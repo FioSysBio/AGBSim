@@ -55,14 +55,14 @@ public class MatrixWindow {
 		DefaultTableModel tmodel = new DefaultTableModel();
 		table = new JTable(tmodel);
 		tmodel.addColumn("\u2193 Bacteria / Metabolite \u2192");
-		for (int i = 0; i < RunWindow.metabolite_name.size(); i++) {
-			tmodel.addColumn("<html>" + RunWindow.metabolite_name.get(i) + " Rxn" + "<br>" + "Name");
-			tmodel.addColumn("<html>" + RunWindow.metabolite_name.get(i) + " Rxn" + "<br>" + "Direction");
+		for (int i = 0; i < Environment.metabolite_name.size(); i++) {
+			tmodel.addColumn("<html>" + Environment.metabolite_name.get(i) + " Rxn" + "<br>" + "Name");
+			tmodel.addColumn("<html>" + Environment.metabolite_name.get(i) + " Rxn" + "<br>" + "Direction");
 
 		}
 		
-		for (int i = 0; i < RunWindow.bacteria_name.size(); i++) {
-			tmodel.addRow(new Object[] { RunWindow.bacteria_name.get(i) });
+		for (int i = 0; i < Environment.bacteria_name.size(); i++) {
+			tmodel.addRow(new Object[] { Environment.bacteria_name.get(i) });
 		}
 		table.getTableHeader().setPreferredSize(new Dimension(70, 40));
 		table.getColumnModel().getColumn(0).setPreferredWidth(135);
@@ -78,12 +78,12 @@ public class MatrixWindow {
 			        	for (int j = 1; j < table.getColumnCount(); j+=2) {
 							al.add((String) table.getModel().getValueAt(i, j));
 						}
-			        	RunWindow.ex_rxns_name.add(al);
+			        	Environment.ex_rxns_name.add(al);
 			        	ArrayList<Integer> al2 = new ArrayList<Integer>();
 			        	for (int j = 2; j < table.getColumnCount(); j+=2) {
 							al2.add(Integer.parseInt((String) table.getModel().getValueAt(i, j)));
 						}
-			        	RunWindow.ex_rxns_direction.add(al2);
+			        	Environment.ex_rxns_direction.add(al2);
 					}
 					
 				} catch (Exception e2) {

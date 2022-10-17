@@ -13,14 +13,14 @@ import javax.swing.SwingConstants;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
-import java.awt.Canvas;
+//import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+//import java.awt.image.BufferStrategy;
+//import java.awt.image.BufferedImage;
+//import java.io.File;
+//import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.awt.event.ActionEvent;
@@ -28,33 +28,33 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 
 import javax.swing.UIManager;
-import javax.swing.WindowConstants;
+//import javax.swing.WindowConstants;
 
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
+//import java.awt.Graphics;
+//import java.awt.Graphics2D;
+//import java.awt.GraphicsConfiguration;
+//import java.awt.GraphicsDevice;
+//import java.awt.GraphicsEnvironment;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.sun.javafx.font.Disposer;
+//import com.sun.javafx.font.Disposer;
 
-import matlabcontrol.extensions.MatlabNumericArray;
-
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.ListModel;
+//import matlabcontrol.extensions.MatlabNumericArray;
+//
+//import javax.swing.JSpinner;
+//import javax.swing.SpinnerNumberModel;
+//import javax.swing.ListModel;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DropMode;
+//import javax.swing.DropMode;
 import javax.swing.JRadioButton;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import javax.swing.JCheckBox;
+//import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 
 public class InputWindow {

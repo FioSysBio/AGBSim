@@ -1,7 +1,7 @@
 package br.fiocruz.procc.acbmservice.domain;
 
 import java.awt.EventQueue;
-import java.awt.Font;
+//import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -22,7 +22,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
-import javax.swing.WindowConstants;
+//import javax.swing.WindowConstants;
 
 import java.awt.Color;
 import java.awt.Dimension;

@@ -1,16 +1,12 @@
 package br.fiocruz.procc.acbmservice.domain;
 
-import org.omg.CORBA.portable.ValueOutputStream;
-
-import com.sun.corba.se.spi.extension.ZeroPortPolicy;
-
 import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
+//import java.awt.geom.RoundRectangle2D;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-import javax.sound.midi.Synthesizer;
+//import javax.sound.midi.Synthesizer;
 
 import matlabcontrol.*;
 
