@@ -83,7 +83,8 @@ public class InputWindow {
     static ArrayList<String> bacteria_name = new ArrayList<String>();
     static ArrayList<Integer> bacteria_count = new ArrayList<Integer>();
     static ArrayList<Double> bacteria_conc = new ArrayList<Double>();
-    static ArrayList<Integer> doubling_time = new ArrayList<Integer>();
+
+	static ArrayList<Integer> doubling_time = new ArrayList<Integer>();
     static ArrayList<Integer> bacteria_scale = new ArrayList<Integer>();
     static ArrayList<Double> r_bac = new ArrayList<Double>();
     static ArrayList<Double> l_bac = new ArrayList<Double>();
@@ -93,7 +94,6 @@ public class InputWindow {
     static ArrayList<Integer> bacteria_speed = new ArrayList<Integer>();
     static ArrayList<Integer> t_survive = new ArrayList<Integer>();
     static ArrayList<Integer> r_search = new ArrayList<Integer>();
-    
     static ArrayList<String> metabolite_name = new ArrayList<String>();
     static ArrayList<Integer> metabolite_count = new ArrayList<Integer>();
     static ArrayList<Double> metabolite_conc = new ArrayList<Double>();
@@ -1179,7 +1179,7 @@ public class InputWindow {
 		frame2.setVisible(true);
 		frame2.setIconImage(Toolkit.getDefaultToolkit().getImage(InputWindow.class.getResource("/icon/acbm.png")));
 		frame2.setResizable(false);
-		frame2.setTitle("ACBM");
+		frame2.setTitle("ACBM 2.0");
 		
 		
 		JScrollPane scrollPane = new JScrollPane();
