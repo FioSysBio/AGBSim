@@ -7,9 +7,9 @@ spring:
     name: acbm-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/acbm-service?useSSL=false&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3310/acbm-service?useSSL=false&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
     username: root
-    password: Root@123
+    password: procc123
     testWhileIdle: true
     validationQuery: SELECT 1
     hikari:
