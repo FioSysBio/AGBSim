@@ -224,10 +224,8 @@ public class Environment {
 			try {
 				Environment.substrate.add(Bacteria.substrateFinder(ex_rxns_name.get(i), ex_rxns_direction.get(i), mFile.get(i)));
 			} catch (MatlabConnectionException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (MatlabInvocationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

@@ -365,7 +365,6 @@ public class Bacteria extends Entity {
 			PS.add(p);
 			pol.setMass(vToMass(v));
 			Environment.metabolite_count.set(p.getType(), Environment.metabolite_count.get(p.getType())+1);
-//			System.out.println("YYYYYYYYYYYY");
 		}
     	
     	
@@ -525,10 +524,8 @@ public class Bacteria extends Entity {
     	try {
     		v_out = runModel(v_in, c_in);
 		} catch (MatlabConnectionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (MatlabInvocationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	
@@ -690,8 +687,8 @@ public class Bacteria extends Entity {
        return outputs;
 	}
 	
-	public static ArrayList<Integer> substrateFinder( ArrayList<String> exRxnsName, ArrayList<Integer> exRxnsDirection,
-     String mFileName ) throws MatlabConnectionException, MatlabInvocationException {
+	public static ArrayList<Integer> substrateFinder( ArrayList<String> exRxnsName, ArrayList<Integer> exRxnsDirection, String mFileName )
+			throws MatlabConnectionException, MatlabInvocationException {
     	// create proxy
         MatlabProxyFactoryOptions options =
            new MatlabProxyFactoryOptions.Builder()

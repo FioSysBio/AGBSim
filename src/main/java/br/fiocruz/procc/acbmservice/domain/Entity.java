@@ -156,7 +156,6 @@ public abstract class Entity {
         setX((int)Math.round(getStepX()));
         setY((int)Math.round(getStepY()));
         setZ((int)Math.round(getStepZ()));
-        
     }
 
 
@@ -193,8 +192,5 @@ public abstract class Entity {
 
     		
 	}
-    
-
-
 }
 
