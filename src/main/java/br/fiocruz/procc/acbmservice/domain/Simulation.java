@@ -36,8 +36,6 @@ public class Simulation {
 
     private Float metaboliteScale;
 
-    private Color cellColor;
-
     private Color metaboliteColor;
 
     private Boolean isLocalFeedSimulation;
