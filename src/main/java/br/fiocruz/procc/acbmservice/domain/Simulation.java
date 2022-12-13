@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.awt.Color;
 import java.util.List;
 
@@ -36,23 +37,15 @@ public class Simulation {
 
     private Float metaboliteScale;
 
-    private Color metaboliteColor;
-
     private Boolean isLocalFeedSimulation;
 
     @Embedded
     private LocalFeed localFeed;
 
-    @ManyToMany
-    @JoinTable(name = "simulation_cells",
-            joinColumns = @JoinColumn(name = "simulation_id"),
-            inverseJoinColumns = @JoinColumn(name = "cells_id"))
-    private List<Cell> cells = new java.util.ArrayList<>();
+    @OneToMany(mappedBy = "pk.simulation")
+    private List<ItemCell> cells = new java.util.ArrayList<>();
 
 
-    @ManyToMany
-    @JoinTable(name = "simulation_metabolites",
-            joinColumns = @JoinColumn(name = "simulation_id"),
-            inverseJoinColumns = @JoinColumn(name = "metabolites_id"))
-    private List<Metabolite> metabolites = new java.util.ArrayList<>();
+    @OneToMany(mappedBy = "pk.simulation")
+    private List<ItemMetabolite> metabolites = new java.util.ArrayList<>();
 }

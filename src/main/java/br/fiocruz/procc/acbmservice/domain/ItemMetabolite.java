@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import java.awt.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,4 +23,6 @@ public class ItemMetabolite {
     private String nomeReactionExchange;
 
     private String directionReactionExchange;
+
+    private Color cellColor;
 }
