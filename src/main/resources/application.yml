@@ -1,5 +1,6 @@
 server:
   port: 8010
+  forward-headers-strategy: framework
 
 spring:
   application:
@@ -25,3 +26,13 @@ spring:
     properties:
       hibernate:
         show_sql: true
+
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true
+  swagger-ui:
+    path: /index.html
+    enabled: true
+    syntax-highlight:
+      activated: false
