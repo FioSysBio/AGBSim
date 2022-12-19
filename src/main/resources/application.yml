@@ -1,5 +1,5 @@
 server:
-  port: 8010
+  port: 8187
   forward-headers-strategy: framework
 
 spring:
@@ -8,9 +8,9 @@ spring:
     name: acbm-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3310/acbm-service?useSSL=false&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
-    username: root
-    password: procc123
+    url: jdbc:mysql://localhost:3306/acbm-service?useSSL=false&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+    username: acbm
+    password: Procc@123
     testWhileIdle: true
     validationQuery: SELECT 1
     hikari:
