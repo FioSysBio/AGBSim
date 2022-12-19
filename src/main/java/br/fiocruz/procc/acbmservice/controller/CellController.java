@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
-@Tag(name = "Cell Controll", description = "ROUTES for API of Cell operations.")
+@Tag(name = "Cell Controller", description = "ROUTES for API of Cell operations.")
 @RestController
 @RequestMapping("/")
 public class CellController {

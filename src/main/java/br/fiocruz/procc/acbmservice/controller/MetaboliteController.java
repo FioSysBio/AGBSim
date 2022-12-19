@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
-@Tag(name = "Metabolite Controll", description = "ROUTES for API of Metabolite operations.")
+@Tag(name = "Metabolite Controller", description = "ROUTES for API of Metabolite operations.")
 @RestController
 @RequestMapping("/")
 public class MetaboliteController {

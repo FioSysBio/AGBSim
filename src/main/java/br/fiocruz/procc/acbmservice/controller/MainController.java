@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
-@Tag(name = "Main Controll", description = "ROUTES for API operations.")
+@Tag(name = "Main Controller", description = "ROUTES for API operations.")
 @RestController
 @RequestMapping("/")
 public class MainController {
