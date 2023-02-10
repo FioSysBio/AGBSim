@@ -44,6 +44,7 @@ public class MetaboliteController {
     public ResponseEntity<List<Metabolite>> getAll() {
 
         List<Metabolite> metabolites = metaboliteService.getAll();
+
         return ResponseEntity.ok(metabolites);
     }
 
@@ -54,10 +55,12 @@ public class MetaboliteController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Search by ID Metabolite registered in the database.")
-    @GetMapping("/metabolites/id")
-    public ResponseEntity<Metabolite> getMetaboliteById() {
+    @GetMapping("/metabolites/{idMetabolite}")
+    public ResponseEntity<Metabolite> getMetaboliteById(@PathVariable Long idMetabolite) {
 
-        return ResponseEntity.ok(new Metabolite());
+        Metabolite metabolite = metaboliteService.getById(idMetabolite);
+
+        return ResponseEntity.ok(metabolite);
     }
 
     @ApiResponses(value = {
@@ -82,10 +85,12 @@ public class MetaboliteController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Delete Metabolite Entity by ID in the database.")
-    @DeleteMapping("/metabolites")
-    public ResponseEntity<Metabolite> delete(@PathVariable Long idMetabolite) {
+    @DeleteMapping("/metabolites/{idMetabolite}")
+    public ResponseEntity<String> delete(@PathVariable Long idMetabolite) {
 
-        return ResponseEntity.ok(new Metabolite());
+        Boolean result = metaboliteService.delete(idMetabolite);
+
+        return ResponseEntity.ok("Metabólito deletado com sucesso");
     }
 
     @ApiResponses(value = {
@@ -96,8 +101,10 @@ public class MetaboliteController {
     })
     @Operation(description = "Update Metabolite Entity by ID e new values in the database.")
     @PutMapping("/metabolites")
-    public ResponseEntity<Metabolite> update(@RequestBody MetaboliteUpdateCommand metaboliteUpdateCommand) {
+    public ResponseEntity<MetaboliteUpdateCommand> update(@RequestBody MetaboliteUpdateCommand metaboliteUpdateCommand) {
 
-        return ResponseEntity.ok(new Metabolite());
+        Metabolite metabolite = metaboliteService.update(metaboliteUpdateCommand);
+
+        return ResponseEntity.ok(MetaboliteUpdateCommand.convert(metabolite));
     }
 }
