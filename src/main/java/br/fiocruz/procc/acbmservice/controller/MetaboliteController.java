@@ -3,10 +3,13 @@ package br.fiocruz.procc.acbmservice.controller;
 import br.fiocruz.procc.acbmservice.commands.MetaboliteCreateCommand;
 import br.fiocruz.procc.acbmservice.commands.MetaboliteUpdateCommand;
 import br.fiocruz.procc.acbmservice.domain.Metabolite;
+import br.fiocruz.procc.acbmservice.repository.MetaboliteRepository;
+import br.fiocruz.procc.acbmservice.service.MetaboliteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +28,11 @@ import java.util.List;
 @RequestMapping("/")
 public class MetaboliteController {
 
+    @Autowired
+    private MetaboliteService metaboliteService;
+    @Autowired
+    private MetaboliteRepository metaboliteRepository;
+
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "JSON Array of Metabolites registered in the database."),
             @ApiResponse(responseCode = "403", description = "No permission to access this resource."),
@@ -35,7 +43,8 @@ public class MetaboliteController {
     @GetMapping("/metabolites")
     public ResponseEntity<List<Metabolite>> getAll() {
 
-        return ResponseEntity.ok(new ArrayList<Metabolite>());
+        List<Metabolite> metabolites = metaboliteService.getAll();
+        return ResponseEntity.ok(metabolites);
     }
 
     @ApiResponses(value = {
@@ -59,9 +68,11 @@ public class MetaboliteController {
     })
     @Operation(description = "Create New Metabolite Entity in the database.")
     @PostMapping("/metabolites")
-    public ResponseEntity<Metabolite> create(@RequestBody MetaboliteCreateCommand metaboliteCreateCommand) {
+    public ResponseEntity<MetaboliteCreateCommand> create(@RequestBody MetaboliteCreateCommand metaboliteCreateCommand) {
 
-        return ResponseEntity.ok(new Metabolite());
+        Metabolite metabolite = metaboliteService.save(metaboliteCreateCommand);
+
+        return ResponseEntity.ok(MetaboliteCreateCommand.convert(metabolite));
     }
 
     @ApiResponses(value = {

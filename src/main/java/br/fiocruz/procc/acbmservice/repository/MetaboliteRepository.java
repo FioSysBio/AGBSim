@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MeboliteRepository extends CrudRepository<Metabolite, Integer> {
+public interface MetaboliteRepository extends CrudRepository<Metabolite, Long> {
 }
