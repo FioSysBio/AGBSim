@@ -22,7 +22,7 @@ public class MetaboliteCreateCommand {
         command.setName(metabolite.getName());
         command.setAmount(metabolite.getAmount());
         command.setMolarMass(metabolite.getMolarMass());
-        command.setSpeed(command.getSpeed());
+        command.setSpeed(metabolite.getSpeed());
         command.setUptakeUpperBound(metabolite.getUptakeUpperBound());
 
         return command;
