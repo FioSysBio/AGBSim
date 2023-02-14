@@ -1,13 +1,15 @@
 package br.fiocruz.procc.acbmservice.controller;
 
 import br.fiocruz.procc.acbmservice.commands.CellCreateCommand;
+import br.fiocruz.procc.acbmservice.commands.CellGetByIdCommand;
 import br.fiocruz.procc.acbmservice.commands.CellUpdateCommand;
 import br.fiocruz.procc.acbmservice.domain.Cell;
-import br.fiocruz.procc.acbmservice.domain.Simulation;
+import br.fiocruz.procc.acbmservice.service.CellService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,13 +20,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Tag(name = "Cell Controller", description = "ROUTES for API of Cell operations.")
 @RestController
 @RequestMapping("/")
 public class CellController {
+
+    @Autowired
+    private CellService cellService;
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "JSON Array of Cells registered in the database."),
@@ -36,7 +40,9 @@ public class CellController {
     @GetMapping("/cells")
     public ResponseEntity<List<Cell>> getAll() {
 
-        return ResponseEntity.ok(new ArrayList<Cell>());
+        List<Cell> cells = cellService.getAll();
+
+        return ResponseEntity.ok(cells);
     }
 
     @ApiResponses(value = {
@@ -46,10 +52,12 @@ public class CellController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Search by ID Cell Result registered in the database.")
-    @GetMapping("/cells/id")
-    public ResponseEntity<Cell> getById() {
+    @GetMapping("/cells/{idCell}")
+    public ResponseEntity<CellGetByIdCommand> getById(@PathVariable Long idCell) {
 
-        return ResponseEntity.ok(new Cell());
+        Cell cell = cellService.getById(idCell);
+
+        return ResponseEntity.ok(CellGetByIdCommand.convert(cell));
     }
 
     @ApiResponses(value = {
@@ -60,9 +68,11 @@ public class CellController {
     })
     @Operation(description = "Create New Cell Entity in the database.")
     @PostMapping("/cells")
-    public ResponseEntity<Cell> create(@RequestBody CellCreateCommand cellCreateCommand) {
+    public ResponseEntity<CellCreateCommand> create(@RequestBody CellCreateCommand cellCreateCommand) {
 
-        return ResponseEntity.ok(new Cell());
+        Cell cell = cellService.save(cellCreateCommand);
+
+        return ResponseEntity.ok(CellCreateCommand.convert(cell));
     }
 
     @ApiResponses(value = {

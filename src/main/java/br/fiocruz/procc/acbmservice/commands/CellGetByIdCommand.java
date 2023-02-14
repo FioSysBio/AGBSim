@@ -6,8 +6,7 @@ import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 @Data
-public class CellCreateCommand {
-
+public class CellGetByIdCommand {
     private Long id;
 
     private String name;
@@ -34,9 +33,9 @@ public class CellCreateCommand {
 
     private Float surviveTime;
 
-    public static CellCreateCommand convert (Cell cell) {
+    public static CellGetByIdCommand convert (Cell cell) {
 
-        CellCreateCommand command = new CellCreateCommand();
+        CellGetByIdCommand command = new CellGetByIdCommand();
 
         BeanUtils.copyProperties(cell, command);
 
