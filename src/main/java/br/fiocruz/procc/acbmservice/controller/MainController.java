@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Tag(name = "Main Controller", description = "ROUTES for API operations.")
 @RestController
-@RequestMapping("/")
+@RequestMapping("/results")
 public class MainController {
 
     @ApiResponses(value = {
@@ -26,8 +27,8 @@ public class MainController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Searches all Simulation Results registered in the database.")
-    @GetMapping("/simulations")
-    public ResponseEntity<List<Simulation>> getSimulations() {
+    @GetMapping("/")
+    public ResponseEntity<List<Simulation>> getAll() {
 
         return ResponseEntity.ok(new ArrayList<Simulation>());
     }
@@ -39,8 +40,8 @@ public class MainController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Search by ID Simulation Result registered in the database.")
-    @GetMapping("/simulations/id")
-    public ResponseEntity<Simulation> getSimulationById() {
+    @GetMapping("/{idResults}")
+    public ResponseEntity<Simulation> getById(@PathVariable Long idResults) {
 
         return ResponseEntity.ok(new Simulation());
     }
@@ -52,21 +53,8 @@ public class MainController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Searches all Simulation Results registered in the database.")
-    @GetMapping("/results")
-    public ResponseEntity<SimulationResult> getResults() {
-
-        return ResponseEntity.ok(new SimulationResult());
-    }
-
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "JSON of Simulation Result registered in the database."),
-            @ApiResponse(responseCode = "403", description = "No permission to access this resource."),
-            @ApiResponse(responseCode = "404", description = "Resource not found in the database."),
-            @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
-    })
-    @Operation(description = "Search by ID Simulation Result registered in the database.")
-    @GetMapping("/results/id")
-    public ResponseEntity<SimulationResult> getResultById() {
+    @GetMapping("/testes")
+    public ResponseEntity<SimulationResult> getTestes() {
 
         return ResponseEntity.ok(new SimulationResult());
     }

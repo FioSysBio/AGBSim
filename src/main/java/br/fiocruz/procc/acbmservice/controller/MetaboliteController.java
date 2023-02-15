@@ -25,7 +25,7 @@ import java.util.List;
 
 @Tag(name = "Metabolite Controller", description = "ROUTES for API of Metabolite operations.")
 @RestController
-@RequestMapping("/")
+@RequestMapping("/metabolites")
 public class MetaboliteController {
 
     @Autowired
@@ -40,7 +40,7 @@ public class MetaboliteController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Searches all Simulation Results registered in the database.")
-    @GetMapping("/metabolites")
+    @GetMapping("/")
     public ResponseEntity<List<Metabolite>> getAll() {
 
         List<Metabolite> metabolites = metaboliteService.getAll();
@@ -55,7 +55,7 @@ public class MetaboliteController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Search by ID Metabolite registered in the database.")
-    @GetMapping("/metabolites/{idMetabolite}")
+    @GetMapping("/{idMetabolite}")
     public ResponseEntity<Metabolite> getMetaboliteById(@PathVariable Long idMetabolite) {
 
         Metabolite metabolite = metaboliteService.getById(idMetabolite);
@@ -70,7 +70,7 @@ public class MetaboliteController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Create New Metabolite Entity in the database.")
-    @PostMapping("/metabolites")
+    @PostMapping()
     public ResponseEntity<MetaboliteCreateCommand> create(@RequestBody MetaboliteCreateCommand metaboliteCreateCommand) {
 
         Metabolite metabolite = metaboliteService.save(metaboliteCreateCommand);
@@ -85,7 +85,7 @@ public class MetaboliteController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Delete Metabolite Entity by ID in the database.")
-    @DeleteMapping("/metabolites/{idMetabolite}")
+    @DeleteMapping("/{idMetabolite}")
     public ResponseEntity<String> delete(@PathVariable Long idMetabolite) {
 
         Boolean result = metaboliteService.delete(idMetabolite);
@@ -100,7 +100,7 @@ public class MetaboliteController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Update Metabolite Entity by ID e new values in the database.")
-    @PutMapping("/metabolites")
+    @PutMapping()
     public ResponseEntity<MetaboliteUpdateCommand> update(@RequestBody MetaboliteUpdateCommand metaboliteUpdateCommand) {
 
         Metabolite metabolite = metaboliteService.update(metaboliteUpdateCommand);
