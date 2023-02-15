@@ -34,9 +34,9 @@ public class CellUpdateCommand {
 
     private Float surviveTime;
 
-    public static CellCreateCommand convert (Cell cell) {
+    public static CellUpdateCommand convert (Cell cell) {
 
-        CellCreateCommand command = new CellCreateCommand();
+        CellUpdateCommand command = new CellUpdateCommand();
 
         BeanUtils.copyProperties(cell, command);
 

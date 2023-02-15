@@ -24,7 +24,7 @@ import java.util.List;
 
 @Tag(name = "Cell Controller", description = "ROUTES for API of Cell operations.")
 @RestController
-@RequestMapping("/")
+@RequestMapping("/cells")
 public class CellController {
 
     @Autowired
@@ -37,7 +37,7 @@ public class CellController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Searches all Simulation registered in the database.")
-    @GetMapping("/cells")
+    @GetMapping()
     public ResponseEntity<List<Cell>> getAll() {
 
         List<Cell> cells = cellService.getAll();
@@ -52,7 +52,7 @@ public class CellController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Search by ID Cell Result registered in the database.")
-    @GetMapping("/cells/{idCell}")
+    @GetMapping("/{idCell}")
     public ResponseEntity<CellGetByIdCommand> getById(@PathVariable Long idCell) {
 
         Cell cell = cellService.getById(idCell);
@@ -67,7 +67,7 @@ public class CellController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Create New Cell Entity in the database.")
-    @PostMapping("/cells")
+    @PostMapping()
     public ResponseEntity<CellCreateCommand> create(@RequestBody CellCreateCommand cellCreateCommand) {
 
         Cell cell = cellService.save(cellCreateCommand);
@@ -82,7 +82,7 @@ public class CellController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Delete Cell Entity by ID in the database.")
-    @DeleteMapping("/cells")
+    @DeleteMapping()
     public ResponseEntity<Cell> delete(@PathVariable Long idCell) {
 
         return ResponseEntity.ok(new Cell());
@@ -95,9 +95,11 @@ public class CellController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Update Cell Entity by ID e new values in the database.")
-    @PutMapping("/cells")
-    public ResponseEntity<Cell> update(@RequestBody CellUpdateCommand cellUpdateCommand) {
+    @PutMapping()
+    public ResponseEntity<CellUpdateCommand> update(@RequestBody CellUpdateCommand cellUpdateCommand) {
 
-        return ResponseEntity.ok(new Cell());
+        Cell cell = cellService.update(cellUpdateCommand);
+
+        return ResponseEntity.ok(CellUpdateCommand.convert(cell));
     }
 }

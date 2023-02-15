@@ -9,8 +9,8 @@ public enum TipoShape {
 
     @Override
     public String toString() {
-        if (this.name().equals("Cocci")) {
-            return "Masculino";
+        if (this.name().equals("COCCI")) {
+            return "Cocci";
         } else if (this.name().equals("BACILLI")) {
             return "Bacilli";
         }
