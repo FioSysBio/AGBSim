@@ -10,6 +10,16 @@ import javax.persistence.Table;
 @Embeddable
 public class LocalFeed {
 
+    public LocalFeed() {
+
+    }
+
+    public LocalFeed(String x, String y, String z) {
+        this.xFeedField = Integer.parseInt(x);
+        this.yFeedField = Integer.parseInt(y);
+        this.zFeedField = Integer.parseInt(x);
+    }
+
     @Getter @Setter
     private Integer xFeedField;
 

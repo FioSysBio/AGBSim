@@ -1,11 +1,14 @@
 package br.fiocruz.procc.acbmservice.commands;
 
+import br.fiocruz.procc.acbmservice.domain.LocalFeed;
 import br.fiocruz.procc.acbmservice.domain.Simulation;
+import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
+@Data
 public class SimulationCreateCommand {
 
-    private String id;
+    private Long id;
 
     private String description;
 
@@ -15,23 +18,28 @@ public class SimulationCreateCommand {
 
     private Integer environmentLength;
 
+    private Integer environmentWidth;
+
     private Integer environmentDepth;
 
     private Float metaboliteScale;
 
     private Boolean isLocalFeedSimulation;
 
-    private Integer xFeedField;
-
-    private Integer yFeedField;
-
-    private Integer zFeedField;
+    private String localFeed;
 
     public static SimulationCreateCommand convert (Simulation simulation) {
 
         SimulationCreateCommand command = new SimulationCreateCommand();
 
         BeanUtils.copyProperties(simulation, command);
+
+        if (simulation.getIsLocalFeedSimulation()) {
+            command.setLocalFeed(String.format("%d, %d, %d",
+                    simulation.getLocalFeed().getXFeedField(),
+                    simulation.getLocalFeed().getYFeedField(),
+                    simulation.getLocalFeed().getZFeedField()));
+        }
 
         return command;
     }

@@ -2,6 +2,7 @@ package br.fiocruz.procc.acbmservice.service;
 
 import br.fiocruz.procc.acbmservice.commands.SimulationCreateCommand;
 import br.fiocruz.procc.acbmservice.commands.SimulationUpdateCommand;
+import br.fiocruz.procc.acbmservice.domain.LocalFeed;
 import br.fiocruz.procc.acbmservice.domain.Simulation;
 import br.fiocruz.procc.acbmservice.repository.MetaboliteRepository;
 import br.fiocruz.procc.acbmservice.repository.SimulationRepository;
@@ -20,11 +21,20 @@ public class SimulationService {
     @Autowired
     private MetaboliteRepository metaboliteRepository;
 
-    public Simulation save(SimulationCreateCommand simulationCreateCommand) {
+    public Simulation save(SimulationCreateCommand command) {
 
         Simulation simulation = new Simulation();
 
-        BeanUtils.copyProperties(simulationCreateCommand, simulation);
+        BeanUtils.copyProperties(command, simulation);
+
+        if (command.getIsLocalFeedSimulation()) {
+
+            String[] vet = command.getLocalFeed().split(",");
+
+            LocalFeed localFeed = new LocalFeed(vet[0], vet[1], vet[2]);
+
+            simulation.setLocalFeed(localFeed);
+        }
 
         return simulationRepository.save(simulation);
     }

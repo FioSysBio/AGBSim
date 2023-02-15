@@ -9,11 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import java.awt.Color;
 import java.util.List;
 
 @AllArgsConstructor
@@ -22,7 +18,8 @@ import java.util.List;
 @Entity
 public class Simulation {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String description;
@@ -32,6 +29,8 @@ public class Simulation {
     private Integer timeStep;
 
     private Integer environmentLength;
+
+    private Integer environmentWidth;
 
     private Integer environmentDepth;
 
