@@ -1,6 +1,9 @@
 package br.fiocruz.procc.acbmservice.commands;
 
-public class CreateSimulationCommand {
+import br.fiocruz.procc.acbmservice.domain.Simulation;
+import org.springframework.beans.BeanUtils;
+
+public class SimulationCreateCommand {
 
     private String id;
 
@@ -23,4 +26,13 @@ public class CreateSimulationCommand {
     private Integer yFeedField;
 
     private Integer zFeedField;
+
+    public static SimulationCreateCommand convert (Simulation simulation) {
+
+        SimulationCreateCommand command = new SimulationCreateCommand();
+
+        BeanUtils.copyProperties(simulation, command);
+
+        return command;
+    }
 }
