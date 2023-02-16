@@ -90,7 +90,12 @@ public class MetaboliteController {
 
         Boolean result = metaboliteService.delete(idMetabolite);
 
-        return ResponseEntity.ok("Metabólito deletado com sucesso");
+        if (result) {
+
+            return ResponseEntity.ok("Metabolite deleted with success!");
+        }
+
+        return ResponseEntity.ok("ERROR of deleted Metabolite!");
     }
 
     @ApiResponses(value = {

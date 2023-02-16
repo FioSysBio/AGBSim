@@ -83,9 +83,14 @@ public class CellController {
     })
     @Operation(description = "Delete Cell Entity by ID in the database.")
     @DeleteMapping()
-    public ResponseEntity<Cell> delete(@PathVariable Long idCell) {
+    public ResponseEntity<String> delete(@PathVariable Long idCell) {
 
-        return ResponseEntity.ok(new Cell());
+        Boolean result = cellService.delete(idCell);
+        if (result) {
+            return ResponseEntity.ok("Cell deleted with success!");
+        }
+
+        return ResponseEntity.ok("ERROR of deleted Cell!");
     }
 
     @ApiResponses(value = {
