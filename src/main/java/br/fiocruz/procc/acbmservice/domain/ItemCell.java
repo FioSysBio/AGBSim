@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import java.awt.*;
+import java.awt.Color;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,5 +20,5 @@ public class ItemCell {
     @EmbeddedId
     private ItemCellPK pk = new ItemCellPK();
 
-    private Color cellColor;
+    private String cellColor;
 }

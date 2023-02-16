@@ -4,7 +4,6 @@ import br.fiocruz.procc.acbmservice.commands.SimulationCreateCommand;
 import br.fiocruz.procc.acbmservice.commands.SimulationUpdateCommand;
 import br.fiocruz.procc.acbmservice.domain.LocalFeed;
 import br.fiocruz.procc.acbmservice.domain.Simulation;
-import br.fiocruz.procc.acbmservice.repository.MetaboliteRepository;
 import br.fiocruz.procc.acbmservice.repository.SimulationRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,6 @@ public class SimulationService {
 
     @Autowired
     private SimulationRepository simulationRepository;
-    @Autowired
-    private MetaboliteRepository metaboliteRepository;
 
     public Simulation save(SimulationCreateCommand command) {
 
@@ -46,7 +43,7 @@ public class SimulationService {
 
     public Boolean delete(Long idSimulation) {
 
-        metaboliteRepository.deleteById(idSimulation);
+        simulationRepository.deleteById(idSimulation);
 
         return true;
     }
