@@ -82,7 +82,7 @@ public class CellController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Delete Cell Entity by ID in the database.")
-    @DeleteMapping()
+    @DeleteMapping("/{idCell}")
     public ResponseEntity<String> delete(@PathVariable Long idCell) {
 
         Boolean result = cellService.delete(idCell);

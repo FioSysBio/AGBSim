@@ -84,7 +84,7 @@ public class SimulationController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Search by ID Simulation Result registered in the database.")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{idSimulation}")
     public ResponseEntity<String> delete(@PathVariable Long idSimulation) {
 
         Boolean result = simulationService.delete(idSimulation);
