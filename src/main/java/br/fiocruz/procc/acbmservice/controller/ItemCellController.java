@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Cell Controller", description = "ROUTES for API of Cell operations.")
+@Tag(name = "ItemCell Controller", description = "ROUTES for API of ItemCell operations.")
 @RestController
 @RequestMapping("/item-cell")
 public class ItemCellController {
@@ -33,7 +33,7 @@ public class ItemCellController {
     private ItemCellService itemCellService;
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "JSON Array of Cells registered in the database."),
+            @ApiResponse(responseCode = "200", description = "JSON Array of ItemCells registered in the database."),
             @ApiResponse(responseCode = "403", description = "No permission to access this resource."),
             @ApiResponse(responseCode = "404", description = "Resource not found in the database."),
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
@@ -48,12 +48,12 @@ public class ItemCellController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "JSON fields of Cell registered in the database by ID."),
+            @ApiResponse(responseCode = "200", description = "JSON fields of ItemCell registered in the database by ID."),
             @ApiResponse(responseCode = "403", description = "No permission to access this resource."),
             @ApiResponse(responseCode = "404", description = "Resource not found in the database."),
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
-    @Operation(description = "Search by ID Cell Result registered in the database.")
+    @Operation(description = "Search by ID (PK) ItemCell Result registered in the database.")
     @GetMapping("/{idCell}/{idSimulation}")
     public ResponseEntity<ItemCellGetByIdCommand> getById(@PathVariable Long idCell, @PathVariable Long idSimulation) {
 
@@ -63,12 +63,12 @@ public class ItemCellController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "JSON fields of Cell registered in the database by ID."),
+            @ApiResponse(responseCode = "200", description = "JSON fields of ItemCell registered in the database by ID."),
             @ApiResponse(responseCode = "403", description = "No permission to access this resource."),
             @ApiResponse(responseCode = "404", description = "Resource not found in the database."),
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
-    @Operation(description = "Create New Cell Entity in the database.")
+    @Operation(description = "Create New ItemCell Entity in the database.")
     @PostMapping()
     public ResponseEntity<ItemCellCreateCommand> create(@RequestBody ItemCellCreateCommand itemCellCreateCommand) {
 
@@ -78,12 +78,12 @@ public class ItemCellController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "JSON with fields and message of Cell deleted in the database by ID."),
+            @ApiResponse(responseCode = "200", description = "JSON with fields and message of ItemCell deleted in the database by ID."),
             @ApiResponse(responseCode = "403", description = "No permission to access this resource."),
             @ApiResponse(responseCode = "404", description = "Resource not found in the database."),
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
-    @Operation(description = "Delete Cell Entity by ID in the database.")
+    @Operation(description = "Delete ItemCell Entity by ID (PK) in the database.")
     @DeleteMapping("/{idCell}/{idSimulation}")
     public ResponseEntity<String> delete(@PathVariable Long idCell, @PathVariable Long idSimulation) {
 
@@ -96,12 +96,12 @@ public class ItemCellController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "JSON with fields updated of Cell in the database by ID."),
+            @ApiResponse(responseCode = "200", description = "JSON with fields updated of ItemCell in the database by ID (PK)."),
             @ApiResponse(responseCode = "403", description = "No permission to access this resource."),
             @ApiResponse(responseCode = "404", description = "Resource not found in the database."),
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
-    @Operation(description = "Update Cell Entity by ID e new values in the database.")
+    @Operation(description = "Update ItemCell Entity by ID (PK) e new values in the database.")
     @PutMapping()
     public ResponseEntity<ItemCellUpdateCommand> update(@RequestBody ItemCellUpdateCommand itemCellUpdateCommand) {
 
