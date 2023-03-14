@@ -1229,7 +1229,7 @@ public class InputWindow {
 				frame2.setVisible(false);
 				frame2.dispose();
 				frmAcbm.dispose();
-				Environment.setParameters();
+//				Environment.setParameters(environmentCommand);
 				RunWindow w = new RunWindow();
 				w.execute();
 			}

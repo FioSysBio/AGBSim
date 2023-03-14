@@ -62,17 +62,29 @@ public class PolySaccharides extends Entity {
     }
 
     //draw PS in the environment
-    public void draw(Graphics g){
+//    public void draw(Graphics g){
+//
+//        GradientPaint gp = new GradientPaint((int)(getX()/Environment.getTickX()), (int) (getZ()/Environment.getTickY()), new Color(getColor_r(),getColor_g(),getColor_b(), 180),
+//                (int)(getX()/Environment.getTickX()), (int) (getY()/Environment.getTickY()) + getSizeX(), new Color(getColor_r() ,getColor_g(), getColor_b(), 180));
+//        Graphics2D g2d = (Graphics2D) g;
+//        g2d.setPaint(gp);
+////        int x = (int) (getX() / Environment.getTickX());
+////        int y = (int) (getY() / Environment.getTickY());
+////        System.out.println("X "+getX() + " tickx"+ Environment.getTickX());
+////        System.out.println("x: "+x+", y: "+y);
+//        g2d.fillRect((int) (getX()/Environment.getTickX()), (int) (getY()/Environment.getTickY()), getSizeX(), getSizeX());
+//    }
+
+    public void draw(){
 
         GradientPaint gp = new GradientPaint((int)(getX()/Environment.getTickX()), (int) (getZ()/Environment.getTickY()), new Color(getColor_r(),getColor_g(),getColor_b(), 180),
                 (int)(getX()/Environment.getTickX()), (int) (getY()/Environment.getTickY()) + getSizeX(), new Color(getColor_r() ,getColor_g(), getColor_b(), 180));
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setPaint(gp);
-//        int x = (int) (getX() / Environment.getTickX());
-//        int y = (int) (getY() / Environment.getTickY());
-//        System.out.println("X "+getX() + " tickx"+ Environment.getTickX());
-//        System.out.println("x: "+x+", y: "+y);
-        g2d.fillRect((int) (getX()/Environment.getTickX()), (int) (getY()/Environment.getTickY()), getSizeX(), getSizeX());
+
+        System.out.println("Desenho Retângulo: "
+                + "Coord x1: " + (int) (getX()/Environment.getTickX())
+                + " / Coord y1" + (int) (getY()/Environment.getTickY())
+                + " / Largura: " + getSizeX()
+                + " / Altura: " + getSizeX());
     }
 
 

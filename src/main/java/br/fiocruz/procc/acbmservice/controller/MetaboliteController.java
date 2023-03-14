@@ -40,7 +40,7 @@ public class MetaboliteController {
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
     @Operation(description = "Searches all Simulation Results registered in the database.")
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<List<Metabolite>> getAll() {
 
         List<Metabolite> metabolites = metaboliteService.getAll();

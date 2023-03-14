@@ -1,16 +1,17 @@
 package br.fiocruz.procc.acbmservice.domain;
 
 import java.awt.*;
-//import java.awt.geom.RoundRectangle2D;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-//import javax.sound.midi.Synthesizer;
-
+import lombok.Getter;
+import lombok.Setter;
 import matlabcontrol.*;
 
-public class Bacteria extends Entity {
+@Getter
+@Setter
+public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 
     //Constructor
     public Bacteria (int x, int y,int z, int type){
@@ -27,35 +28,47 @@ public class Bacteria extends Entity {
     
     //bacteria name
     private String name;
-    private int type;
-    //doubling time
+
+	private int type;
+
+	//doubling time
     private int t_d;
-    //average radius of one bacterium [mkm]
+
+	//average radius of one bacterium [mkm]
     private double r_bac;
-    //average length of one bacterium [mkm]
+
+	//average length of one bacterium [mkm]
     private double l_bac;
-    //average volume of one bacterium [m^3]
+
+	//average volume of one bacterium [m^3]
     private double v_bac;
+
 	//average mass of one bacterium [g]
     private double m_avg;
-    //metabolites can be used as substrate
+
+	//metabolites can be used as substrate
     private ArrayList<Integer> growth_substrate;
     
     
     //time to degradable one metabolite and produce another [ticks]
     private double degradableEat;
-    //time, when bacteria eats some metabolite [ticks]
+
+	//time, when bacteria eats some metabolite [ticks]
     private int TimeEat;
-    //time when bacteria dies
+
+	//time when bacteria dies
     private int TimeDeath;
-    //bacteria can sensitive something at this distance [mkm]
+
+	//bacteria can sensitive something at this distance [mkm]
     private double searchRadius;
-    //bacteria can eat something at this distance [mkm]
+
+	//bacteria can eat something at this distance [mkm]
     private double eatRadius;
 
 	//period of time,during which bacteria can live without eat
     private double eat_rate;
-    //random period of time,during which bacteria can live without eat;
+
+	//random period of time,during which bacteria can live without eat;
     //this value has chosen depended on Gaussian distribution witch mean value equals eat_rate and sigma = 1/3*eat_rate
     private double eat_range;
 
@@ -64,152 +77,26 @@ public class Bacteria extends Entity {
 
 
     //Avogadro number
-    public static final double n_a = 6.022*Math.pow(10, 23);
-    //one molecule in simulations represent this amount in reality
-    public static double n_real = 1.23*Math.pow(10, 11);
+    public static final double n_a = 6.022 * Math.pow(10, 23);
+
+	//one molecule in simulations represent this amount in reality
+    public static double n_real = 1.23 * Math.pow(10, 11);
     
     private ArrayList<String> exRxnsName;
-    private ArrayList<Integer> exRxnsDirection;
-    private String mFileName;
+
+	private ArrayList<Integer> exRxnsDirection;
+
+	private String mFileName;
     
     ArrayList<Double> produce_fluxes = new ArrayList<>();
 
-  
-    public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public int getType() {
-		return type;
-	}
-	public void setType(int type) {
-		this.type = type;
-	}
-	public double getR_bac() {
-		return r_bac;
-	}
-	public void setR_bac(double r_bac) {
-		this.r_bac = r_bac;
-	}
-	public double getL_bac() {
-		return l_bac;
-	}
-	public void setL_bac(double l_bac) {
-		this.l_bac = l_bac;
-	}
-	public double getV_bac() {
-		return v_bac;
-	}
-	public void setV_bac(double v_bac) {
-		this.v_bac = v_bac;
-	}
-	public double getM_avg() {
-		return m_avg;
-	}
-	public void setM_avg(double m_avg) {
-		this.m_avg = m_avg;
-	}
-	public double getR() {
-		return searchRadius;
-	}
-	public void setR(double r) {
-		searchRadius = r;
-	}
+	public void setEat_radius(double eat_radius) { this.eatRadius = eat_radius * Math.max(r_bac, l_bac); }
 	
-	public double getEat_radius() {
-		return eatRadius;
-	}
-	public void setEat_radius(double eat_radius) {
-		this.eatRadius = eat_radius * Math.max(r_bac, l_bac);
-	}
-	
-    public double getSearchRadius() {
-		return searchRadius;
-	}
-	public void setSearchRadius(double searchRadius) {
-		this.searchRadius = searchRadius;
-	}
-	public double getEat_rate(){
-        return this.eat_rate;
-    }
-    public void setEat_rate(double r) {
-        this.eat_rate = r;
-    }
-    public double getEat_range(){
-        return this.eat_range;
-    }
-
-    public double getDegradableEat(){
-        return this.degradableEat;
-    }
-
-    public void setDegradableEat(double d){
-        this.degradableEat = d;
-    }
-
-
-    public int getTimeEat(){
-        return this.TimeEat;
-    }
-
-    public void setTimeEat(int t){
-        this.TimeEat = t;
-    }
-    
-    public int getT_d() {
-		return t_d;
-	}
-	public void setT_d(int t_d) {
-		this.t_d = t_d;
-	}
-	
-	public ArrayList<Integer> getExRxnsDirection() {
-		return exRxnsDirection;
-	}
-	public void setExRxnsDirection(ArrayList<Integer> exRxnsDirection) {
-		this.exRxnsDirection = exRxnsDirection;
-	}
-	public ArrayList<String> getExRxnsName() {
-		return exRxnsName;
-	}
-	public void setExRxnsName(ArrayList<String> exRxnsName) {
-		this.exRxnsName = exRxnsName;
-	}
-	public ArrayList<Integer> getGrowth_substrate() {
-		return growth_substrate;
-	}
-	public void setGrowth_substrate(ArrayList<Integer> growth_substrate) {
-		this.growth_substrate = growth_substrate;
-	}
-	public String getmFileName() {
-		return mFileName;
-	}
-	public void setmFileName(String mFileName) {
-		this.mFileName = mFileName;
-	}
-	public int getTimeDeath(){
-        return this.TimeDeath;
-    }
-
     public void setTimeDeath(){
         this.TimeDeath = Environment.ticks + 10*t_d;
     }
 
-
-    public void setEat_range(double d){
-        this.eat_range = d;
-    }
-
-
     public void setAntibiotic () {this.Antibiotic += 1;}
-    public int getAntibiotic () {return this.Antibiotic;}
-
-
-
-
- 
 
     //set value of bacteria variable
     public void SetProperty() {
@@ -223,7 +110,7 @@ public class Bacteria extends Entity {
         setColor(Environment.bacteria_color.get(type).getRed(), Environment.bacteria_color.get(type).getGreen(), Environment.bacteria_color.get(type).getBlue());
         setSpeed(Environment.bacteria_speed.get(type));
         setEat_radius(Environment.eat_radius.get(type));
-        setmFileName(Environment.mFile.get(type));
+        setMFileName(Environment.mFile.get(type));
         setExRxnsName(Environment.ex_rxns_name.get(type));
         setExRxnsDirection(Environment.ex_rxns_direction.get(type));
         setEat_range(Environment.t_survive.get(type));
@@ -234,14 +121,42 @@ public class Bacteria extends Entity {
 
 
     //draw bacteria in the environment
-    public void draw(Graphics g){
-        Graphics2D g2d = (Graphics2D) g;
-        g.setColor(new Color(getColor_r(), getColor_g(), getColor_b()));
-        
+	//desenhar objetos e ambiente
+//    public void draw(Graphics g){
+//        Graphics2D g2d = (Graphics2D) g;
+//        g.setColor(new Color(getColor_r(), getColor_g(), getColor_b()));
+//
+//        if (l_bac == 0) {
+//        	g2d.fillOval((int) (getX() / Environment.getTickX()), (int) (getY() / Environment.getTickY()), 2*getSizeX(), 2*getSizeX());
+//		} else {
+//	        g2d.fillRoundRect((int) (getX() / Environment.getTickX()), (int) (getY() / Environment.getTickY()), 2*getSizeX()+2, getSizeX()+1, 80, 100);
+//		}
+//
+//    }
+	public void draw(){
+//        Graphics2D g2d = (Graphics2D) g;
+        Color color = new Color(getColor_r(), getColor_g(), getColor_b());
+
         if (l_bac == 0) {
-        	g2d.fillOval((int) (getX() / Environment.getTickX()), (int) (getY() / Environment.getTickY()), 2*getSizeX(), 2*getSizeX());
+			System.out.println("Desenho Oval: "
+					+ "Coord x1: " + ((int) (getX() / Environment.getTickX())
+					+ " / Coord y1" + (int) (getY() / Environment.getTickY())
+					+ " / Largura: " + 2 * getSizeX()
+					+ " / Altura: " + 2 * getSizeX())
+					+ " / Cor RGB: " + color.getRGB()
+					+ " / Cor:  R=" + color.getRed() + ", G=" + color.getGreen() + ", B=" + color.getBlue()
+			);
 		} else {
-	        g2d.fillRoundRect((int) (getX() / Environment.getTickX()), (int) (getY() / Environment.getTickY()), 2*getSizeX()+2, getSizeX()+1, 80, 100);
+			System.out.println("Desenho Retângulo Arredondado: "
+					+ "Coord x1: " + ((int) (getX() / Environment.getTickX())
+					+ " / Coord y1" + (int) (getY() / Environment.getTickY())
+					+ " / Largura: " + 2 * getSizeX() + 2
+					+ " / Altura: " + getSizeX() + 1
+					+ "/ Largura ARC: " + 80
+					+ " / Altura ARC: " + 100)
+					+ " / Cor RGB: " + color.getRGB()
+					+ " / Cor:  R=" + color.getRed() + ", G=" + color.getGreen() + ", B=" + color.getBlue()
+			);
 		}
 
     }
@@ -381,41 +296,23 @@ public class Bacteria extends Entity {
 
 	}   
     
-    
-//    public double nToC(List<Entity> PS, List<Integer> l) {
-//    	double m_t = 0;
-//    	for (int i = 0; i < l.size(); i++) {
-//			m_t += PS.get(l.get(i)).getMass(); 
-//		}
-//		double c = (m_t/n_a) / (getV_bac()); // unit = [mol/m^3]
-//    	return c;
-//	}    
-//    
-//    //converts concentrations to fluxes
-//    public double cToV(double c) {
-//    		double x = 0.33*mass/(getV_bac());
-//    		double v = c/(x*(t_d/Environment.getNorm()))*Math.pow(10, 3); //unit = [mmol/gr.hr]
-//    	return v;
-//	}
-    
-    
     public double vToMass(double v) {
 		double x = 0.33*mass / ( Math.pow(eatRadius, 3) * getV_bac() );
     	double c = v * (x* (t_d/ Environment.getNorm()) ) * Math.pow(10, -3);
     	double m = c * ( Math.pow(eatRadius, 3) * getV_bac() ) * n_a; //amount of metabolite produced
     	return m;
 	}
-    
 
     public void calculateBiomass(double miu) {
-    	double new_mass = mass*Math.pow(Math.E, miu*t_d/ Environment.getNorm());
+    	double new_mass = mass * Math.pow(Math.E, miu * t_d / Environment.getNorm());
     	setMass(new_mass);
     	return;
 	}
     
 	public void divide(List<Entity> le1) {
-    	int count = (int) (getMass()/m_avg);
-//    	System.out.println("count "+count);
+
+    	int count = (int) (getMass() / m_avg);
+
     	double m_dummy = getMass()/count;
     	this.setMass(m_dummy);
     	for (int i = 0; i < count-1; i++) {
@@ -425,19 +322,15 @@ public class Bacteria extends Entity {
     	    le1.add(b);
     	    Environment.bacteria_count.set(this.type, Environment.bacteria_count.get(this.type) +1 );
     	}
-
 	}
-                  
-    
+
     public void updateIndexes() {
     	
     	for (int i = 1; i < Environment.metabolite_count.size(); i++) {
 			Environment.metabolite_index.set(i, Environment.metabolite_index.get(i-1) + Environment.metabolite_count.get(i-1));
 		}
-    	
 	}
-    
-    
+
     public void produce(List<Entity> PS, ArrayList<Double> f) {
     	
 		double m;
@@ -505,7 +398,7 @@ public class Bacteria extends Entity {
 		}
  	    int ps_size_2 = PS.size();
  	    
- 		System.out.println("size"+nearMetabolites[0].size());
+ 		System.out.println("size" + nearMetabolites[0].size());
     	
     	//modifies sign of input fluxes
     	for (int j = 0; j < v_in.size(); j++) {
@@ -523,13 +416,11 @@ public class Bacteria extends Entity {
     	double miu=0;
     	try {
     		v_out = runModel(v_in, c_in);
-		} catch (MatlabConnectionException e) {
-			e.printStackTrace();
-		} catch (MatlabInvocationException e) {
+		} catch (MatlabConnectionException | MatlabInvocationException e) {
 			e.printStackTrace();
 		}
-    	
-    	System.out.println("v_in "+v_in.get(0));
+
+		System.out.println("v_in "+v_in.get(0));
     	System.out.println("v_out "+v_out.get(0));
     	System.out.println("miu "+v_out.get(v_out.size()-1));
     	
@@ -572,16 +463,9 @@ public class Bacteria extends Entity {
     		else if (v_out.get(k) * exRxnsDirection.get(k) > 0) {
     			v_produce.set(k, v_out.get(k));
 			
-			} else if (-exRxnsDirection.get(k)*(v_in.get(k) - v_out.get(k)) > 0) {
-//		 		for (int l = nearMetabolites[k].size()-1; l >= 0; l--) {
-//		 			int index = nearMetabolites[k].get(l);
-//		 			PS.get(index).setLive(false);
-//		 			PS.remove(index);
-//		        }
-//	 			Environment.metabolite_count.set(k, Environment.metabolite_count.get(k) - nearMetabolites[k].size());
-//    			v_produce.set(k, -exRxnsDirection.get(k)*(v_in.get(k) - v_out.get(k)));
-//    			System.out.println("NNNNNNNNNNNN");
-    			
+			}
+			else if (-exRxnsDirection.get(k)*(v_in.get(k) - v_out.get(k)) > 0) {
+
     	    	double m_t = 0.0;
     	    	double c = 0.0;
     	    	double x = 0.0;
@@ -611,7 +495,8 @@ public class Bacteria extends Entity {
 			}
     		
 		}
-    	v_produce.set(v_produce.size()-1, v_out.get(v_out.size()-1));
+
+		v_produce.set(v_produce.size()-1, v_out.get(v_out.size()-1));
 
 		for (int j = 0; j < ps_size_2 - ps_size_1; j++) {
 			PolySaccharides pp = (PolySaccharides) PS.get(PS.size()-1);
@@ -624,7 +509,8 @@ public class Bacteria extends Entity {
 		return v_produce;
 	}
 	
-	public ArrayList<Double> runModel(ArrayList<Double> f, ArrayList<Double> c) throws MatlabConnectionException, MatlabInvocationException {
+	public ArrayList<Double> runModel(ArrayList<Double> f, ArrayList<Double> c)
+			throws MatlabConnectionException, MatlabInvocationException {
     	// create proxy
         MatlabProxyFactoryOptions options =
            new MatlabProxyFactoryOptions.Builder()
@@ -683,7 +569,6 @@ public class Bacteria extends Entity {
        // close connection
        proxy.disconnect();
 
-       
        return outputs;
 	}
 	
@@ -739,11 +624,9 @@ public class Bacteria extends Entity {
        // close connection
        proxy.disconnect();
 
-       
        return substrates;
 	}
-	
-    
+
     public boolean checkCollision(Environment env) {
     	int x_temp = (int)Math.round(getStepX());
     	int y_temp = (int)Math.round(getStepY());
@@ -887,7 +770,7 @@ public class Bacteria extends Entity {
 //    	System.out.println("l " + l + " r " + 2*r_bac + " L " + Environment.getL());
 //    	System.out.println("step "+ getStepX() + " " + getStepY() + " " + getStepZ() + " ");
     	    	
-    	while ( (this.getStepX() < 0) || (this.getStepX() + l > Environment.getL()) || (this.getStepY() < 0) || (this.getStepY() + 2*r_bac > Environment.getW()) || (this.getStepZ() < 0) || (this.getStepZ() + 2*r_bac > Environment.getD())) {
+    	while ( (this.getStepX() < 0) || (this.getStepX() + l > Environment.getL()) || (this.getStepY() < 0) || (this.getStepY() + 2 * r_bac > Environment.getW()) || (this.getStepZ() < 0) || (this.getStepZ() + 2 * r_bac > Environment.getD())) {
     		if (this.getStepX() < 0) {
     			setStepX(-this.getStepX());
     		}
@@ -913,8 +796,7 @@ public class Bacteria extends Entity {
 	}
     
   //action for each tick of program
-    public void tick(List<Entity> PS, List<Entity> A,
-                     List<Entity> B, Environment env)
+    public void tick(List<Entity> PS, List<Entity> A, List<Entity> B, Environment env)
             throws IOException{
     	
     	if (Environment.ticks == 0) {
@@ -952,15 +834,23 @@ public class Bacteria extends Entity {
     		}
 
         	//if bacteria reaches to near of the coordinate of metabolite
+			//se a bactéria chegar perto da coordenada do metabólito
         	if (CheckDistance(ps.getX(), getX(), ps.getY(), getY(), ps.getZ(), getZ(), eatRadius)) {
         		//then bacteria eats
+				//então a bactéria come
         		produce_fluxes = eat(PS, index);
-        		//calculation of new biomass
+
+				//calculation of new biomass
+				//cálculo de biomassa nova
         		calculateBiomass(produce_fluxes.get(produce_fluxes.size()-1));
-        		//then bacteria produces metabolite
+
+				//then bacteria produces metabolite
+				//então a bactéria produz metabólito
                 produce_fluxes.remove(produce_fluxes.size()-1);
                 produce(PS, produce_fluxes);
-                //and divides
+
+				//and divides
+				//e divide
                 divide(B);
                 } else {
                 	//if bacteria couldn't eat metabolite
@@ -990,9 +880,6 @@ public class Bacteria extends Entity {
         CheckTime();
 
     }
-
-    
-
 }
 
 

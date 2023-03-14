@@ -2,6 +2,10 @@ package br.fiocruz.procc.acbmservice.domain;/*
 * this class describes same functions to all other subclasses
 * */
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.awt.*;
 import java.io.IOException;
 import java.util.Random;
@@ -10,31 +14,42 @@ import java.util.List;
 
 public abstract class Entity {
 
-
     //Constructor
     public Entity (int x, int y,int z) {
         this.x = x; this.y = y; this.z = z;
         this.StepX = x;
         this.StepY = y;
         this.StepZ = z;
+    }
 
-}
     //coordinate[mkm]
+    @Getter(AccessLevel.PROTECTED)@Setter(AccessLevel.PROTECTED)
     private int x, y, z;
+
     //direction vectors [mkm]
+    @Getter(AccessLevel.PROTECTED)@Setter(AccessLevel.PROTECTED)
     protected double dx, dy, dz;
+
     //helpful coordinate [mkm]]
+    @Getter(AccessLevel.PROTECTED)@Setter(AccessLevel.PROTECTED)
     private double StepX, StepY, StepZ;
+
     //speed [mkm/hour]
+    @Getter(AccessLevel.PROTECTED)@Setter(AccessLevel.PROTECTED)
     private int Speed;
+
     //size : SizeX = SizeY = SizeZ
+    @Getter(AccessLevel.PROTECTED)@Setter(AccessLevel.PROTECTED)
     private int SizeX;
+
     //mass
+    @Getter(AccessLevel.PUBLIC)@Setter(AccessLevel.PUBLIC)
     protected double mass;
 
-
 	//color variable; visual version
-    int color_r, color_g, color_b;
+    @Getter(AccessLevel.PROTECTED)@Setter(AccessLevel.PROTECTED)
+    protected int color_r, color_g, color_b;
+
     // live`s label
     private boolean live = true;
     //create panel for painting for visual version
@@ -43,60 +58,12 @@ public abstract class Entity {
     protected void setX (int x){
         this.x = x ;
     }
-    protected int getX (){
-        return this.x;
-    }
-    protected void setY (int y){
-        this.y = y ;
-    }
-    protected int getY(){
-        return this.y ;
-    }
-
-    protected void setZ (int z){
-        this.z = z ;
-    }
-    protected int getZ() {
-		return this.z;
-	}
-
-    protected void setDx (double dx){
-        this.dx = dx ;
-    }
-    protected double getDx(){
-        return this.dx ;
-    }
-
-    protected void setDy (double dy){
-        this.dy = dy ;
-    }
-    protected double getDy(){
-        return this.dy ;
-    }
-    
-    protected void setDz (double dz){
-        this.dz = dz ;
-    }
-    protected double getDz(){
-        return this.dz ;
-    }
-    
-    public double getMass() {
-		return mass;
-	}
-	public void setMass(double mass) {
-		this.mass = mass;
-	}
 
     protected void setColor (int r, int g, int b){
         this.color_r = r;
         this.color_g = g;
         this.color_b = b;
     }
-
-    protected int getColor_r (){ return  this.color_r;}
-    protected int getColor_g () {return  this.color_g; }
-    protected int getColor_b () { return this.color_b; }
 
     protected void setLive (boolean live){
         this.live = live;
@@ -144,7 +111,9 @@ public abstract class Entity {
     public abstract void tick(List<Entity> PS, List<Entity> ANT, List<Entity> B, Environment g)
             throws IOException ;
     //draw object; visual version
-    public abstract void draw(Graphics g);// {  }
+//    public abstract void draw(Graphics g);// {  }
+
+    public abstract void draw();// {  }
 
     public void SetProperty (int x, int y, int z){
         setStepX(x);
