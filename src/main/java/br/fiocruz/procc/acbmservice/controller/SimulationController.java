@@ -1,9 +1,12 @@
 package br.fiocruz.procc.acbmservice.controller;
 
+import br.fiocruz.procc.acbmservice.commands.EnvironmentCommand;
 import br.fiocruz.procc.acbmservice.commands.SimulationCreateCommand;
+import br.fiocruz.procc.acbmservice.commands.SimulationRunCommand;
 import br.fiocruz.procc.acbmservice.domain.Simulation;
 import br.fiocruz.procc.acbmservice.domain.SimulationResult;
 import br.fiocruz.procc.acbmservice.repository.SimulationRepository;
+import br.fiocruz.procc.acbmservice.service.RunSimulationService;
 import br.fiocruz.procc.acbmservice.service.SimulationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,8 +32,26 @@ public class SimulationController {
 
     @Autowired
     private SimulationService simulationService;
+
     @Autowired
-    private SimulationRepository simulationRepository;
+    private RunSimulationService runSimulationService;
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "JSON fields of Simulation registered in the database by ID."),
+            @ApiResponse(responseCode = "403", description = "No permission to access this resource."),
+            @ApiResponse(responseCode = "404", description = "Resource not found in the database."),
+            @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
+    })
+    @Operation(description = "Create New Simulation Entity in the database.")
+    @PostMapping("/run")
+    public ResponseEntity<String> run(@RequestBody SimulationRunCommand simulationRunCommand) {
+
+        EnvironmentCommand env = new EnvironmentCommand();
+
+        runSimulationService.runSimulatoin(env, simulationRunCommand);
+
+        return ResponseEntity.ok("Simulation run start with sucess!");
+    }
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "JSON Array of Simulations registered in the database."),

@@ -1,17 +1,12 @@
 package br.fiocruz.procc.acbmservice.commands;
 
+import br.fiocruz.procc.acbmservice.domain.LocalFeed;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
 @Data
-public class SimulationInfoCommand {
-
-    private List<Long> celsId;
-
-    private List<Long> metabolitesId;
+public class SimulationRunCommand {
 
     private Long id;
 
@@ -33,10 +28,7 @@ public class SimulationInfoCommand {
 
     private Boolean isLocalFeedSimulation;
 
-    private Integer xFeedField;
+    private LocalFeed localFeed;
 
-    private Integer yFeedField;
-
-    private Integer zFeedField;
-
+    private List<SimulationItensInfoCommand> itensSimulation;
 }

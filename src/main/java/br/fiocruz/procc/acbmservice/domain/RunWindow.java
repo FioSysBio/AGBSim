@@ -11,17 +11,8 @@ package br.fiocruz.procc.acbmservice.domain;//
  * main program class, which run simulation
  */
 
-import sun.java2d.loops.Blit;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferStrategy;
 import java.io.IOException;
-import javax.swing.*;
-import java.awt.image.BufferedImage;
-//import org.apache.commons.cli.*;
-
 
 public class RunWindow {
 	

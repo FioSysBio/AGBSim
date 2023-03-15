@@ -1,17 +1,15 @@
 package br.fiocruz.procc.acbmservice.service;
 
 import br.fiocruz.procc.acbmservice.commands.EnvironmentCommand;
-import br.fiocruz.procc.acbmservice.commands.SimulationInfoCommand;
+import br.fiocruz.procc.acbmservice.commands.SimulationRunCommand;
 import br.fiocruz.procc.acbmservice.domain.Environment;
 import br.fiocruz.procc.acbmservice.domain.RunWindow;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-
 @Service
 public class RunSimulationService {
 
-    public String runSimulatoin(EnvironmentCommand environmentCommand, SimulationInfoCommand simulationInfoCommand) {
+    public String runSimulatoin(EnvironmentCommand environmentCommand, SimulationRunCommand simulationRunCommand) {
 
         try {
 //            for (int i = 0; i < table.getRowCount(); i++) {
@@ -26,8 +24,8 @@ public class RunSimulationService {
 //                }
 //                ex_rxns_direction.add(al2);
 //            }
-            Double n_real = simulationInfoCommand.getMetaboliteScale()
-                    * Math.pow(10, simulationInfoCommand.getMetaboliteScaleMult());
+            Double n_real = simulationRunCommand.getMetaboliteScale()
+                    * Math.pow(10, simulationRunCommand.getMetaboliteScaleMult());
 
             Environment.setParameters(environmentCommand, n_real);
             RunWindow w = new RunWindow();
