@@ -1,7 +1,7 @@
 package br.fiocruz.procc.acbmservice.commands;
 
 import br.fiocruz.procc.acbmservice.domain.Cell;
-import br.fiocruz.procc.acbmservice.domain.enuns.TipoShape;
+import br.fiocruz.procc.acbmservice.domain.enuns.ShapeType;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
@@ -16,7 +16,7 @@ public class CellUpdateCommand {
 
     private Float scale;
 
-    private TipoShape shape;
+    private ShapeType shape;
 
     private Float radius;
 

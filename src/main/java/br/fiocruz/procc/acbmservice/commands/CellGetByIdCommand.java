@@ -1,9 +1,12 @@
 package br.fiocruz.procc.acbmservice.commands;
 
 import br.fiocruz.procc.acbmservice.domain.Cell;
-import br.fiocruz.procc.acbmservice.domain.enuns.TipoShape;
+import br.fiocruz.procc.acbmservice.domain.enuns.AmountType;
+import br.fiocruz.procc.acbmservice.domain.enuns.ShapeType;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
+
+import java.awt.*;
 
 @Data
 public class CellGetByIdCommand {
@@ -11,27 +14,31 @@ public class CellGetByIdCommand {
 
     private String name;
 
-    private Float amount;
+    private String amount;
 
-    private Float scale;
+    private AmountType amountType;
 
-    private TipoShape shape;
+    private Integer scale;
 
-    private Float radius;
+    private ShapeType shapeType;
 
-    private Float length;
+    private Double radius;
 
-    private Float mass;
+    private String length;
 
-    private Float eatRadius;
+    private Double mass;
+
+    private Double eatRadius;
 
     private String mathlabFile;
 
-    private Float speed;
+    private Integer speed;
 
-    private Float searchRadius;
+    private Integer searchRadius;
 
-    private Float surviveTime;
+    private Integer surviveTime;
+
+    private Color cellColor;
 
     public static CellGetByIdCommand convert (Cell cell) {
 

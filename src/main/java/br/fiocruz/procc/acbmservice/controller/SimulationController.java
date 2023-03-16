@@ -37,18 +37,18 @@ public class SimulationController {
     private RunSimulationService runSimulationService;
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "JSON fields of Simulation registered in the database by ID."),
+            @ApiResponse(responseCode = "200", description = "JSON fields of Environment Simulation for Run a New Simulation."),
             @ApiResponse(responseCode = "403", description = "No permission to access this resource."),
             @ApiResponse(responseCode = "404", description = "Resource not found in the database."),
             @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
     })
-    @Operation(description = "Create New Simulation Entity in the database.")
+    @Operation(description = "Run a New Simulation.")
     @PostMapping("/run")
     public ResponseEntity<String> run(@RequestBody SimulationRunCommand simulationRunCommand) {
 
         EnvironmentCommand env = new EnvironmentCommand();
 
-        runSimulationService.runSimulatoin(env, simulationRunCommand);
+        runSimulationService.runSimulatoin(simulationRunCommand);
 
         return ResponseEntity.ok("Simulation run start with sucess!");
     }

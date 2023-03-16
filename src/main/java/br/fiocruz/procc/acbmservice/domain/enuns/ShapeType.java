@@ -1,8 +1,6 @@
 package br.fiocruz.procc.acbmservice.domain.enuns;
 
-import javax.swing.*;
-
-public enum TipoShape {
+public enum ShapeType {
 
     COCCI,
     BACILLI;

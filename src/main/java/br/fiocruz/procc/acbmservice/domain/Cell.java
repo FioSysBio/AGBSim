@@ -1,6 +1,6 @@
 package br.fiocruz.procc.acbmservice.domain;
 
-import br.fiocruz.procc.acbmservice.domain.enuns.TipoShape;
+import br.fiocruz.procc.acbmservice.domain.enuns.ShapeType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,7 +29,7 @@ public class Cell {
     private Float scale;
 
     @Enumerated(EnumType.STRING)
-    private TipoShape shape;
+    private ShapeType shape;
 
     private Float radius;
 
