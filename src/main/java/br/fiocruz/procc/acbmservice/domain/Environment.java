@@ -214,7 +214,7 @@ public class Environment {
         logFile =  new File("output.txt");
     }
     
-    public static void setParameters (EnvironmentCommand command, Double n_real) {
+    public static void setParameters (EnvironmentCommand command) {
     	Environment.bacteria_name = command.getBacteria_name();
     	Environment.bacteria_count = command.getBacteria_count();
     	Environment.bacteria_conc = command.getBacteria_conc();
@@ -246,7 +246,7 @@ public class Environment {
     	Environment.metabolite_color = command.getMetabolite_color();
     	Environment.feeding_points = command.getFeeding_points();
     	Environment.stirredFeed = command.isStirredFeed();
-    	Bacteria.n_real = n_real; //n_real = Double.parseDouble(metScaleField1.getText()) * Math.pow(10, Integer.parseInt(metScaleField2.getText()));
+    	Bacteria.n_real = command.getN_real(); //n_real = Double.parseDouble(metScaleField1.getText()) * Math.pow(10, Integer.parseInt(metScaleField2.getText()));
     	
     	for (int i = 0; i < bacteria_name.size(); i++) {
 			bacteria_died.add(0);
@@ -256,7 +256,7 @@ public class Environment {
     	tickX = (double) L / dimX;
     	tickY = (double) W / dimY;
 
-    	V = W*D*L*Math.pow(10, -15);
+    	V = W * D * L * Math.pow(10, -15);
     	
     	for (int i = 0; i < bacteria_name.size(); i++) {
 			try {

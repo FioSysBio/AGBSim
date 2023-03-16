@@ -38,7 +38,7 @@ public class CellGetByIdCommand {
 
     private Integer surviveTime;
 
-    private Color cellColor;
+    private String cellColor;
 
     public static CellGetByIdCommand convert (Cell cell) {
 

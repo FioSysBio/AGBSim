@@ -111,7 +111,12 @@ public class EnvironmentCommand {
 
     //number of minuets in 1 program's tick [min]
     private int tickTime;
+
     //number of tick in 1 hour [ticks]
+    private double norm;
+
+    //one molecule in simulations represent this amount in reality
+    public double n_real = 1.23 * Math.pow(10, 11);
 
     public static EnvironmentCommand convert (Environment env) {
 
@@ -144,6 +149,7 @@ public class EnvironmentCommand {
         command.L = env.getL();
         command.D = env.getD();
         command.W = env.getW();
+        command.norm = env.getNorm();
         command.bacteria_color = env.getBacteria_color();
         command.metabolite_color = env.getMetabolite_color();
         command.feeding_points = env.getFeeding_points();

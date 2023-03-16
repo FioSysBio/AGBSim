@@ -16,4 +16,8 @@ public class MetaboliteGetByIdCommand {
     private Float speed;
 
     private Float uptakeUpperBound;
+
+    private String reactionName;
+
+    private Integer reactionDirection;
 }

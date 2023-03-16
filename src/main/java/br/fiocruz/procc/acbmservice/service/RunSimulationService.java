@@ -8,6 +8,11 @@ import br.fiocruz.procc.acbmservice.domain.enuns.AmountType;
 import br.fiocruz.procc.acbmservice.domain.enuns.ShapeType;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
+
 @Service
 public class RunSimulationService {
 
@@ -26,10 +31,8 @@ public class RunSimulationService {
 //                }
 //                ex_rxns_direction.add(al2);
 //            }
-            Double n_real = simulationRunCommand.getMetaboliteScale()
-                    * Math.pow(10, simulationRunCommand.getMetaboliteScaleMult());
 
-            Environment.setParameters(transform(simulationRunCommand), n_real);
+            Environment.setParameters(transform(simulationRunCommand));
             RunWindow w = new RunWindow();
             w.execute();
 
@@ -121,7 +124,36 @@ public class RunSimulationService {
 
                         command.getT_survive().add(item.getCell().getSurviveTime());
 
-                        command.getBacteria_color().add(item.getCell().getCellColor());
+                        command.getBacteria_color().add(new Color(
+                                Integer.parseInt(item.getCell().getCellColor().split(",")[0]),//R
+                                Integer.parseInt(item.getCell().getCellColor().split(",")[1]),//G
+                                Integer.parseInt(item.getCell().getCellColor().split(",")[2]) //B
+                        ));
+
+                        //linha 1225
+                        item.getMetabolites().forEach(met -> {
+
+                            ArrayList<String> al = new ArrayList<String>();
+                            al.add(met.getReactionName());
+                            command.getEx_rxns_name().add(al);
+
+                            ArrayList<Integer> al2 = new ArrayList<Integer>();
+                            al2.add(met.getReactionDirection());
+                            command.getEx_rxns_direction().add(al2);
+                        });
+
+                        //linha 1125
+                        command.setTickslimit(simulationRunCommand.getTimeLimit());
+
+                        command.setTickTime(simulationRunCommand.getTimeLimit());
+
+                        command.setL(simulationRunCommand.getEnvironmentLength());
+
+                        command.setD(simulationRunCommand.getEnvironmentDepth());
+
+                        command.setW(simulationRunCommand.getEnvironmentWidth());
+
+                        command.setN_real(simulationRunCommand.getMetaboliteScale() * Math.pow(10, simulationRunCommand.getMetaboliteScaleMult()));
                     }
             );
         } catch (Exception ex) {
