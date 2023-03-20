@@ -78,7 +78,7 @@ public class RunSimulationService {
                             command.getL_bac().add((0.0));
                         } else {
                             command.getL_bac().add(
-                                    Double.parseDouble(item.getCell().getLength()) *
+                                    item.getCell().getLength() *
                                             (Math.cbrt(command.getBacteria_scale().get(command.getBacteria_scale().size() - 1)))
                             );
                         }

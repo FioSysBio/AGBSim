@@ -1,5 +1,6 @@
 package br.fiocruz.procc.acbmservice.domain;
 
+import br.fiocruz.procc.acbmservice.domain.enuns.AmountType;
 import br.fiocruz.procc.acbmservice.domain.enuns.ShapeType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,26 +25,29 @@ public class Cell {
 
     private String name;
 
-    private Float amount;
-
-    private Float scale;
+    private String amount;
 
     @Enumerated(EnumType.STRING)
-    private ShapeType shape;
+    private AmountType amountType;
 
-    private Float radius;
+    private Integer scale;
 
-    private Float length;
+    @Enumerated(EnumType.STRING)
+    private ShapeType shapeType;
 
-    private Float mass;
+    private Double radius;
 
-    private Float eatRadius;
+    private Double length;
+
+    private Double mass;
+
+    private Double eatRadius;
 
     private String mathlabFile;
 
-    private Float speed;
+    private Integer speed;
 
-    private Float searchRadius;
+    private Integer searchRadius;
 
-    private Float surviveTime;
+    private Integer surviveTime;
 }

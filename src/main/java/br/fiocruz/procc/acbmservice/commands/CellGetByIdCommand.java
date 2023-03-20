@@ -24,7 +24,7 @@ public class CellGetByIdCommand {
 
     private Double radius;
 
-    private String length;
+    private Double length;
 
     private Double mass;
 
