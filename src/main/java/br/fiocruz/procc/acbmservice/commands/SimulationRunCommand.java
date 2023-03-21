@@ -28,7 +28,7 @@ public class SimulationRunCommand {
 
     private Boolean isLocalFeedSimulation;
 
-    private LocalFeed localFeed;
+    private List<LocalFeed> localFeeds;
 
     private List<SimulationItensInfoCommand> itensSimulation;
 }
