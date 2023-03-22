@@ -48,9 +48,9 @@ public class SimulationController {
 
         EnvironmentCommand env = new EnvironmentCommand();
 
-        runSimulationService.runSimulatoin(simulationRunCommand);
+//        runSimulationService.runSimulatoin(simulationRunCommand);
 
-        return ResponseEntity.ok("Simulation run start with sucess!");
+        return ResponseEntity.ok(runSimulationService.runSimulatoin(simulationRunCommand));
     }
 
     @ApiResponses(value = {

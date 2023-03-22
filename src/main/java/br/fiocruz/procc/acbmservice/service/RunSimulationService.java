@@ -42,11 +42,11 @@ public class RunSimulationService {
 
             if (simulationRunCommand.getIsLocalFeedSimulation()) {
                 for (LocalFeed ilocal : simulationRunCommand.getLocalFeeds()) {
-                    if (ilocal.getXFeedField() <= simulationRunCommand.getEnvironmentLength() &&
-                            ilocal.getYFeedField() <= simulationRunCommand.getEnvironmentWidth() &&
-                            ilocal.getZFeedField() <= simulationRunCommand.getEnvironmentWidth() )
+                    if (ilocal.getXFeedField() > simulationRunCommand.getEnvironmentLength() &&
+                            ilocal.getYFeedField() > simulationRunCommand.getEnvironmentWidth() &&
+                            ilocal.getZFeedField() > simulationRunCommand.getEnvironmentWidth() )
                     {
-                        return "Coordinates for invalid launch location points";
+                        return "Coordinates for invalid launch location points, input must be within environment size. Try Again";
                     }
                 }
             }
@@ -61,7 +61,7 @@ public class RunSimulationService {
             return "Invalid Input. Try Again";
         }
 
-        return "Simulation is running";
+        return "Simulation run start with sucess!";
     }
 
     private EnvironmentCommand transform(SimulationRunCommand simulationRunCommand) {
