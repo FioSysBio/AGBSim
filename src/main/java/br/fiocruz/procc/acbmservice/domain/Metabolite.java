@@ -1,10 +1,13 @@
 package br.fiocruz.procc.acbmservice.domain;
 
+import br.fiocruz.procc.acbmservice.domain.enuns.AmountType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,11 +25,14 @@ public class Metabolite implements Serializable {
 
     private String name;
 
-    private Float amount;
+    private String amount;
 
-    private Float molarMass;
+    @Enumerated(EnumType.STRING)
+    private AmountType amountType;
 
-    private Float speed;
+    private Double molarMass;
 
-    private Float uptakeUpperBound;
+    private Integer speed;
+
+    private Double uptakeUpperBound;
 }

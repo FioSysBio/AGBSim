@@ -1,5 +1,6 @@
 package br.fiocruz.procc.acbmservice.commands;
 
+import br.fiocruz.procc.acbmservice.domain.enuns.AmountType;
 import lombok.Data;
 
 @Data
@@ -9,13 +10,15 @@ public class MetaboliteGetByIdCommand {
 
     private String name;
 
-    private Float amount;
+    private String amount;
 
-    private Float molarMass;
+    private AmountType amountType;
 
-    private Float speed;
+    private Double molarMass;
 
-    private Float uptakeUpperBound;
+    private Integer speed;
+
+    private Double uptakeUpperBound;
 
     private String reactionName;
 
