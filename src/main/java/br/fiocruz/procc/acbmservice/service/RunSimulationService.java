@@ -5,6 +5,7 @@ import br.fiocruz.procc.acbmservice.commands.SimulationItensInfoCommand;
 import br.fiocruz.procc.acbmservice.commands.SimulationRunCommand;
 import br.fiocruz.procc.acbmservice.domain.Bacteria;
 import br.fiocruz.procc.acbmservice.domain.Environment;
+import br.fiocruz.procc.acbmservice.domain.LocalFeed;
 import br.fiocruz.procc.acbmservice.domain.RunWindow;
 import br.fiocruz.procc.acbmservice.domain.enuns.AmountType;
 import br.fiocruz.procc.acbmservice.domain.enuns.ShapeType;
@@ -23,18 +24,6 @@ public class RunSimulationService {
     public String runSimulatoin(SimulationRunCommand simulationRunCommand) {
 
         try {
-//            for (int i = 0; i < table.getRowCount(); i++) {
-//                ArrayList<String> al = new ArrayList<String>();
-//                for (int j = 1; j < table.getColumnCount(); j+=2) {
-//                    al.add((String) table.getModel().getValueAt(i, j));
-//                }
-//                ex_rxns_name.add(al);
-//                ArrayList<Integer> al2 = new ArrayList<Integer>();
-//                for (int j = 2; j < table.getColumnCount(); j+=2) {
-//                    al2.add(Integer.parseInt((String) table.getModel().getValueAt(i, j)));
-//                }
-//                ex_rxns_direction.add(al2);
-//            }
 
             if (simulationRunCommand.getItensSimulation() == null || simulationRunCommand.getItensSimulation().size() == 0) {
                 return "Items for simulation are missing!!!";
@@ -48,6 +37,17 @@ public class RunSimulationService {
 
                 if (item.getMetabolites() == null || item.getMetabolites().size() == 0) {
                     return "Missing metabolites for this simulation!!!";
+                }
+            }
+
+            if (simulationRunCommand.getIsLocalFeedSimulation()) {
+                for (LocalFeed ilocal : simulationRunCommand.getLocalFeeds()) {
+                    if (ilocal.getXFeedField() <= simulationRunCommand.getEnvironmentLength() &&
+                            ilocal.getYFeedField() <= simulationRunCommand.getEnvironmentWidth() &&
+                            ilocal.getZFeedField() <= simulationRunCommand.getEnvironmentWidth() )
+                    {
+                        return "Coordinates for invalid launch location points";
+                    }
                 }
             }
 
@@ -71,8 +71,10 @@ public class RunSimulationService {
         try {
             simulationRunCommand.getItensSimulation().forEach(
                     item -> {
+
                         //linha 315
                         command.getBacteria_name().add(item.getCell().getName());
+
                         //linha 316
                         if (item.getCell().getAmountType() == AmountType.GL) {
                             command.getBacteria_conc().add(Double.parseDouble(item.getCell().getAmount()));
@@ -81,8 +83,10 @@ public class RunSimulationService {
                             command.getBacteria_count().add(Integer.parseInt(item.getCell().getAmount()));
                             command.getBacteria_conc().add((-1.0));
                         }
+
                         //linha 323
                         command.getBacteria_scale().add(item.getCell().getScale());
+
                         //linha 325
                         if (item.getCell().getRadius() != (0.0) || item.getCell().getRadius() != null) {
                             command.getR_bac().add(
@@ -92,6 +96,7 @@ public class RunSimulationService {
                         } else {
                             command.getR_bac().add((0.0));
                         }
+
                         //linha 330
                         if (item.getCell().getShapeType() == ShapeType.COCCI) {
                             command.getL_bac().add((0.0));
@@ -101,6 +106,7 @@ public class RunSimulationService {
                                             (Math.cbrt(command.getBacteria_scale().get(command.getBacteria_scale().size() - 1)))
                             );
                         }
+
                         //linha 335
                         if (command.getL_bac().get(command.getL_bac().size() - 1) == (0.0)) {
                             command.getV_bac().add(
@@ -132,6 +138,7 @@ public class RunSimulationService {
                                             command.getBacteria_scale().get(command.getBacteria_scale().size() - 1)
                             );
                         }
+
                         //linha 353
                         command.getEat_radius().add(item.getCell().getEatRadius());
 
@@ -150,7 +157,8 @@ public class RunSimulationService {
                         ));
 
                         //Metabolitos
-
+                        ArrayList<String> auxList1 = new ArrayList<String>();//Lista auxiliar para vetores dos nomes das reações
+                        ArrayList<Integer> auxList2 = new ArrayList<Integer>();//Lista auxiliar para vetores das direções das reações de cada metabólito
                         item.getMetabolites().forEach(met -> {
                             //linha 785
                             {
@@ -180,32 +188,38 @@ public class RunSimulationService {
                                 command.getMetabolite_speed().add(met.getSpeed());
 
                                 command.getMetabolite_uub().add(met.getUptakeUpperBound());
-
-//                                dlm2.addElement((String) metNamecomboBox.getSelectedItem());
-//
-//                                int r = new Random().nextInt(255);
-//                                int g = new Random().nextInt(255);
-//                                int b = new Random().nextInt(255);
-//                                Color randomColor = new Color(r, g, b);
-//                                btnMetChooseColor.setBackground(randomColor);
                             }
 
                             //linha 1225
                             {
-                                ArrayList<String> al = new ArrayList<String>();
-                                al.add(met.getReactionName());
-                                command.getEx_rxns_name().add(al);
-
-                                ArrayList<Integer> al2 = new ArrayList<Integer>();
-                                al2.add(met.getReactionDirection());
-                                command.getEx_rxns_direction().add(al2);
+                                auxList1.add(met.getReactionName());
+                                auxList2.add(met.getReactionDirection());
                             }
                         });
+                        command.getEx_rxns_name().add(auxList1);
+
+                        command.getEx_rxns_direction().add(auxList2);
+
+                        //linha 1170
+                        command.setStirredFeed(simulationRunCommand.getIsLocalFeedSimulation() ? false : true);//Caso esteja desmarcado na UI, StirredFeed será Ativado (ou seja, TRUE)
+
+                        if (simulationRunCommand.getIsLocalFeedSimulation()) {
+                            simulationRunCommand.getLocalFeeds().forEach(
+                                    ilocal -> {
+                                        Integer[] coord = new Integer[3];
+                                        coord[0] = (ilocal.getXFeedField());
+                                        coord[1] = (ilocal.getYFeedField());
+                                        coord[2] = (ilocal.getZFeedField());
+
+                                        command.getFeeding_points().add(coord);
+                                    }
+                            );
+                        }
 
                         //linha 1125
                         command.setTickslimit(simulationRunCommand.getTimeLimit());
 
-                        command.setTickTime(simulationRunCommand.getTimeLimit());
+                        command.setTickTime(simulationRunCommand.getTimeStep());//na UI se chama Passos da simulação no tempo (Time Step)
 
                         command.setL(simulationRunCommand.getEnvironmentLength());
 
@@ -214,6 +228,8 @@ public class RunSimulationService {
                         command.setW(simulationRunCommand.getEnvironmentWidth());
 
                         command.setN_real(simulationRunCommand.getMetaboliteScale() * Math.pow(10, simulationRunCommand.getMetaboliteScaleMult()));
+
+
 
                         //nToN
                         {
