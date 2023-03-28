@@ -211,7 +211,7 @@ public class Environment {
 		}
 
         //create new output file
-        logFile =  new File("output.txt");
+        logFile =  new File("/files_simulation/output.txt");
     }
     
     public static void setParameters (EnvironmentCommand command) {

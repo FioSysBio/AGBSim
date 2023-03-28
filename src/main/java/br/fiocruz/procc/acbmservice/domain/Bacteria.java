@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
+import jep.Interpreter;
+import jep.NDArray;
+import jep.SharedInterpreter;
 import lombok.Getter;
 import lombok.Setter;
 import matlabcontrol.*;
@@ -516,47 +519,47 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
            new MatlabProxyFactoryOptions.Builder()
                .setUsePreviouslyControlledSession(true)
                .build();
-       
+
        MatlabProxyFactory factory = new MatlabProxyFactory(options);
        MatlabProxy proxy = factory.getProxy();
 
        //setting inputs of matlab function
-       Object[] input1 = new Object[1];   
+       Object[] input1 = new Object[1];
        String[] exRxnsArray = new String[exRxnsName.size()];
        for (int i = 0; i < exRxnsName.size(); i++) {
     	   exRxnsArray[i] = exRxnsName.get(i);
        }
        input1[0] = exRxnsArray;
-       
-       Object[] input2 = new Object[1];   
+
+       Object[] input2 = new Object[1];
        int[] exDirsArray = new int[exRxnsDirection.size()];
        for (int i = 0; i < exRxnsDirection.size(); i++) {
     	   exDirsArray[i] = exRxnsDirection.get(i);
        }
        input2[0] = exDirsArray;
-       
-       Object[] input3 = new Object[1];   
+
+       Object[] input3 = new Object[1];
        double[] fluxArray = new double[f.size()];
        for (int i = 0; i < f.size(); i++) {
     	   fluxArray[i] = f.get(i);
        }
        input3[0] = fluxArray;
-       
-       Object[] input4 = new Object[1];   
+
+       Object[] input4 = new Object[1];
        input4[0] = mFileName;
-       
-       Object[] input5 = new Object[1];   
+
+       Object[] input5 = new Object[1];
        input5[0] = Environment.ticks* Environment.getTickTime();
-       
-       Object[] input6 = new Object[1];   
+
+       Object[] input6 = new Object[1];
        double[] cArray = new double[c.size()];
        for (int i = 0; i < c.size(); i++) {
     	   cArray[i] = c.get(i);
        }
        input6[0] = cArray;
-       
+
        // call matlab function
-       Object[] modelOutput = proxy.returningFeval("eat", 1, input1, input2, input3, input4, input5, input6);
+       Object[] modelOutput = proxy.returningFeval("/files_simulation/eat", 1, input1, input2, input3, input4, input5, input6);
        double[] fluxArray2 = (double[]) modelOutput[0];
        ArrayList<Double> outputs = new ArrayList<>();
        for (int i = 0; i < fluxArray2.length; i++) {
@@ -574,55 +577,65 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 	
 	public static ArrayList<Integer> substrateFinder( ArrayList<String> exRxnsName, ArrayList<Integer> exRxnsDirection, String mFileName )
 			throws MatlabConnectionException, MatlabInvocationException {
-    	// create proxy
-        MatlabProxyFactoryOptions options =
-           new MatlabProxyFactoryOptions.Builder()
-               .setUsePreviouslyControlledSession(true)
-               .build();
-       
-       MatlabProxyFactory factory = new MatlabProxyFactory(options);
-       MatlabProxy proxy = factory.getProxy();
 
-       //setting inputs of matlab function
-       Object[] input1 = new Object[1];   
-       String[] exRxnsArray = new String[exRxnsName.size()];
-       for (int i = 0; i < exRxnsName.size(); i++) {
-    	   exRxnsArray[i] = exRxnsName.get(i);
-       }
-       input1[0]=exRxnsArray;
-       
-       Object[] input2 = new Object[1];   
-       int[] exDirsArray = new int[exRxnsDirection.size()];
-       for (int i = 0; i < exRxnsDirection.size(); i++) {
-    	   exDirsArray[i] = exRxnsDirection.get(i);
-       }
-       input2[0]=exDirsArray;
-       
-       Object[] input3 = new Object[1];   
-       input3[0] = mFileName;
-       
-       // call matlab function
-       Object[] modelOutput = proxy.returningFeval("substrateFinder", 1, input1, input2, input3);
-       double[] fluxArray = (double[]) modelOutput[0];
-       
-       ArrayList<Integer> substrates = new ArrayList<>();
-       for (int i = 0; i < fluxArray.length; i++) {
-    	   if (fluxArray[i] > 0) {
-    		   int index = 0;
-    		   for (int j = 0; j < substrates.size(); j++) {
-				if ( fluxArray[i] < fluxArray[substrates.get(j)] ) {
-					index = j+1;
+		ArrayList<Integer> substrates = new ArrayList<>();
+
+		try (Interpreter interp = new SharedInterpreter()) {
+
+			Object[] input1 = new Object[1];
+			String[] exRxnsArray = new String[exRxnsName.size()];
+			for (int i = 0; i < exRxnsName.size(); i++) {
+				exRxnsArray[i] = exRxnsName.get(i);
+			}
+			input1[0]=exRxnsArray;
+
+			Object[] input2 = new Object[1];
+			int[] exDirsArray = new int[exRxnsDirection.size()];
+			for (int i = 0; i < exRxnsDirection.size(); i++) {
+				exDirsArray[i] = exRxnsDirection.get(i);
+			}
+			input2[0]=exDirsArray;
+
+			Object[] input3 = new Object[1];
+			input3[0] = mFileName;
+
+//			interp.exec("import cobra");
+			interp.exec("import numpy as np");
+			interp.exec("import cobra");
+
+			String scriptSubstrateFinder = "/home/thiago/projetos/fiocruz/acbm-service/src/main/resources/static/substrateFinder.py";
+//			Integer[] numbers = {2, 3 , 4};
+//			metabolites, directions, metabolic_model - parametros dentro do script que precisam ser settados
+			interp.set("metabolites", input1);
+			interp.set("directions", input2);
+			interp.set("metabolic_model", input3);
+
+			interp.runScript(scriptSubstrateFinder);
+//			double[] result = (double[]) interp.getValue("result");
+			double[] result = (double[]) ((NDArray) interp.getValue("result")).getData();
+
+			Arrays.stream(result).forEach(System.out::println);
+
+			// call matlab function
+//			Object[] modelOutput = proxy.returningFeval("/files_simulation/substrateFinder", 1, input1, input2, input3);
+//			double[] fluxArray = (double[]) modelOutput[0];
+			double[] fluxArray = result;
+
+
+			for (int i = 0; i < fluxArray.length; i++) {
+				if (fluxArray[i] > 0) {
+					int index = 0;
+					for (int j = 0; j < substrates.size(); j++) {
+						if ( fluxArray[i] < fluxArray[substrates.get(j)] ) {
+							index = j+1;
+						}
+					}
+					substrates.add(index, i);
 				}
 			}
-    		   substrates.add(index, i);
-    	   }
-       }
-       
-       proxy.eval("clear all");
-       proxy.eval("close all");
 
-       // close connection
-       proxy.disconnect();
+			interp.close();
+		}
 
        return substrates;
 	}

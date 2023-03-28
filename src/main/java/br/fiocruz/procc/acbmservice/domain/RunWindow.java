@@ -44,9 +44,9 @@ public class RunWindow {
     //visual version
     private void runGui(Environment environment){
         // Create jframe
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int width = (int) screenSize.getWidth();
-		int height = (int) screenSize.getHeight();
+//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//		int width = (int) screenSize.getWidth();
+//		int height = (int) screenSize.getHeight();
 		
 //        JFrame app = new JFrame("Environment");
 //        app.setBounds(width/2 - (environment.getDimX() + 250)/2, 100, environment.getDimX() + 280 , environment.getDimY()+150);
