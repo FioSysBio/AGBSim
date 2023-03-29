@@ -142,7 +142,7 @@ public class RunSimulationService {
                         //linha 353
                         command.getEat_radius().add(item.getCell().getEatRadius());
 
-                        command.getMFile().add("/files_simulation/" + item.getCell().getMathlabFile());
+                        command.getMFile().add(item.getCell().getMathlabFile());
 
                         command.getBacteria_speed().add(item.getCell().getSpeed());
 
