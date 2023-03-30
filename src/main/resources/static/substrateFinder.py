@@ -5,8 +5,8 @@ from cobra.io import load_model, load_json_model, save_json_model, load_matlab_m
 # from pathlib import Path
 # from cobra import Model, Reaction, Metabolite
 
-def substrateFinder(metabolites, directions, metabolic_model):
-    metabolites = ["glyc_p", "ump_p"]
+def substrateFinder(metabolites, directions, file_metabolic_model):
+#     metabolites = ["glyc_p", "ump_p"]
     # metabolites = ["GLCNtex"]
 #     directions = np.array([-1, 1])
     print('direções: ' + str(directions))
@@ -14,16 +14,18 @@ def substrateFinder(metabolites, directions, metabolic_model):
     # print('qtd de metabolitos: ' + str(len(metabolites)))
     print('metabolitos: ' + str(metabolites))
 
-    print(str('iJO1366TRFBA'))
-    metabolic_model = str('iJO1366TRFBA')
+    metabolic_model = str(file_metabolic_model)
+    print(metabolic_model)
 
     solver = 'glpk'
 
+#     data_dir = './'
     data_dir = '/home/thiago/projetos/fiocruz/acbm-service/src/main/resources/static/'
-    matfile_path = data_dir + 'iJO1366TRFBA.mat'
+    matfile_path = data_dir + metabolic_model
     # model = scipy.io.loadmat('iJO1366TRFBA.mat')
     # model = load_matlab_model(str(matfile_path.resolve()))
-    model = load_model('iJO1366')
+#     model = load_model(matfile_path)
+    model = load_json_model(matfile_path)
     print('--Sucesso ao carregar modelo do MATLAB--')
 
     v_out = np.zeros(len(metabolites))
@@ -97,5 +99,5 @@ def substrateFinder(metabolites, directions, metabolic_model):
     # print(model.metabolites)
     return v_out
 
-result = substrateFinder('metabolites', 'directions', 'metabolic_model')
+result = substrateFinder(metabolites, directions, metabolic_model)
 # print('saída: ' + str(result))
