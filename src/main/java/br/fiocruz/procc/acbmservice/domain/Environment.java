@@ -5,10 +5,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.*;
 import java.util.List;
 
 import br.fiocruz.procc.acbmservice.commands.EnvironmentCommand;
+import jep.JepException;
 import lombok.Getter;
 import lombok.Setter;
 import matlabcontrol.MatlabConnectionException;
@@ -261,7 +263,7 @@ public class Environment {
     	for (int i = 0; i < bacteria_name.size(); i++) {
 			try {
 				Environment.substrate.add(Bacteria.substrateFinder(ex_rxns_name.get(i), ex_rxns_direction.get(i), mFile.get(i)));
-			} catch (MatlabConnectionException | MatlabInvocationException e) {
+			} catch (JepException e) {
 				e.printStackTrace();
 			}
         }
@@ -349,7 +351,11 @@ public class Environment {
         }
 		for (int i = 0; i < bacteria_mass.size(); i++) {
 			double c = bacteria_mass.get(i)/V;
-			c = Double.parseDouble(new DecimalFormat("####.##").format(c));
+
+            DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+            symbols.setDecimalSeparator('.');
+            String newNumber = new DecimalFormat("####.##", symbols).format(c);
+            c = Double.parseDouble(newNumber);
 			bacteria_conc.set(i, c);
 		}
 		
@@ -363,7 +369,11 @@ public class Environment {
         }
 		for (int i = 0; i < metabolite_mass.size(); i++) {
 			double c = (metabolite_mass.get(i)/Bacteria.n_a) * metabolite_mw.get(i) / V;
-			c = Double.parseDouble(new DecimalFormat("####.##").format(c));
+
+            DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+            symbols.setDecimalSeparator('.');
+            String newNumber = new DecimalFormat("####.##", symbols).format(c);
+			c = Double.parseDouble(newNumber);
 			metabolite_conc.set(i, c);
 		}
 	}

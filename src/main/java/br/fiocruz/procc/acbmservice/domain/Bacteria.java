@@ -420,7 +420,7 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 		double miu=0;
 		try {
 			v_out = runModel(v_in, c_in);
-		} catch (MatlabConnectionException | MatlabInvocationException e) {
+		} catch (JepException e) {
 			e.printStackTrace();
 		}
 
@@ -510,67 +510,68 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 		return v_produce;
 	}
 
-	public ArrayList<Double> runModel(ArrayList<Double> f, ArrayList<Double> c)
-			throws MatlabConnectionException, MatlabInvocationException {
-		// create proxy
-        MatlabProxyFactoryOptions options =
-           new MatlabProxyFactoryOptions.Builder()
-               .setUsePreviouslyControlledSession(true)
-               .build();
+	public ArrayList<Double> runModel(ArrayList<Double> f, ArrayList<Double> c)  throws JepException {
 
-       MatlabProxyFactory factory = new MatlabProxyFactory(options);
-       MatlabProxy proxy = factory.getProxy();
+		ArrayList<Double> outputs = new ArrayList<>();
+		Interpreter interp = null;
+		try {
 
-       //setting inputs of matlab function
-       Object[] input1 = new Object[1];
-       String[] exRxnsArray = new String[exRxnsName.size()];
-       for (int i = 0; i < exRxnsName.size(); i++) {
-		   exRxnsArray[i] = exRxnsName.get(i);
-       }
-       input1[0] = exRxnsArray;
+			interp = new SharedInterpreter();
 
-       Object[] input2 = new Object[1];
-       int[] exDirsArray = new int[exRxnsDirection.size()];
-       for (int i = 0; i < exRxnsDirection.size(); i++) {
-		   exDirsArray[i] = exRxnsDirection.get(i);
-       }
-       input2[0] = exDirsArray;
+			//setting inputs of matlab function
+			String[] exRxnsArray = new String[exRxnsName.size()];
+			for (int i = 0; i < exRxnsName.size(); i++) {
+				exRxnsArray[i] = exRxnsName.get(i);
+			}
 
-       Object[] input3 = new Object[1];
-       double[] fluxArray = new double[f.size()];
-       for (int i = 0; i < f.size(); i++) {
-		   fluxArray[i] = f.get(i);
-       }
-       input3[0] = fluxArray;
+			int[] exDirsArray = new int[exRxnsDirection.size()];
+			for (int i = 0; i < exRxnsDirection.size(); i++) {
+				exDirsArray[i] = exRxnsDirection.get(i);
+			}
 
-       Object[] input4 = new Object[1];
-       input4[0] = mFileName;
+			double[] fluxArray = new double[f.size()];
+			for (int i = 0; i < f.size(); i++) {
+				fluxArray[i] = f.get(i);
+			}
 
-       Object[] input5 = new Object[1];
-       input5[0] = Environment.ticks* Environment.getTickTime();
+			int time = Environment.ticks * Environment.getTickTime();
 
-       Object[] input6 = new Object[1];
-       double[] cArray = new double[c.size()];
-       for (int i = 0; i < c.size(); i++) {
-		   cArray[i] = c.get(i);
-       }
-       input6[0] = cArray;
+			double[] cArray = new double[c.size()];
+			for (int i = 0; i < c.size(); i++) {
+				cArray[i] = c.get(i);
+			}
 
-       // call matlab function
-       Object[] modelOutput = proxy.returningFeval("/files_simulation/eat", 1, input1, input2, input3, input4, input5, input6);
-       double[] fluxArray2 = (double[]) modelOutput[0];
-       ArrayList<Double> outputs = new ArrayList<>();
-       for (int i = 0; i < fluxArray2.length; i++) {
-		   outputs.add(fluxArray2[i]);
-	   }
+			//Script para integragação com o CobraPy
+			String scriptEat = "./src/main/resources/static/eat_v2.py";
 
-       proxy.eval("clear all");
-       proxy.eval("close all");
+			//metabolites, directions, metabolic_model - parametros dentro do script que precisam ser settados
+			interp.set("reactions", exRxnsArray);
+			interp.set("directions", exDirsArray);
+			interp.set("v_in", fluxArray);
+			String ext = ".json";
+			interp.set("file_metabolic_model", mFileName + ext);//MUDAR para pegar direto a extensão
+			interp.set("time", time);
+			interp.set("c_in", cArray);
 
-       // close connection
-       proxy.disconnect();
+			// call matlab function
+//			Object[] modelOutput = proxy.returningFeval("/files_simulation/eat", 1, input1, input2, input3, input4, input5, input6);
+			interp.runScript(scriptEat);
+			double[] result = (double[]) ((NDArray) interp.getValue("result")).getData();
+			double[] fluxArray2 = result;
 
-       return outputs;
+			for (int i = 0; i < fluxArray2.length; i++) {
+				outputs.add(fluxArray2[i]);
+			}
+
+		} catch (JepException exc) {
+			exc.printStackTrace();
+		} finally {
+			if(interp != null) {
+				interp.close();
+			}
+		}
+
+		return outputs;
 	}
 
 	public static ArrayList<Integer> substrateFinder( ArrayList<String> exRxnsName, ArrayList<Integer> exRxnsDirection, String mFileName ) throws JepException {
