@@ -26,9 +26,9 @@ public class RunWindow {
     /**
      * @wbp.parser.entryPoint
      */
-    public void execute() {
+    public void execute(String pathLogFile) {
         // create simple Environment object
-        Environment e1 = new Environment();
+        Environment e1 = new Environment(pathLogFile);
     	e1.initialize();
 		try {
 			e1.addEntity();

@@ -53,7 +53,7 @@ public class RunSimulationService {
 
             Environment.setParameters(transform(simulationRunCommand));
             RunWindow w = new RunWindow();
-            w.execute();
+            w.execute("/files_simulation/output_simulation_" + simulationRunCommand.getId() +  ".txt");
 
         } catch (Exception ex) {
             ex.printStackTrace();

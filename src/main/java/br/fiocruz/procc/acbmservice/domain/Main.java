@@ -34,7 +34,7 @@ public class Main {
     	new Runnable() {
     		public void run() {
    				try {
-   					InputWindow window = new InputWindow();
+//   					InputWindow window = new InputWindow();
 //   					window.getFrame().setVisible(true);
    				} catch (Exception e) {
     				e.printStackTrace();

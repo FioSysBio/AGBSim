@@ -22,9 +22,11 @@ import matlabcontrol.MatlabInvocationException;
 public class Environment {
 
     //Constructor
-    public Environment() {
+    public Environment(String pathLogFile) {
         super();
     	mesh = new int[L][D][W];
+
+        this.logFile =  new File(pathLogFile);
     }
     
     //environment mesh
@@ -203,7 +205,9 @@ public class Environment {
     static Properties props = new Properties() ;
 
     //Variable for writing output in a file
+    @Setter@Getter
     File logFile;
+
     PrintWriter writeFile = null;
     
     public void initialize () {    
@@ -213,10 +217,11 @@ public class Environment {
 		}
 
         //create new output file
-        logFile =  new File("/files_simulation/output.txt");
+//        logFile =  new File("/files_simulation/output.txt");
     }
     
     public static void setParameters (EnvironmentCommand command) {
+
     	Environment.bacteria_name = command.getBacteria_name();
     	Environment.bacteria_count = command.getBacteria_count();
     	Environment.bacteria_conc = command.getBacteria_conc();
@@ -248,8 +253,8 @@ public class Environment {
     	Environment.metabolite_color = command.getMetabolite_color();
     	Environment.feeding_points = command.getFeeding_points();
     	Environment.stirredFeed = command.isStirredFeed();
-    	Bacteria.n_real = command.getN_real(); //n_real = Double.parseDouble(metScaleField1.getText()) * Math.pow(10, Integer.parseInt(metScaleField2.getText()));
-    	
+        Bacteria.n_real = command.getN_real(); //n_real = Double.parseDouble(metScaleField1.getText()) * Math.pow(10, Integer.parseInt(metScaleField2.getText()));
+
     	for (int i = 0; i < bacteria_name.size(); i++) {
 			bacteria_died.add(0);
 		}
