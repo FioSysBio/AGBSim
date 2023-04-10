@@ -1,7 +1,11 @@
+import jep.JepConfig;
+import jep.MainInterpreter;
 import jep.NDArray;
+import jep.PyConfig;
 import jep.SharedInterpreter;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -32,13 +36,19 @@ public class TesteUiPythonMain {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
+        File pythonHome = new File("/softwares/anaconda3");
+        PyConfig conf = new PyConfig();
+        conf.setPythonHome(pythonHome.getAbsolutePath());
+        MainInterpreter.setInitParams(conf);
+
         try (Interpreter interp = new SharedInterpreter()) {
             interp.exec("from java.lang import System");
-            interp.exec("s = 'The Search from metabolites is beging'");
+            interp.exec("s = 'Testes da integração com o Python'");
             interp.exec("System.out.println(s)");
             interp.exec("print(s)");
             interp.exec("print(s[1:-1])");
         }
+
 
         try (Interpreter interp = new SharedInterpreter()) {
 
