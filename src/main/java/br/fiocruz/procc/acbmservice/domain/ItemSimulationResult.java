@@ -8,24 +8,29 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
-public class SimulationResult {
+public class ItemSimulationResult {
 
     @Id
     private Long id;
 
-    private String emailOnwer;
+    private Long tick;
 
-    @OneToMany
-    private List<ItemSimulationResult> itemSimulationResultList;
+    private String size;
+
+    private Boolean haveCollision;
+
+    private Double v_in;
+
+    private Double v_out;
+
+    private Double miu;
 
     @ManyToOne
-    @JoinColumn(name = "simulation_id")
-    private Simulation simulation;
+    @JoinColumn(name = "simulation_result_id")
+    private SimulationResult simulationResult;
 }

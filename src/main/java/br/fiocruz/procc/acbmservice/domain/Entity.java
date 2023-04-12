@@ -115,6 +115,8 @@ public abstract class Entity {
 
     public abstract void draw();// {  }
 
+    public abstract void saveToDraw();
+
     public void SetProperty (int x, int y, int z){
         setStepX(x);
         setStepY(y);

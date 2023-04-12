@@ -11,7 +11,6 @@ import jep.NDArray;
 import jep.SharedInterpreter;
 import lombok.Getter;
 import lombok.Setter;
-import matlabcontrol.*;
 
 @Getter
 @Setter
@@ -140,6 +139,34 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 	public void draw(){
 //        Graphics2D g2d = (Graphics2D) g;
         Color color = new Color(getColor_r(), getColor_g(), getColor_b());
+
+        if (l_bac == 0) {
+			System.out.println("Desenho Oval: "
+					+ "Coord x1: " + ((int) (getX() / Environment.getTickX())
+					+ " / Coord y1" + (int) (getY() / Environment.getTickY())
+					+ " / Largura: " + 2 * getSizeX()
+					+ " / Altura: " + 2 * getSizeX())
+					+ " / Cor RGB: " + color.getRGB()
+					+ " / Cor:  R=" + color.getRed() + ", G=" + color.getGreen() + ", B=" + color.getBlue()
+			);
+		} else {
+			System.out.println("Desenho Retângulo Arredondado: "
+					+ "Coord x1: " + ((int) (getX() / Environment.getTickX())
+					+ " / Coord y1" + (int) (getY() / Environment.getTickY())
+					+ " / Largura: " + 2 * getSizeX() + 2
+					+ " / Altura: " + getSizeX() + 1
+					+ "/ Largura ARC: " + 80
+					+ " / Altura ARC: " + 100)
+					+ " / Cor RGB: " + color.getRGB()
+					+ " / Cor:  R=" + color.getRed() + ", G=" + color.getGreen() + ", B=" + color.getBlue()
+			);
+		}
+
+    }
+
+	public void saveToDraw(){
+//        Graphics2D g2d = (Graphics2D) g;
+        Color color = new Color(getColor_r(), getColor_g(), getColor_b());//REVER A COR QUE VAIR VIR DA INTERFACE
 
         if (l_bac == 0) {
 			System.out.println("Desenho Oval: "

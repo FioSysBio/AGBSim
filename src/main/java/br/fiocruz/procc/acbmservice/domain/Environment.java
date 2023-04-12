@@ -13,8 +13,6 @@ import br.fiocruz.procc.acbmservice.commands.EnvironmentCommand;
 import jep.JepException;
 import lombok.Getter;
 import lombok.Setter;
-import matlabcontrol.MatlabConnectionException;
-import matlabcontrol.MatlabInvocationException;
 
 
 @Getter

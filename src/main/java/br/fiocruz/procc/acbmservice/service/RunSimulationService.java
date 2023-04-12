@@ -9,13 +9,10 @@ import br.fiocruz.procc.acbmservice.domain.LocalFeed;
 import br.fiocruz.procc.acbmservice.domain.RunWindow;
 import br.fiocruz.procc.acbmservice.domain.enuns.AmountType;
 import br.fiocruz.procc.acbmservice.domain.enuns.ShapeType;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 
 @Service
