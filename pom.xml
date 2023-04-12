@@ -15,16 +15,9 @@
 	<name>acbm-service</name>
 	<description>Service of ACBM System</description>
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
-
-		<!-- https://mvnrepository.com/artifact/matlabcontrol/matlabcontrol -->
-		<dependency>
-			<groupId>org.matlabcontrol</groupId>
-			<artifactId>matlabcontrol</artifactId>
-			<version>4.1.0</version>
-		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/commons-cli/commons-cli -->
 		<dependency>
