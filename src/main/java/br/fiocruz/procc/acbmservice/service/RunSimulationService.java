@@ -9,6 +9,7 @@ import br.fiocruz.procc.acbmservice.domain.LocalFeed;
 import br.fiocruz.procc.acbmservice.domain.RunWindow;
 import br.fiocruz.procc.acbmservice.domain.enuns.AmountType;
 import br.fiocruz.procc.acbmservice.domain.enuns.ShapeType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
@@ -18,7 +19,10 @@ import java.util.ArrayList;
 @Service
 public class RunSimulationService {
 
-    public String runSimulatoin(SimulationRunCommand simulationRunCommand) {
+    @Autowired
+    private RunService runService;
+
+    public String runSimulation(SimulationRunCommand simulationRunCommand) {
 
         try {
 
@@ -49,8 +53,14 @@ public class RunSimulationService {
             }
 
             Environment.setParameters(transform(simulationRunCommand));
-            RunWindow w = new RunWindow();
-            w.execute("/files_simulation/output_simulation_" + simulationRunCommand.getId() +  ".txt");
+//            RunWindow w = new RunWindow();
+//            w.execute("/files_simulation/output_simulation_" + simulationRunCommand.getId() +  ".txt");
+
+
+            runService.execute("/files_simulation/output_simulation_" + simulationRunCommand.getId() +  ".txt");
+
+
+            System.out.println("Rodou a simulação até o final!!!");
 
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -8,8 +8,11 @@ spring:
     name: acbm-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3310/acbm-service?useSSL=false&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
     url: jdbc:mysql://localhost:3306/acbm-service?useSSL=false&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+#    username: root
     username: acbm
+#    password: procc123
     password: Procc@123
     testWhileIdle: true
     validationQuery: SELECT 1
@@ -26,6 +29,7 @@ spring:
     properties:
       hibernate:
         show_sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
 
 springdoc:
   api-docs:

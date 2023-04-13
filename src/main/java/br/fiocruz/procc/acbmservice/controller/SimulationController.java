@@ -4,8 +4,6 @@ import br.fiocruz.procc.acbmservice.commands.EnvironmentCommand;
 import br.fiocruz.procc.acbmservice.commands.SimulationCreateCommand;
 import br.fiocruz.procc.acbmservice.commands.SimulationRunCommand;
 import br.fiocruz.procc.acbmservice.domain.Simulation;
-import br.fiocruz.procc.acbmservice.domain.SimulationResult;
-import br.fiocruz.procc.acbmservice.repository.SimulationRepository;
 import br.fiocruz.procc.acbmservice.service.RunSimulationService;
 import br.fiocruz.procc.acbmservice.service.SimulationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Tag(name = "Main Controller", description = "ROUTES for API operations.")
@@ -48,9 +45,9 @@ public class SimulationController {
 
         EnvironmentCommand env = new EnvironmentCommand();
 
-//        runSimulationService.runSimulatoin(simulationRunCommand);
+        String result = runSimulationService.runSimulation(simulationRunCommand);
 
-        return ResponseEntity.ok(runSimulationService.runSimulatoin(simulationRunCommand));
+        return ResponseEntity.ok(result);
     }
 
     @ApiResponses(value = {

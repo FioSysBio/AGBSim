@@ -511,7 +511,7 @@ public class Environment {
         Action(ANT);
 
         if (ticks == tickslimit || bacterias.isEmpty()){
-            System.exit(0);
+//            System.exit(0);
             writeFile.close();
         }
     }
