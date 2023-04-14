@@ -10,9 +10,11 @@ public class ColorConverter implements AttributeConverter<Color, String> {
     @Override
     public String convertToDatabaseColumn(Color attribute) {
 //        String hex = "#"+Integer.toHexString(attribute.getRGB()).substring(0,6);
-        String rgb = attribute.toString();
+        String r = String.valueOf(attribute.getRed());
+        String g = String.valueOf(attribute.getGreen());
+        String b = String.valueOf(attribute.getBlue());
 //        log.info("Convert "+attribute+" to "+hex);
-        return rgb;
+        return r + "," + g + "," + b;
     }
 
     @Override
