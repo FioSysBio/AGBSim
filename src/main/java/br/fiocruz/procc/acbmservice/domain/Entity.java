@@ -23,23 +23,23 @@ public abstract class Entity {
     }
 
     //coordinate[mkm]
-    @Getter(AccessLevel.PROTECTED)@Setter(AccessLevel.PROTECTED)
+    @Getter@Setter
     private int x, y, z;
 
     //direction vectors [mkm]
-    @Getter(AccessLevel.PROTECTED)@Setter(AccessLevel.PROTECTED)
+    @Getter@Setter
     protected double dx, dy, dz;
 
     //helpful coordinate [mkm]]
-    @Getter(AccessLevel.PROTECTED)@Setter(AccessLevel.PROTECTED)
+    @Getter@Setter
     private double StepX, StepY, StepZ;
 
     //speed [mkm/hour]
-    @Getter(AccessLevel.PROTECTED)@Setter(AccessLevel.PROTECTED)
+    @Getter@Setter
     private int Speed;
 
     //size : SizeX = SizeY = SizeZ
-    @Getter(AccessLevel.PROTECTED)@Setter(AccessLevel.PROTECTED)
+    @Getter@Setter
     private int SizeX;
 
     //mass
@@ -47,7 +47,7 @@ public abstract class Entity {
     protected double mass;
 
 	//color variable; visual version
-    @Getter(AccessLevel.PROTECTED)@Setter(AccessLevel.PROTECTED)
+    @Getter@Setter
     protected int color_r, color_g, color_b;
 
     // live`s label

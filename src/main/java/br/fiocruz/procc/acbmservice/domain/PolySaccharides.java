@@ -89,14 +89,21 @@ public class PolySaccharides extends Entity {
 
     public void saveToDraw(){
 
-        GradientPaint gp = new GradientPaint((int)(getX()/Environment.getTickX()), (int) (getZ()/Environment.getTickY()), new Color(getColor_r(),getColor_g(),getColor_b(), 180),
-                (int)(getX()/Environment.getTickX()), (int) (getY()/Environment.getTickY()) + getSizeX(), new Color(getColor_r() ,getColor_g(), getColor_b(), 180));
+        GradientPaint gp = new GradientPaint(
+                (int)(getX()/Environment.getTickX()),
+                (int) (getZ()/Environment.getTickY()),
+                new Color(getColor_r(),getColor_g(),getColor_b(), 180),
+                (int)(getX()/Environment.getTickX()),
+                (int) (getY()/Environment.getTickY()) + getSizeX(),
+                new Color(getColor_r() ,getColor_g(), getColor_b(), 180)
+        );
 
         System.out.println("Desenho Retângulo: "
                 + "Coord x1: " + (int) (getX()/Environment.getTickX())
                 + " / Coord y1" + (int) (getY()/Environment.getTickY())
                 + " / Largura: " + getSizeX()
-                + " / Altura: " + getSizeX());
+                + " / Altura: " + getSizeX()
+        );
     }
 
 

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import java.awt.*;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,7 +19,7 @@ import java.awt.*;
 public abstract class ItemToPrintSimulation {
 
     @Id
-    private Long id;
+    private String id;
 
     private Integer tick;
 
