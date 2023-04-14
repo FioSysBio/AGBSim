@@ -4,19 +4,42 @@ import br.fiocruz.procc.acbmservice.commands.EnvironmentCommand;
 import br.fiocruz.procc.acbmservice.commands.SimulationItensInfoCommand;
 import br.fiocruz.procc.acbmservice.commands.SimulationRunCommand;
 import br.fiocruz.procc.acbmservice.domain.Bacteria;
+import br.fiocruz.procc.acbmservice.domain.CellBacillusItemToPrintSimulation;
+import br.fiocruz.procc.acbmservice.domain.CellCocciItemToPrintSimulation;
 import br.fiocruz.procc.acbmservice.domain.Environment;
+import br.fiocruz.procc.acbmservice.domain.ItemToPrintSimulation;
 import br.fiocruz.procc.acbmservice.domain.LocalFeed;
+import br.fiocruz.procc.acbmservice.domain.MetaboliteRectagleItemToPrintSimulation;
+import br.fiocruz.procc.acbmservice.domain.Simulation;
+import br.fiocruz.procc.acbmservice.domain.SimulationResult;
 import br.fiocruz.procc.acbmservice.domain.enuns.AmountType;
 import br.fiocruz.procc.acbmservice.domain.enuns.ShapeType;
+import br.fiocruz.procc.acbmservice.repository.ItemToPrintSimulationRepository;
+import br.fiocruz.procc.acbmservice.repository.SimulationRepository;
+import br.fiocruz.procc.acbmservice.repository.SimulationResultRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 
 @Service
 public class RunSimulationService {
+
+
+    @Autowired
+    private ItemToPrintSimulationRepository itemToPrintSimulationRepository;
+
+    @Autowired
+    private SimulationRepository simulationRepository;
+
+    @Autowired
+    private SimulationResultRepository simulationResultRepository;
+
+    private static final String pathFileLog = "/files_simulation/output_simulation_";
 
     private static int cont = 0;
 
@@ -26,21 +49,25 @@ public class RunSimulationService {
 
         try {
 
+            //VALIDAÇÃO PARA VERIFICAR SE O OBJETO ITEM-SIMULATION NÃO É NULO NEM VAZIO
             if (simulationRunCommand.getItensSimulation() == null || simulationRunCommand.getItensSimulation().size() == 0) {
                 return "Items for simulation are missing!!!";
             }
 
-            Boolean temItens = true;
+//            Boolean temItens = true;
+            //VALIDAÇÃO PARA VERIFICAR SE EXISTEM ITENS PARA SIMULAÇÃO (TANTO CELULAS, QUANTO METABOLITOS)
             for (SimulationItensInfoCommand item : simulationRunCommand.getItensSimulation()) {
+                //VALIDAÇÃO PARA VERIFICAR SE EXISTEM CELULAS
                 if (item.getCell() == null) {
-                            return "Missing cells for this simulation!!!";
+                    return "Missing cells for this simulation!!!";
                 }
-
+                //VALIDAÇÃO PARA VERIFICAR SE EXISTEM METABOLITOS
                 if (item.getMetabolites() == null || item.getMetabolites().size() == 0) {
                     return "Missing metabolites for this simulation!!!";
                 }
             }
 
+            //VALIDAÇÃO PARA VERIFICAR SE AS COORDENADAS DADAS PELO USUÁRIO SÃO VÁLIDAS
             if (simulationRunCommand.getIsLocalFeedSimulation()) {
                 for (LocalFeed ilocal : simulationRunCommand.getLocalFeeds()) {
                     if (ilocal.getXFeedField() > simulationRunCommand.getEnvironmentLength() &&
@@ -52,13 +79,12 @@ public class RunSimulationService {
                 }
             }
 
+
+            SimulationResult simulationResult = newSimulationResult(simulationRunCommand);
+
             Environment.setParameters(transform(simulationRunCommand));
-//            RunWindow w = new RunWindow();
-//            w.execute("/files_simulation/output_simulation_" + simulationRunCommand.getId() +  ".txt");
 
-
-            this.executeEnvironmentsSimulation("/files_simulation/output_simulation_" + simulationRunCommand.getId() +  ".txt");
-
+            executeEnvironmentsSimulation(pathFileLog + simulationRunCommand.getId() +  ".txt", simulationRunCommand, simulationResult);
 
             System.out.println("Rodou a simulação até o final!!!");
 
@@ -69,6 +95,23 @@ public class RunSimulationService {
         }
 
         return "Simulation run start with sucess!";
+    }
+
+    private SimulationResult newSimulationResult(SimulationRunCommand simulationRunCommand) {
+
+        SimulationResult simulationResult = new SimulationResult();
+
+        Optional<Simulation> simulation = simulationRepository.findById(simulationRunCommand.getId());
+        if (!simulation.isPresent())
+            new Exception("Simulation definition not exist!");
+
+        simulationResult.setSimulation(simulation.get());
+        simulationResult.setEmailOnwer(simulationRunCommand.getEmailOnwer());
+        simulationResult.setIsFinish(false);
+
+        SimulationResult simulationResultSaved = simulationResultRepository.save(simulationResult);
+
+        return simulationResultSaved;
     }
 
     private EnvironmentCommand transform(SimulationRunCommand simulationRunCommand) {
@@ -266,8 +309,7 @@ public class RunSimulationService {
         return command;
     }
 
-
-    public void executeEnvironmentsSimulation(String pathLogFile) {
+    public void executeEnvironmentsSimulation(String pathLogFile, SimulationRunCommand simulationRunCommand, SimulationResult simulationResult) {
         // create simple Environment object
         Environment e1 = new Environment(pathLogFile);
         e1.initialize();
@@ -276,10 +318,10 @@ public class RunSimulationService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        graphicDataGeneration(e1);
+        graphicDataGeneration(e1, simulationRunCommand, simulationResult);
     }
 
-    private void graphicDataGeneration(Environment environment){
+    private void graphicDataGeneration(Environment environment, SimulationRunCommand simulationRunCommand, SimulationResult simulationResult){
 
         t = new Thread(new Runnable() {
             @Override
@@ -302,6 +344,10 @@ public class RunSimulationService {
 
                             System.out.println("Simulação " + num + " terminou com sucesso!");
 
+                            simulationResult.setIsFinish(true);
+
+                            simulationResultRepository.save(simulationResult);
+
                             return;
                         }
 
@@ -319,6 +365,20 @@ public class RunSimulationService {
                                         + " / Cor RGB: " + c.getRGB()
                                         + " / Cor:  R=" + c.getRed() + ", G=" + c.getGreen() + ", B=" + c.getBlue()
                                 );
+                                CellCocciItemToPrintSimulation item = new CellCocciItemToPrintSimulation();
+
+                                item.setSimulationResult(simulationResult);
+                                item.setTick(environment.getTicks());
+                                item.setShapeType(ShapeType.COCCI);
+                                item.setCoordX(environment.getDimX() + 25);
+                                item.setCoordY(25 * ( i + 2 ));
+                                item.setWidth(10);
+                                item.setHeight(10);
+                                item.setColor(c);//DEFINIR DE ONDE VIRÁ A COR DO PONTO
+
+                                itemToPrintSimulationRepository.save(item);//SAVE TO VIEW
+
+
                             } else {
                                 System.out.println("Desenho Retângulo Arredondado: "
                                         + "Coord x1: " + environment.getDimX() + 25
@@ -333,6 +393,21 @@ public class RunSimulationService {
                             }
                             System.out.println(environment.getBacteria_name().get(i));
                             System.out.println(environment.getBacteria_conc().get(i).toString() + " (g/L)");
+
+                            CellBacillusItemToPrintSimulation item = new CellBacillusItemToPrintSimulation();
+
+                            item.setSimulationResult(simulationResult);
+                            item.setTick(environment.getTicks());
+                            item.setShapeType(ShapeType.BACILLI);
+                            item.setCoordX(environment.getDimX() + 25);
+                            item.setCoordY(25 * ( i + 2 ));
+                            item.setWidth(12);
+                            item.setHeight(6);
+                            item.setArcWidth(80);
+                            item.setArcHeight(100);
+                            item.setColor(c);//DEFINIR DE ONDE VIRÁ A COR DO PONTO
+
+                            itemToPrintSimulationRepository.save(item);//SAVE TO VIEW
                         }
 
                         int offset = (environment.getBacteria_name().size()+2)*25+8;
@@ -347,6 +422,17 @@ public class RunSimulationService {
                             );
                             System.out.println(environment.getMetabolite_name().get(i));
                             System.out.println(environment.getMetabolite_conc().get(i).toString() + " (g/L)");
+
+                            MetaboliteRectagleItemToPrintSimulation item = new MetaboliteRectagleItemToPrintSimulation();
+                            item.setSimulationResult(simulationResult);
+                            item.setTick(environment.getTicks());
+                            item.setShapeType(ShapeType.BACILLI);
+                            item.setCoordX(environment.getDimX() + 25);
+                            item.setCoordY(25 * ( i + 2 ));
+                            item.setWidth(12);
+                            item.setColor(c);//DEFINIR DE ONDE VIRÁ A COR DO PONTO
+
+                            itemToPrintSimulationRepository.save(item);//SAVE TO VIEW
                         }
 
                         Thread.yield();
