@@ -3,15 +3,7 @@ package br.fiocruz.procc.acbmservice.service;
 import br.fiocruz.procc.acbmservice.commands.EnvironmentCommand;
 import br.fiocruz.procc.acbmservice.commands.SimulationItensInfoCommand;
 import br.fiocruz.procc.acbmservice.commands.SimulationRunCommand;
-import br.fiocruz.procc.acbmservice.domain.Bacteria;
-import br.fiocruz.procc.acbmservice.domain.CellBacillusItemToPrintSimulation;
-import br.fiocruz.procc.acbmservice.domain.CellCocciItemToPrintSimulation;
-import br.fiocruz.procc.acbmservice.domain.Environment;
-import br.fiocruz.procc.acbmservice.domain.ItemToPrintSimulation;
-import br.fiocruz.procc.acbmservice.domain.LocalFeed;
-import br.fiocruz.procc.acbmservice.domain.MetaboliteRectagleItemToPrintSimulation;
-import br.fiocruz.procc.acbmservice.domain.Simulation;
-import br.fiocruz.procc.acbmservice.domain.SimulationResult;
+import br.fiocruz.procc.acbmservice.domain.*;
 import br.fiocruz.procc.acbmservice.domain.enuns.AmountType;
 import br.fiocruz.procc.acbmservice.domain.enuns.ShapeType;
 import br.fiocruz.procc.acbmservice.repository.ItemToPrintSimulationRepository;
@@ -23,7 +15,9 @@ import org.springframework.stereotype.Service;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -105,6 +99,7 @@ public class RunSimulationService {
         if (!simulation.isPresent())
             new Exception("Simulation definition not exist!");
 
+        simulationResult.setId(UUID.randomUUID().toString());
         simulationResult.setSimulation(simulation.get());
         simulationResult.setEmailOnwer(simulationRunCommand.getEmailOnwer());
         simulationResult.setIsFinish(false);
@@ -338,6 +333,10 @@ public class RunSimulationService {
                         //TAMANHO DO QUADRO: 0, 0, environment.getDimX() , environment.getDimY()
                         // move and draw object
                         environment.draw();
+
+                        //METODO CRIADO PARA PERSISTIR AS ENTIDADES QUE SÃO PARA DESENHAR
+                        draToPrint();
+
                         environment.actionCore();
 
                         if (environment.getTicks() == environment.getTickslimit() || environment.getBacterias().isEmpty()){
@@ -365,8 +364,10 @@ public class RunSimulationService {
                                         + " / Cor RGB: " + c.getRGB()
                                         + " / Cor:  R=" + c.getRed() + ", G=" + c.getGreen() + ", B=" + c.getBlue()
                                 );
+
                                 CellCocciItemToPrintSimulation item = new CellCocciItemToPrintSimulation();
 
+                                item.setId(UUID.randomUUID().toString());
                                 item.setSimulationResult(simulationResult);
                                 item.setTick(environment.getTicks());
                                 item.setShapeType(ShapeType.COCCI);
@@ -395,7 +396,7 @@ public class RunSimulationService {
                             System.out.println(environment.getBacteria_conc().get(i).toString() + " (g/L)");
 
                             CellBacillusItemToPrintSimulation item = new CellBacillusItemToPrintSimulation();
-
+                            item.setId(UUID.randomUUID().toString());
                             item.setSimulationResult(simulationResult);
                             item.setTick(environment.getTicks());
                             item.setShapeType(ShapeType.BACILLI);
@@ -424,6 +425,7 @@ public class RunSimulationService {
                             System.out.println(environment.getMetabolite_conc().get(i).toString() + " (g/L)");
 
                             MetaboliteRectagleItemToPrintSimulation item = new MetaboliteRectagleItemToPrintSimulation();
+                            item.setId(UUID.randomUUID().toString());
                             item.setSimulationResult(simulationResult);
                             item.setTick(environment.getTicks());
                             item.setShapeType(ShapeType.BACILLI);
@@ -441,6 +443,83 @@ public class RunSimulationService {
                     finally {
 
                     }
+                }
+            }
+
+            private void draToPrint() {
+                List<Entity> newList = new ArrayList<Entity>() {
+                    {
+                        addAll(environment.getBacterias());
+                        addAll(environment.getPS());
+                        addAll(environment.getANT());
+                    }
+                };
+
+                for(Entity ent : newList) {
+                    ent.draw();
+                }
+
+                for (Entity ent : environment.getBacterias()) {
+
+                    Bacteria bac = (Bacteria)ent;
+                    if (bac.getL_bac() == 0) {
+
+                        CellCocciItemToPrintSimulation item = new CellCocciItemToPrintSimulation();
+
+                        item.setId(UUID.randomUUID().toString());
+                        item.setSimulationResult(simulationResult);
+                        item.setTick(environment.getTicks());
+                        item.setShapeType(ShapeType.COCCI);
+                        item.setCoordX((int) (bac.getX() / environment.getTickX() ) );
+                        item.setCoordY((int) (bac.getY() / environment.getTickY() ) );
+                        item.setWidth( 2 * bac.getSizeX() );
+                        item.setHeight( 2 * bac.getSizeX() );
+                        item.setColor(Color.BLUE);//DEFINIR DE ONDE VIRÁ A COR DO PONTO
+
+                        itemToPrintSimulationRepository.save(item);//SAVE TO VIEW
+
+                    } else {
+
+                        CellBacillusItemToPrintSimulation item = new CellBacillusItemToPrintSimulation();
+
+                        item.setId(UUID.randomUUID().toString());
+                        item.setSimulationResult(simulationResult);
+                        item.setTick(environment.getTicks());
+                        item.setShapeType(ShapeType.COCCI);
+                        item.setCoordX((int) (bac.getX() / environment.getTickX() ) );
+                        item.setCoordY((int) (bac.getY() / environment.getTickY() ) );
+                        item.setWidth( 2 * bac.getSizeX() + 2 );
+                        item.setHeight( bac.getSizeX() + 1 );
+                        item.setArcWidth(80);
+                        item.setArcHeight(100);
+                        item.setColor(Color.RED);//DEFINIR DE ONDE VIRÁ A COR DO PONTO
+
+                        itemToPrintSimulationRepository.save(item);//SAVE TO VIEW
+                    }
+                }
+
+                for (Entity ent : environment.getPS()) {
+
+                    PolySaccharides polsac = (PolySaccharides)ent;
+
+                    MetaboliteRectagleItemToPrintSimulation item = new MetaboliteRectagleItemToPrintSimulation();
+
+                    item.setId(UUID.randomUUID().toString());
+                    item.setSimulationResult(simulationResult);
+                    item.setTick(environment.getTicks());
+                    item.setShapeType(ShapeType.COCCI);
+                    item.setCoordX((int) (polsac.getX() / environment.getTickX() ) );
+                    item.setCoordY((int) (polsac.getY() / environment.getTickY() ) );
+                    item.setWidth( polsac.getSizeX() );
+                    item.setHeight( polsac.getSizeX() );
+
+                    item.setColor(Color.YELLOW);//DEFINIR DE ONDE VIRÁ A COR DO PONTO
+
+                    itemToPrintSimulationRepository.save(item);//SAVE TO VIEW
+                }
+
+                for (Entity bac : environment.getANT()) {
+
                 }
             }
         });

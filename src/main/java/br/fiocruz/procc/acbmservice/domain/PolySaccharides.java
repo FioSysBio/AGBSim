@@ -8,6 +8,7 @@ import java.util.Random;
 public class PolySaccharides extends Entity {
 	
 	private String name;
+
 	private int type;
 
     // /Speed variable
