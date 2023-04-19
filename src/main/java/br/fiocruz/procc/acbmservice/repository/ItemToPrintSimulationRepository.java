@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ItemToPrintSimulationRepository extends CrudRepository<ItemToPrintSimulation,Long> {
+
+    void deleteAllByTickLessThanEqual(Integer tick);
 }

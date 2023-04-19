@@ -23,10 +23,12 @@ public class Environment {
     public Environment(String pathLogFile) {
         super();
     	mesh = new int[L][D][W];
-
+        qtdTicks = 0;
         this.logFile =  new File(pathLogFile);
     }
-    
+
+    static Integer qtdTicks;
+
     //environment mesh
     private int[][][] mesh;
 
