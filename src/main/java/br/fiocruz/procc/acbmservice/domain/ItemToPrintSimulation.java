@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import java.awt.*;
-import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,7 +38,8 @@ public abstract class ItemToPrintSimulation {
     @Convert(converter = ColorConverter.class)
     private Color color;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
+//    @ManyToOne
     @JoinColumn(name = "simulation_result_id")
     private SimulationResult simulationResult;
 }
