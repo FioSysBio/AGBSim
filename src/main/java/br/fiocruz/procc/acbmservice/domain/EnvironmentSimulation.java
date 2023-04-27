@@ -17,10 +17,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Environment {
+public class EnvironmentSimulation {
 
     //Constructor
-    public Environment(String pathLogFile) {
+    public EnvironmentSimulation(String pathLogFile) {
         super();
     	mesh = new int[L][D][W];
         qtdTicks = 0;
@@ -222,37 +222,37 @@ public class Environment {
     
     public static void setParameters (EnvironmentCommand command) {
 
-    	Environment.bacteria_name = command.getBacteria_name();
-    	Environment.bacteria_count = command.getBacteria_count();
-    	Environment.bacteria_conc = command.getBacteria_conc();
-    	Environment.bacteria_scale = command.getBacteria_scale();
+    	EnvironmentSimulation.bacteria_name = command.getBacteria_name();
+    	EnvironmentSimulation.bacteria_count = command.getBacteria_count();
+    	EnvironmentSimulation.bacteria_conc = command.getBacteria_conc();
+    	EnvironmentSimulation.bacteria_scale = command.getBacteria_scale();
 //    	Environment.doubling_time = RunWindow.doubling_time;
-    	Environment.r_bac = command.getR_bac();
-    	Environment.l_bac = command.getL_bac();
-    	Environment.v_bac = command.getV_bac();
-    	Environment.m_bac = command.getM_bac();
-    	Environment.eat_radius = command.getEat_radius();
-    	Environment.mFile = command.getMFile();
-    	Environment.bacteria_speed = command.getBacteria_speed();
-    	Environment.t_survive = command.getT_survive();
-    	Environment.r_search = command.getR_search();
-    	Environment.metabolite_name = command.getMetabolite_name();
-    	Environment.metabolite_count = command.getMetabolite_count();
-    	Environment.metabolite_conc = command.getMetabolite_conc();
-    	Environment.metabolite_mw = command.getMetabolite_mw();
-    	Environment.metabolite_speed = command.getMetabolite_speed();
-    	Environment.metabolite_uub = command.getMetabolite_uub();
-    	Environment.ex_rxns_name = command.getEx_rxns_name();
-    	Environment.ex_rxns_direction = command.getEx_rxns_direction();
-    	Environment.tickslimit = command.getTickslimit();
-    	Environment.tickTime = command.getTickTime();
-    	Environment.L = command.getL();
-    	Environment.D = command.getD();
-    	Environment.W = command.getW();
-    	Environment.bacteria_color = command.getBacteria_color();
-    	Environment.metabolite_color = command.getMetabolite_color();
-    	Environment.feeding_points = command.getFeeding_points();
-    	Environment.stirredFeed = command.isStirredFeed();
+    	EnvironmentSimulation.r_bac = command.getR_bac();
+    	EnvironmentSimulation.l_bac = command.getL_bac();
+    	EnvironmentSimulation.v_bac = command.getV_bac();
+    	EnvironmentSimulation.m_bac = command.getM_bac();
+    	EnvironmentSimulation.eat_radius = command.getEat_radius();
+    	EnvironmentSimulation.mFile = command.getMFile();
+    	EnvironmentSimulation.bacteria_speed = command.getBacteria_speed();
+    	EnvironmentSimulation.t_survive = command.getT_survive();
+    	EnvironmentSimulation.r_search = command.getR_search();
+    	EnvironmentSimulation.metabolite_name = command.getMetabolite_name();
+    	EnvironmentSimulation.metabolite_count = command.getMetabolite_count();
+    	EnvironmentSimulation.metabolite_conc = command.getMetabolite_conc();
+    	EnvironmentSimulation.metabolite_mw = command.getMetabolite_mw();
+    	EnvironmentSimulation.metabolite_speed = command.getMetabolite_speed();
+    	EnvironmentSimulation.metabolite_uub = command.getMetabolite_uub();
+    	EnvironmentSimulation.ex_rxns_name = command.getEx_rxns_name();
+    	EnvironmentSimulation.ex_rxns_direction = command.getEx_rxns_direction();
+    	EnvironmentSimulation.tickslimit = command.getTickslimit();
+    	EnvironmentSimulation.tickTime = command.getTickTime();
+    	EnvironmentSimulation.L = command.getL();
+    	EnvironmentSimulation.D = command.getD();
+    	EnvironmentSimulation.W = command.getW();
+    	EnvironmentSimulation.bacteria_color = command.getBacteria_color();
+    	EnvironmentSimulation.metabolite_color = command.getMetabolite_color();
+    	EnvironmentSimulation.feeding_points = command.getFeeding_points();
+    	EnvironmentSimulation.stirredFeed = command.isStirredFeed();
         Bacteria.n_real = command.getN_real(); //n_real = Double.parseDouble(metScaleField1.getText()) * Math.pow(10, Integer.parseInt(metScaleField2.getText()));
 
     	for (int i = 0; i < bacteria_name.size(); i++) {
@@ -267,7 +267,7 @@ public class Environment {
     	
     	for (int i = 0; i < bacteria_name.size(); i++) {
 			try {
-				Environment.substrate.add(Bacteria.substrateFinder(ex_rxns_name.get(i), ex_rxns_direction.get(i), mFile.get(i)));
+				EnvironmentSimulation.substrate.add(Bacteria.substrateFinder(ex_rxns_name.get(i), ex_rxns_direction.get(i), mFile.get(i)));
 			} catch (JepException e) {
 				e.printStackTrace();
 			}
@@ -336,9 +336,9 @@ public class Environment {
 		    	for (int j = 0; j < count-bacteria_count.get(i); j++) {
 		    		Bacteria b = new Bacteria(new Random().nextInt(L), new Random().nextInt(W), new Random().nextInt(D), i );
 		    		b.setMass(m_dummy);
-		    		b.setTimeEat(Environment.ticks + 1);
+		    		b.setTimeEat(EnvironmentSimulation.ticks + 1);
 		    	    bacterias.add(b);
-		    	    Environment.bacteria_count.set(i, Environment.bacteria_count.get(i) +1 );
+		    	    EnvironmentSimulation.bacteria_count.set(i, EnvironmentSimulation.bacteria_count.get(i) +1 );
 		    	}
 			}
 		}

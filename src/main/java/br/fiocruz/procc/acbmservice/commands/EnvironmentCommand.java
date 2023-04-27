@@ -1,7 +1,7 @@
 package br.fiocruz.procc.acbmservice.commands;
 
 import br.fiocruz.procc.acbmservice.domain.Entity;
-import br.fiocruz.procc.acbmservice.domain.Environment;
+import br.fiocruz.procc.acbmservice.domain.EnvironmentSimulation;
 import lombok.Data;
 import java.awt.*;
 import java.util.ArrayList;
@@ -118,7 +118,7 @@ public class EnvironmentCommand {
     //one molecule in simulations represent this amount in reality
     public double n_real = 1.23 * Math.pow(10, 11);
 
-    public static EnvironmentCommand convert (Environment env) {
+    public static EnvironmentCommand convert (EnvironmentSimulation env) {
 
         EnvironmentCommand command = new EnvironmentCommand();
 

@@ -6,7 +6,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.Random;
 import java.util.List;
@@ -108,7 +107,7 @@ public abstract class Entity {
     }
 
     //action for each program step
-    public abstract void tick(List<Entity> PS, List<Entity> ANT, List<Entity> B, Environment g)
+    public abstract void tick(List<Entity> PS, List<Entity> ANT, List<Entity> B, EnvironmentSimulation g)
             throws IOException ;
     //draw object; visual version
 //    public abstract void draw(Graphics g);// {  }
@@ -138,27 +137,27 @@ public abstract class Entity {
         setDy(Math.cos(phi) * Math.sin(teta));
         setDx(Math.cos(phi) * Math.cos(teta));
 
-        setStepX(getStepX() - getSpeed()/Environment.getNorm() * getDx());
-        setStepY(getStepY() - getSpeed()/Environment.getNorm() * getDy());
-        setStepZ(getStepZ() - getSpeed()/Environment.getNorm() * getDz());
+        setStepX(getStepX() - getSpeed()/ EnvironmentSimulation.getNorm() * getDx());
+        setStepY(getStepY() - getSpeed()/ EnvironmentSimulation.getNorm() * getDy());
+        setStepZ(getStepZ() - getSpeed()/ EnvironmentSimulation.getNorm() * getDz());
     }
     
     //for closed system, boundary of reactor    
     public void wall() {
     	
-    	while (this.getStepX() < 0 || this.getStepX() > Environment.getL() || this.getStepY() < 0 || this.getStepY() > Environment.getW() || this.getStepZ() < 0 || this.getStepZ() > Environment.getD()) {
+    	while (this.getStepX() < 0 || this.getStepX() > EnvironmentSimulation.getL() || this.getStepY() < 0 || this.getStepY() > EnvironmentSimulation.getW() || this.getStepZ() < 0 || this.getStepZ() > EnvironmentSimulation.getD()) {
     		if (this.getStepX() < 0)
     			setStepX(-this.getStepX());
-    		if (this.getStepX() > Environment.getL())
-    			setStepX(Environment.getL() - (this.getStepX() - Environment.getL()));
+    		if (this.getStepX() > EnvironmentSimulation.getL())
+    			setStepX(EnvironmentSimulation.getL() - (this.getStepX() - EnvironmentSimulation.getL()));
     		if (this.getStepY() < 0)
     			setStepY(-this.getStepY());
-    		if (this.getStepY() > Environment.getW())
-    			setStepY(Environment.getW() - (this.getStepY() - Environment.getW()));
+    		if (this.getStepY() > EnvironmentSimulation.getW())
+    			setStepY(EnvironmentSimulation.getW() - (this.getStepY() - EnvironmentSimulation.getW()));
     		if (this.getStepZ() < 0)
     			setStepZ(-this.getStepZ());
-    		if (this.getStepZ() > Environment.getD())
-    			setStepZ(Environment.getD() - (this.getStepZ() - Environment.getD()));
+    		if (this.getStepZ() > EnvironmentSimulation.getD())
+    			setStepZ(EnvironmentSimulation.getD() - (this.getStepZ() - EnvironmentSimulation.getD()));
     	}
 
     		

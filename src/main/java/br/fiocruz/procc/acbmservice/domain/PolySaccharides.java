@@ -22,7 +22,7 @@ public class PolySaccharides extends Entity {
     public PolySaccharides (int x, int y, int z, int type) {
         super(x, y, z);
         this.type = type;
-        this.name = Environment.metabolite_name.get(type);
+        this.name = EnvironmentSimulation.metabolite_name.get(type);
         setProperty();
     }
     
@@ -44,7 +44,7 @@ public class PolySaccharides extends Entity {
 
 	public void setProperty() {
         setSizeX(2);
-        setColor(Environment.metabolite_color.get(type).getRed(), Environment.metabolite_color.get(type).getGreen(), Environment.metabolite_color.get(type).getBlue());
+        setColor(EnvironmentSimulation.metabolite_color.get(type).getRed(), EnvironmentSimulation.metabolite_color.get(type).getGreen(), EnvironmentSimulation.metabolite_color.get(type).getBlue());
         setMass(new Random().nextGaussian()*(Bacteria.n_real/7)+(Bacteria.n_real));
 //        setMass(Bacteria.n_real);
 
@@ -54,7 +54,7 @@ public class PolySaccharides extends Entity {
     public void MoveFlux (double Speed_out,double Speed_trans){
 
 //        setStepX(getStepX() + Speed_out);
-        if (getStepY() > Environment.getW()/2){
+        if (getStepY() > EnvironmentSimulation.getW()/2){
             setStepY(getStepY() + Speed_trans);
         }
         else {
@@ -78,12 +78,12 @@ public class PolySaccharides extends Entity {
 
     public void draw(){
 
-        GradientPaint gp = new GradientPaint((int)(getX()/Environment.getTickX()), (int) (getZ()/Environment.getTickY()), new Color(getColor_r(),getColor_g(),getColor_b(), 180),
-                (int)(getX()/Environment.getTickX()), (int) (getY()/Environment.getTickY()) + getSizeX(), new Color(getColor_r() ,getColor_g(), getColor_b(), 180));
+        GradientPaint gp = new GradientPaint((int)(getX()/ EnvironmentSimulation.getTickX()), (int) (getZ()/ EnvironmentSimulation.getTickY()), new Color(getColor_r(),getColor_g(),getColor_b(), 180),
+                (int)(getX()/ EnvironmentSimulation.getTickX()), (int) (getY()/ EnvironmentSimulation.getTickY()) + getSizeX(), new Color(getColor_r() ,getColor_g(), getColor_b(), 180));
 
         System.out.println("Desenho Retângulo: "
-                + "Coord x1: " + (int) (getX()/Environment.getTickX())
-                + " / Coord y1" + (int) (getY()/Environment.getTickY())
+                + "Coord x1: " + (int) (getX()/ EnvironmentSimulation.getTickX())
+                + " / Coord y1" + (int) (getY()/ EnvironmentSimulation.getTickY())
                 + " / Largura: " + getSizeX()
                 + " / Altura: " + getSizeX());
     }
@@ -91,17 +91,17 @@ public class PolySaccharides extends Entity {
     public void saveToDraw(){
 
         GradientPaint gp = new GradientPaint(
-                (int)(getX()/Environment.getTickX()),
-                (int) (getZ()/Environment.getTickY()),
+                (int)(getX()/ EnvironmentSimulation.getTickX()),
+                (int) (getZ()/ EnvironmentSimulation.getTickY()),
                 new Color(getColor_r(),getColor_g(),getColor_b(), 180),
-                (int)(getX()/Environment.getTickX()),
-                (int) (getY()/Environment.getTickY()) + getSizeX(),
+                (int)(getX()/ EnvironmentSimulation.getTickX()),
+                (int) (getY()/ EnvironmentSimulation.getTickY()) + getSizeX(),
                 new Color(getColor_r() ,getColor_g(), getColor_b(), 180)
         );
 
         System.out.println("Desenho Retângulo: "
-                + "Coord x1: " + (int) (getX()/Environment.getTickX())
-                + " / Coord y1" + (int) (getY()/Environment.getTickY())
+                + "Coord x1: " + (int) (getX()/ EnvironmentSimulation.getTickX())
+                + " / Coord y1" + (int) (getY()/ EnvironmentSimulation.getTickY())
                 + " / Largura: " + getSizeX()
                 + " / Altura: " + getSizeX()
         );
@@ -110,7 +110,7 @@ public class PolySaccharides extends Entity {
 
     //action for each program tick
     public void tick(java.util.List<Entity> PS, java.util.List<Entity> A,
-                     java.util.List<Entity> B, Environment g)
+                     java.util.List<Entity> B, EnvironmentSimulation g)
             throws IOException {
     	RandomMove();
     	wall();
