@@ -10,12 +10,12 @@ import br.fiocruz.procc.acbmservice.repository.ItemToPrintSimulationRepository;
 import br.fiocruz.procc.acbmservice.repository.SimulationRepository;
 import br.fiocruz.procc.acbmservice.repository.SimulationResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,6 +23,12 @@ import java.util.UUID;
 @Service
 public class RunSimulationService {
 
+    @Autowired
+    private Environment env;
+
+    private Boolean turnOnToPrint;// = Boolean.valueOf(env.getProperty("turnOnPrint"));
+
+    private Boolean turnOnToDraw; // = Boolean.valueOf(env.getProperty("turnOnDraw"));
 
     @Autowired
     private ItemToPrintSimulationRepository itemToPrintSimulationRepository;
@@ -40,6 +46,11 @@ public class RunSimulationService {
     Thread t;
 
     public String runSimulation(SimulationRunCommand simulationRunCommand) {
+
+
+        turnOnToPrint = Boolean.valueOf(env.getProperty("turnOnPrint"));
+
+        turnOnToDraw = Boolean.valueOf(env.getProperty("turnOnDraw"));
 
         try {
 
@@ -76,7 +87,7 @@ public class RunSimulationService {
 
             SimulationResult simulationResult = newSimulationResult(simulationRunCommand);
 
-            Environment.setParameters(transform(simulationRunCommand));
+            EnvironmentSimulation.setParameters(transform(simulationRunCommand));
 
             executeEnvironmentsSimulation(pathFileLog + simulationRunCommand.getId() +  ".txt", simulationRunCommand, simulationResult);
 
@@ -306,7 +317,7 @@ public class RunSimulationService {
 
     public void executeEnvironmentsSimulation(String pathLogFile, SimulationRunCommand simulationRunCommand, SimulationResult simulationResult) {
         // create simple Environment object
-        Environment e1 = new Environment(pathLogFile);
+        EnvironmentSimulation e1 = new EnvironmentSimulation(pathLogFile);
         e1.initialize();
         try {
             e1.addEntity();
@@ -316,7 +327,7 @@ public class RunSimulationService {
         graphicDataGeneration(e1, simulationRunCommand, simulationResult);
     }
 
-    private void graphicDataGeneration(Environment environment, SimulationRunCommand simulationRunCommand, SimulationResult simulationResult){
+    private void graphicDataGeneration(EnvironmentSimulation environmentSimulation, SimulationRunCommand simulationRunCommand, SimulationResult simulationResult){
 
         t = new Thread(new Runnable() {
             @Override
@@ -335,11 +346,13 @@ public class RunSimulationService {
 //                        environment.draw();
 
                         //METODO CRIADO PARA PERSISTIR AS ENTIDADES QUE SÃO PARA DESENHAR
-                        draToPrint(environment, simulationResult);
+                        if (turnOnToDraw) {
+                            draToPrint(environmentSimulation, simulationResult);
+                        }
 
-                        environment.actionCore();
+                        environmentSimulation.actionCore();
 
-                        if (environment.getTicks() == environment.getTickslimit() || environment.getBacterias().isEmpty()){
+                        if (environmentSimulation.getTicks() == environmentSimulation.getTickslimit() || environmentSimulation.getBacterias().isEmpty()){
 
                             System.out.println("Simulação " + num + " terminou com sucesso!");
 
@@ -351,97 +364,112 @@ public class RunSimulationService {
                         }
 
                         // TEXTO PARA MOSTRAR NO RESULTADO("time:  " + environment.ticks*environment.getTickTime() + " min", environment.getDimX() + 25, 25);
-                        System.out.println("time: " + environment.getTicks() * environment.getTickTime() + " min");
+                        System.out.println("time: " + environmentSimulation.getTicks() * environmentSimulation.getTickTime() + " min");
 
-                        for (int i = 0; i < environment.getBacteria_name().size(); i++) {
-                            Color c = new Color(environment.getBacteria_color().get(i).getRed(), environment.getBacteria_color().get(i).getGreen(), environment.getBacteria_color().get(i).getBlue());
-                            if (environment.getL_bac().get(i) == 0) {
-//                                System.out.println("Desenho Oval: "
-//                                        + "Coord x1: " + environment.getDimX() + 25
-//                                        + " / Coord y1" + 25 * ( i + 2 )
-//                                        + " / Largura: " + 10
-//                                        + " / Altura: " + 10
-//                                        + " / Cor RGB: " + c.getRGB()
-//                                        + " / Cor:  R=" + c.getRed() + ", G=" + c.getGreen() + ", B=" + c.getBlue()
-//                                );
+                        for (int i = 0; i < environmentSimulation.getBacteria_name().size(); i++) {
+                            Color c = new Color(environmentSimulation.getBacteria_color().get(i).getRed(), environmentSimulation.getBacteria_color().get(i).getGreen(), environmentSimulation.getBacteria_color().get(i).getBlue());
+                            if (environmentSimulation.getL_bac().get(i) == 0) {
 
-                                CellCocciItemToPrintSimulation item = new CellCocciItemToPrintSimulation();
+                                if(turnOnToPrint) {
+                                    System.out.println("Desenho Oval: "
+                                            + "Coord x1: " + environmentSimulation.getDimX() + 25
+                                            + " / Coord y1" + 25 * (i + 2)
+                                            + " / Largura: " + 10
+                                            + " / Altura: " + 10
+                                            + " / Cor RGB: " + c.getRGB()
+                                            + " / Cor:  R=" + c.getRed() + ", G=" + c.getGreen() + ", B=" + c.getBlue()
+                                    );
+                                }
 
-                                item.setId(UUID.randomUUID().toString());
-                                item.setSimulationResult(simulationResult);
-                                item.setTick(environment.getTicks());
-                                item.setShapeType(ShapeType.COCCI);
-                                item.setCoordX(environment.getDimX() + 25);
-                                item.setCoordY(25 * ( i + 2 ));
-                                item.setWidth(10);
-                                item.setHeight(10);
-                                item.setColor(c);//DEFINIR DE ONDE VIRÁ A COR DO PONTO
+                                if (turnOnToDraw) {
+                                    CellCocciItemToPrintSimulation item = new CellCocciItemToPrintSimulation();
 
-                                itemToPrintSimulationRepository.save(item);//SAVE TO VIEW
+                                    item.setId(UUID.randomUUID().toString());
+                                    item.setSimulationResult(simulationResult);
+                                    item.setTick(environmentSimulation.getTicks());
+                                    item.setShapeType(ShapeType.COCCI);
+                                    item.setCoordX(environmentSimulation.getDimX() + 25);
+                                    item.setCoordY(25 * (i + 2));
+                                    item.setWidth(10);
+                                    item.setHeight(10);
+                                    item.setColor(c);//DEFINIR DE ONDE VIRÁ A COR DO PONTO
+
+                                    itemToPrintSimulationRepository.save(item);//SAVE TO VIEW
+                                }
 
 
                             } else {
-//                                System.out.println("Desenho Retângulo Arredondado: "
-//                                        + "Coord x1: " + environment.getDimX() + 25
-//                                        + " / Coord y1" + 25 * ( i + 2 )
-//                                        + " / Largura: " + 12
-//                                        + " / Altura: " + 6
-//                                        + "/ Largura ARC: " + 80
-//                                        + " / Altura ARC: " + 100
-//                                        + " / Cor RGB: " + c.getRGB()
-//                                        + " / Cor:  R=" + c.getRed() + ", G=" + c.getGreen() + ", B=" + c.getBlue()
-//                                );
+                                if (turnOnToPrint) {
+                                    System.out.println("Desenho Retângulo Arredondado: "
+                                            + "Coord x1: " + environmentSimulation.getDimX() + 25
+                                            + " / Coord y1" + 25 * (i + 2)
+                                            + " / Largura: " + 12
+                                            + " / Altura: " + 6
+                                            + "/ Largura ARC: " + 80
+                                            + " / Altura ARC: " + 100
+                                            + " / Cor RGB: " + c.getRGB()
+                                            + " / Cor:  R=" + c.getRed() + ", G=" + c.getGreen() + ", B=" + c.getBlue()
+                                    );
+                                }
                             }
-                            System.out.println(environment.getBacteria_name().get(i));
-                            System.out.println(environment.getBacteria_conc().get(i).toString() + " (g/L)");
+                            System.out.println(environmentSimulation.getBacteria_name().get(i));
+                            System.out.println(environmentSimulation.getBacteria_conc().get(i).toString() + " (g/L)");
 
-                            CellBacillusItemToPrintSimulation item = new CellBacillusItemToPrintSimulation();
-                            item.setId(UUID.randomUUID().toString());
-                            item.setSimulationResult(simulationResult);
-                            item.setTick(environment.getTicks());
-                            item.setShapeType(ShapeType.BACILLI);
-                            item.setCoordX(environment.getDimX() + 25);
-                            item.setCoordY(25 * ( i + 2 ));
-                            item.setWidth(12);
-                            item.setHeight(6);
-                            item.setArcWidth(80);
-                            item.setArcHeight(100);
-                            item.setColor(c);//DEFINIR DE ONDE VIRÁ A COR DO PONTO
+                            if (turnOnToDraw) {
+                                CellBacillusItemToPrintSimulation item = new CellBacillusItemToPrintSimulation();
+                                item.setId(UUID.randomUUID().toString());
+                                item.setSimulationResult(simulationResult);
+                                item.setTick(environmentSimulation.getTicks());
+                                item.setShapeType(ShapeType.BACILLI);
+                                item.setCoordX(environmentSimulation.getDimX() + 25);
+                                item.setCoordY(25 * (i + 2));
+                                item.setWidth(12);
+                                item.setHeight(6);
+                                item.setArcWidth(80);
+                                item.setArcHeight(100);
+                                item.setColor(c);//DEFINIR DE ONDE VIRÁ A COR DO PONTO
 
-                            itemToPrintSimulationRepository.save(item);//SAVE TO VIEW
+                                itemToPrintSimulationRepository.save(item);//SAVE TO VIEW
+                            }
                         }
 
-                        int offset = (environment.getBacteria_name().size()+2)*25+8;
+                        int offset = (environmentSimulation.getBacteria_name().size()+2)*25+8;
 
-                        for (int i = 0; i < environment.getMetabolite_name().size(); i++) {
-                            Color c = new Color(environment.getMetabolite_color().get(i).getRed(), environment.getMetabolite_color().get(i).getGreen(), environment.getMetabolite_color().get(i).getBlue());
-//                            System.out.println("Desenho Retângulo: "
-//                                    + "Coord x1: " + environment.getDimX() + 29
-//                                    + " / Coord y1" + offset + 25 * ( i + 1 )
-//                                    + " / Largura: " + 2
-//                                    + " / Altura: " + 2
-//                            );
-                            System.out.println(environment.getMetabolite_name().get(i));
-                            System.out.println(environment.getMetabolite_conc().get(i).toString() + " (g/L)");
+                        for (int i = 0; i < environmentSimulation.getMetabolite_name().size(); i++) {
+                            Color c = new Color(environmentSimulation.getMetabolite_color().get(i).getRed(), environmentSimulation.getMetabolite_color().get(i).getGreen(), environmentSimulation.getMetabolite_color().get(i).getBlue());
 
-                            MetaboliteRectagleItemToPrintSimulation item = new MetaboliteRectagleItemToPrintSimulation();
-                            item.setId(UUID.randomUUID().toString());
-                            item.setSimulationResult(simulationResult);
-                            item.setTick(environment.getTicks());
-                            item.setShapeType(ShapeType.BACILLI);
-                            item.setCoordX(environment.getDimX() + 25);
-                            item.setCoordY(25 * ( i + 2 ));
-                            item.setWidth(12);
-                            item.setColor(c);//DEFINIR DE ONDE VIRÁ A COR DO PONTO
+                            if (turnOnToPrint) {
+                                System.out.println("Desenho Retângulo: "
+                                        + "Coord x1: " + environmentSimulation.getDimX() + 29
+                                        + " / Coord y1" + offset + 25 * (i + 1)
+                                        + " / Largura: " + 2
+                                        + " / Altura: " + 2
+                                );
+                            }
 
-                            itemToPrintSimulationRepository.save(item);//SAVE TO VIEW
+                            System.out.println(environmentSimulation.getMetabolite_name().get(i));
+                            System.out.println(environmentSimulation.getMetabolite_conc().get(i).toString() + " (g/L)");
+
+                            if (turnOnToDraw) {
+                                MetaboliteRectagleItemToPrintSimulation item = new MetaboliteRectagleItemToPrintSimulation();
+                                item.setId(UUID.randomUUID().toString());
+                                item.setSimulationResult(simulationResult);
+                                item.setTick(environmentSimulation.getTicks());
+                                item.setShapeType(ShapeType.BACILLI);
+                                item.setCoordX(environmentSimulation.getDimX() + 25);
+                                item.setCoordY(25 * (i + 2));
+                                item.setWidth(12);
+                                item.setColor(c);//DEFINIR DE ONDE VIRÁ A COR DO PONTO
+
+                                itemToPrintSimulationRepository.save(item);//SAVE TO VIEW
+                            }
                         }
 
                         Thread.yield();
 
                     }
                     finally {
-
+                        System.out.println("Thread número: " + num + " terminou");
                     }
                 }
             }
@@ -450,24 +478,14 @@ public class RunSimulationService {
         t.start();
     }
 
-    private void draToPrint(Environment environment, SimulationResult simulationResult) {
-//        List<Entity> newList = new ArrayList<Entity>() {
-//            {
-//                addAll(environment.getBacterias());
-//                addAll(environment.getPS());
-//                addAll(environment.getANT());
-//            }
-//        };
-//
-//        for(Entity ent : newList) {
-//            ent.draw();
-//        }
-        int ticks = environment.getTicks();
+    private void draToPrint(EnvironmentSimulation environmentSimulation, SimulationResult simulationResult) {
+
+        int ticks = environmentSimulation.getTicks();
         if (ticks - 1 >= 0) {
             itemToPrintSimulationRepository.deleteAllByTickLessThanEqual(ticks - 1);
         }
 
-        for (Entity ent : environment.getBacterias()) {
+        for (Entity ent : environmentSimulation.getBacterias()) {
 
             Bacteria bac = (Bacteria)ent;
             if (bac.getL_bac() == 0) {
@@ -476,10 +494,10 @@ public class RunSimulationService {
 
                 item.setId(UUID.randomUUID().toString());
                 item.setSimulationResult(simulationResult);
-                item.setTick(environment.getTicks());
+                item.setTick(environmentSimulation.getTicks());
                 item.setShapeType(ShapeType.COCCI);
-                item.setCoordX((int) (bac.getX() / environment.getTickX() ) );
-                item.setCoordY((int) (bac.getY() / environment.getTickY() ) );
+                item.setCoordX((int) (bac.getX() / environmentSimulation.getTickX() ) );
+                item.setCoordY((int) (bac.getY() / environmentSimulation.getTickY() ) );
                 item.setWidth( 2 * bac.getSizeX() );
                 item.setHeight( 2 * bac.getSizeX() );
                 item.setColor(Color.BLUE);//DEFINIR DE ONDE VIRÁ A COR DO PONTO
@@ -492,10 +510,10 @@ public class RunSimulationService {
 
                 item.setId(UUID.randomUUID().toString());
                 item.setSimulationResult(simulationResult);
-                item.setTick(environment.getTicks());
+                item.setTick(environmentSimulation.getTicks());
                 item.setShapeType(ShapeType.COCCI);
-                item.setCoordX((int) (bac.getX() / environment.getTickX() ) );
-                item.setCoordY((int) (bac.getY() / environment.getTickY() ) );
+                item.setCoordX((int) (bac.getX() / environmentSimulation.getTickX() ) );
+                item.setCoordY((int) (bac.getY() / environmentSimulation.getTickY() ) );
                 item.setWidth( 2 * bac.getSizeX() + 2 );
                 item.setHeight( bac.getSizeX() + 1 );
                 item.setArcWidth(80);
@@ -506,7 +524,7 @@ public class RunSimulationService {
             }
         }
 
-        for (Entity ent : environment.getPS()) {
+        for (Entity ent : environmentSimulation.getPS()) {
 
             PolySaccharides polsac = (PolySaccharides)ent;
 
@@ -514,10 +532,10 @@ public class RunSimulationService {
 
             item.setId(UUID.randomUUID().toString());
             item.setSimulationResult(simulationResult);
-            item.setTick(environment.getTicks());
+            item.setTick(environmentSimulation.getTicks());
             item.setShapeType(ShapeType.COCCI);
-            item.setCoordX((int) (polsac.getX() / environment.getTickX() ) );
-            item.setCoordY((int) (polsac.getY() / environment.getTickY() ) );
+            item.setCoordX((int) (polsac.getX() / environmentSimulation.getTickX() ) );
+            item.setCoordY((int) (polsac.getY() / environmentSimulation.getTickY() ) );
             item.setWidth( polsac.getSizeX() );
             item.setHeight( polsac.getSizeX() );
 

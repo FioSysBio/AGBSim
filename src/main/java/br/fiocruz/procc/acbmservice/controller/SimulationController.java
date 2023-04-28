@@ -4,6 +4,7 @@ import br.fiocruz.procc.acbmservice.commands.EnvironmentCommand;
 import br.fiocruz.procc.acbmservice.commands.SimulationCreateCommand;
 import br.fiocruz.procc.acbmservice.commands.SimulationRunCommand;
 import br.fiocruz.procc.acbmservice.domain.Simulation;
+import br.fiocruz.procc.acbmservice.service.EmailService;
 import br.fiocruz.procc.acbmservice.service.RunSimulationService;
 import br.fiocruz.procc.acbmservice.service.SimulationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,6 +34,9 @@ public class SimulationController {
     @Autowired
     private RunSimulationService runSimulationService;
 
+    @Autowired
+    private EmailService emailService;
+
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "JSON fields of Environment Simulation for Run a New Simulation."),
             @ApiResponse(responseCode = "403", description = "No permission to access this resource."),
@@ -46,6 +50,8 @@ public class SimulationController {
         EnvironmentCommand env = new EnvironmentCommand();
 
         String result = runSimulationService.runSimulation(simulationRunCommand);
+
+        emailService.sendEmail("acbm.service@gmail.com", "New Simulation", "Simulation finished with Success!");
 
         return ResponseEntity.ok(result);
     }
