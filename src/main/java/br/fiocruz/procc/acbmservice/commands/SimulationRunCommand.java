@@ -33,8 +33,4 @@ public class SimulationRunCommand {
     private List<SimulationItensInfoCommand> itensSimulation;
 
     private String emailOnwer;
-
-    public void setEmailOnwer(String emailOnwer) {
-        this.emailOnwer = emailOnwer;
-    }
 }
