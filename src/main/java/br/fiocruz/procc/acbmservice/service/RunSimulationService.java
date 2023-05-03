@@ -39,6 +39,9 @@ public class RunSimulationService {
     @Autowired
     private SimulationResultRepository simulationResultRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     private static final String pathFileLog = "/files_simulation/output_simulation_";
 
     private static int cont = 0;
@@ -91,7 +94,9 @@ public class RunSimulationService {
 
             executeEnvironmentsSimulation(pathFileLog + simulationRunCommand.getId() +  ".txt", simulationRunCommand, simulationResult);
 
-//            System.out.println("Rodou a simulação até o final!!!");
+            emailService.sendEmailWithAttachment(simulationRunCommand.getEmailOnwer(), "New Simulation", "Simulation finished with Success! - Attachment in Email", pathFileLog + simulationRunCommand.getId() + ".txt");
+
+            System.out.println("Rodou a simulação até o final!!!");
 
         } catch (Exception ex) {
             ex.printStackTrace();
