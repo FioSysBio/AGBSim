@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,6 +44,8 @@ public class RunSimulationService {
     private EmailService emailService;
 
     private static final String pathFileLog = "/files_simulation/output_simulation_";
+
+    private String pathFileLogFull;
 
     private static int cont = 0;
 
@@ -92,9 +95,9 @@ public class RunSimulationService {
 
             EnvironmentSimulation.setParameters(transform(simulationRunCommand));
 
-            executeEnvironmentsSimulation(pathFileLog + simulationRunCommand.getId() +  ".txt", simulationRunCommand, simulationResult);
+            pathFileLogFull = pathFileLog + simulationResult.getEmailOnwer() + "_" + simulationResult.getId() +  ".txt";
 
-            emailService.sendEmailWithAttachment(simulationRunCommand.getEmailOnwer(), "New Simulation", "Simulation finished with Success! - Attachment in Email", pathFileLog + simulationRunCommand.getId() + ".txt");
+            executeEnvironmentsSimulation(pathFileLogFull, simulationRunCommand, simulationResult);
 
             System.out.println("Rodou a simulação até o final!!!");
 
@@ -365,6 +368,8 @@ public class RunSimulationService {
 
                             simulationResultRepository.save(simulationResult);
 
+                            emailService.sendEmailWithAttachment(simulationRunCommand.getEmailOnwer(), "New Simulation", "Simulation finished with Success! - Attachment in Email", pathFileLogFull);
+
                             return;
                         }
 
@@ -472,8 +477,9 @@ public class RunSimulationService {
 
                         Thread.yield();
 
-                    }
-                    finally {
+                    } catch (MessagingException e) {
+                        throw new RuntimeException(e);
+                    } finally {
                         System.out.println("Thread número: " + num + " terminou");
                     }
                 }

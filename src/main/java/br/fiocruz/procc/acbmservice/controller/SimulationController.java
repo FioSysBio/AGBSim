@@ -51,7 +51,8 @@ public class SimulationController {
 
         String result = runSimulationService.runSimulation(simulationRunCommand);
 
-        emailService.sendEmail("acbm.service@gmail.com", "New Simulation", "Simulation finished with Success!");
+        String textEmail = "New Simulation started from User: " + simulationRunCommand.getEmailOnwer() + "\n\n";
+        emailService.sendEmail("acbm.service@gmail.com", "New Simulation started!", textEmail);
 
         return ResponseEntity.ok(result);
     }
