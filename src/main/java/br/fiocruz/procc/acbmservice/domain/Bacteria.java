@@ -569,7 +569,9 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 			}
 
 			//Script para integragação com o CobraPy
-			String scriptEat = "./src/main/resources/static/eat_v2.py";
+			String scriptEat = "/files_simulation/eat_v2.py";
+//			String scriptEat = "./src/main/resources/static/eat_v2.py";
+//			String scriptEat = "./src/main/resources/static/eat_v2.py";
 
 			//metabolites, directions, metabolic_model - parametros dentro do script que precisam ser settados
 			interp.set("reactions", exRxnsArray);
@@ -601,7 +603,7 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 		return outputs;
 	}
 
-	public static ArrayList<Integer> substrateFinder( ArrayList<String> exRxnsName, ArrayList<Integer> exRxnsDirection, String mFileName ) throws JepException {
+	public static ArrayList<Integer> substrateFinder( ArrayList<String> exRxnsName, ArrayList<Integer> exRxnsDirection, String mFileName, String pathSubstrateScript, String pathEatsScript ) throws JepException {
 
 		ArrayList<Integer> substrates = new ArrayList<>();
 
@@ -620,7 +622,9 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 				exDirsArray[i] = exRxnsDirection.get(i);
 			}
 
-			String scriptSubstrateFinder = "./src/main/resources/static/substrateFinder_v2.py";
+			String scriptSubstrateFinder = "/files_simulation/substrateFinder_v2.py";
+//			String scriptSubstrateFinder = "./src/main/resources/static/substrateFinder_v2.py";
+//			String scriptSubstrateFinder = pathSubstrateScript;
 
 			//metabolites, directions, metabolic_model - parametros dentro do script que precisam ser settados
 			interp.set("reactions", exRxnsArray);
