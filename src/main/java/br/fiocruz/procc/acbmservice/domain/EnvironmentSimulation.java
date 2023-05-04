@@ -13,6 +13,7 @@ import br.fiocruz.procc.acbmservice.commands.EnvironmentCommand;
 import jep.JepException;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.core.io.ClassPathResource;
 
 
 @Getter
@@ -20,12 +21,18 @@ import lombok.Setter;
 public class EnvironmentSimulation {
 
     //Constructor
-    public EnvironmentSimulation(String pathLogFile) {
+    public EnvironmentSimulation(String pathLogFile, String pathSubstrateScript, String pathEatScript) {
         super();
     	mesh = new int[L][D][W];
         qtdTicks = 0;
         this.logFile =  new File(pathLogFile);
+        this.pathSubstrateScript = pathSubstrateScript;
+        this.pathEatScript = pathEatScript;
     }
+
+    private static String pathSubstrateScript;
+
+    private static String pathEatScript;
 
     static Integer qtdTicks;
 
@@ -264,10 +271,12 @@ public class EnvironmentSimulation {
     	tickY = (double) W / dimY;
 
     	V = W * D * L * Math.pow(10, -15);
-    	
+
+        ClassPathResource resource = new ClassPathResource("substrateFinder_v2.py");
+
     	for (int i = 0; i < bacteria_name.size(); i++) {
 			try {
-				EnvironmentSimulation.substrate.add(Bacteria.substrateFinder(ex_rxns_name.get(i), ex_rxns_direction.get(i), mFile.get(i)));
+				EnvironmentSimulation.substrate.add(Bacteria.substrateFinder(ex_rxns_name.get(i), ex_rxns_direction.get(i), mFile.get(i), pathSubstrateScript, pathEatScript));
 			} catch (JepException e) {
 				e.printStackTrace();
 			}

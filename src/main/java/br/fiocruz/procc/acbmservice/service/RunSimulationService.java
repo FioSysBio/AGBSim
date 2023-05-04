@@ -11,9 +11,14 @@ import br.fiocruz.procc.acbmservice.repository.SimulationRepository;
 import br.fiocruz.procc.acbmservice.repository.SimulationResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassRelativeResourceLoader;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.FileSystemResourceLoader;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
+import javax.servlet.ServletContext;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,6 +48,9 @@ public class RunSimulationService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private ServletContext servletContext;
+
     private static final String pathFileLog = "/files_simulation/output_simulation_";
 
     private String pathFileLogFull;
@@ -53,6 +61,26 @@ public class RunSimulationService {
 
     public String runSimulation(SimulationRunCommand simulationRunCommand) {
 
+        String realtPathSubstrateFinder = servletContext.getRealPath("/WEB-INF/classes/static/");
+//        System.out.println("Real Path: " + realtPathSubstrateFinder);
+//
+        String contexttPathSubstrateFinder = servletContext.getContextPath();
+//        System.out.println("Context Path: " + contexttPathSubstrateFinder);
+//
+        String realtPathEat = servletContext.getRealPath("/WEB-INF/classes/static/eat_v2.py");
+//        System.out.println("Real Path: " + realtPathEat);
+//
+//        ResourceLoader resourceLoader = new DefaultResourceLoader();
+//        ResourceLoader classRelativeResourceLoader = new ClassRelativeResourceLoader(RunSimulationService.class);
+//        ResourceLoader fileSystemResourceLoader = new FileSystemResourceLoader();
+//
+//        System.out.println("R: " + resourceLoader.getResource().);
+//        System.out.println("C: " + classRelativeResourceLoader.toString());
+//        try {
+//            System.out.println("F: " + fileSystemResourceLoader.getResource("substrateFinder_v2.py").getURL().toString());
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
 
         turnOnToPrint = Boolean.valueOf(env.getProperty("turnOnPrint"));
 
@@ -97,7 +125,7 @@ public class RunSimulationService {
 
             pathFileLogFull = pathFileLog + simulationResult.getEmailOnwer() + "_" + simulationResult.getId() +  ".txt";
 
-            executeEnvironmentsSimulation(pathFileLogFull, simulationRunCommand, simulationResult);
+            executeEnvironmentsSimulation(pathFileLogFull, simulationRunCommand, simulationResult, realtPathSubstrateFinder, realtPathEat);
 
             System.out.println("Rodou a simulação até o final!!!");
 
@@ -323,9 +351,9 @@ public class RunSimulationService {
         return command;
     }
 
-    public void executeEnvironmentsSimulation(String pathLogFile, SimulationRunCommand simulationRunCommand, SimulationResult simulationResult) {
+    public void executeEnvironmentsSimulation(String pathLogFile, SimulationRunCommand simulationRunCommand, SimulationResult simulationResult, String pathSubstrateScript, String pathEatScript) {
         // create simple Environment object
-        EnvironmentSimulation e1 = new EnvironmentSimulation(pathLogFile);
+        EnvironmentSimulation e1 = new EnvironmentSimulation(pathLogFile, pathSubstrateScript, pathEatScript);
         e1.initialize();
         try {
             e1.addEntity();
