@@ -4,8 +4,10 @@ import br.fiocruz.procc.acbmservice.commands.EnvironmentCommand;
 import br.fiocruz.procc.acbmservice.commands.SimulationCreateCommand;
 import br.fiocruz.procc.acbmservice.commands.SimulationRunCommand;
 import br.fiocruz.procc.acbmservice.domain.Simulation;
+import br.fiocruz.procc.acbmservice.domain.SimulationResult;
 import br.fiocruz.procc.acbmservice.service.EmailService;
 import br.fiocruz.procc.acbmservice.service.RunSimulationService;
+import br.fiocruz.procc.acbmservice.service.SimulationResultService;
 import br.fiocruz.procc.acbmservice.service.SimulationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,6 +35,9 @@ public class SimulationController {
 
     @Autowired
     private RunSimulationService runSimulationService;
+
+    @Autowired
+    private SimulationResultService simulationResultService;
 
     @Autowired
     private EmailService emailService;
@@ -119,5 +124,20 @@ public class SimulationController {
         }
 
         return ResponseEntity.ok("ERROR of deleted Simulation");
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "JSON of Results of the Simulation registered for Email in the database."),
+            @ApiResponse(responseCode = "403", description = "No permission to access this resource."),
+            @ApiResponse(responseCode = "404", description = "Resource not found in the database."),
+            @ApiResponse(responseCode = "500", description = "An internal exception was generated on the Server."),
+    })
+    @Operation(description = "Search by ID Simulation registered in the database.")
+    @GetMapping("/results/{emailOnwer}")
+    public ResponseEntity<List<SimulationResult>> getResultsByEmail(@PathVariable String emailOnwer) {
+
+        List<SimulationResult> simulationResults = simulationResultService.getResultsByEmail(emailOnwer);
+
+        return ResponseEntity.ok(simulationResults);
     }
 }
