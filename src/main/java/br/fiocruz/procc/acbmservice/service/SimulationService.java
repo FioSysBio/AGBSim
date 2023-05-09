@@ -24,14 +24,14 @@ public class SimulationService {
 
         BeanUtils.copyProperties(command, simulation);
 
-        if (command.getIsLocalFeedSimulation()) {
-
-            String[] vet = command.getLocalFeed().split(",");
-
-            LocalFeed localFeed = new LocalFeed(vet[0], vet[1], vet[2]);
-
-            simulation.setLocalFeed(localFeed);
-        }
+//        if (command.getIsLocalFeedSimulation()) {
+//
+//            String[] vet = command.getLocalFeed().split(",");
+//
+//            LocalFeed localFeed = new LocalFeed(vet[0], vet[1], vet[2]);
+//
+//            simulation.setLocalFeed(localFeed);
+//        }
 
         return simulationRepository.save(simulation);
     }

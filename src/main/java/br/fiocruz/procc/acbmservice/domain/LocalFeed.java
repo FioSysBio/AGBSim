@@ -3,15 +3,13 @@ package br.fiocruz.procc.acbmservice.domain;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
-@Embeddable
+@Entity
 public class LocalFeed {
 
     public LocalFeed() {
-
     }
 
     public LocalFeed(String x, String y, String z) {
@@ -19,6 +17,10 @@ public class LocalFeed {
         this.yFeedField = Integer.parseInt(y);
         this.zFeedField = Integer.parseInt(x);
     }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Getter @Setter
     private Integer xFeedField;
@@ -28,4 +30,8 @@ public class LocalFeed {
 
     @Getter @Setter
     private Integer zFeedField;
+
+    @Getter @Setter
+    @ManyToOne
+    private Simulation simulation;
 }

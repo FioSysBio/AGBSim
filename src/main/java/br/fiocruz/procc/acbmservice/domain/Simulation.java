@@ -36,15 +36,17 @@ public class Simulation {
 
     private Float metaboliteScale;
 
+    private Integer metaboliteScaleMult;
+
     private Boolean isLocalFeedSimulation;
 
-    @Embedded
-    private LocalFeed localFeed;
+    @OneToMany(mappedBy = "simulation")
+    private List<LocalFeed> localFeeds;
 
-    @OneToMany(mappedBy = "pk.simulation")
-    private List<ItemCell> cells = new java.util.ArrayList<>();
-
-
-    @OneToMany(mappedBy = "pk.simulation")
-    private List<ItemMetabolite> metabolites = new java.util.ArrayList<>();
+//    @OneToMany(mappedBy = "pk.simulation")
+//    private List<ItemCell> cells = new java.util.ArrayList<>();
+//
+//
+//    @OneToMany(mappedBy = "pk.simulation")
+//    private List<ItemMetabolite> metabolites = new java.util.ArrayList<>();
 }

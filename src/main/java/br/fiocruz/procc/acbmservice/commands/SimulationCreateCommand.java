@@ -5,6 +5,8 @@ import br.fiocruz.procc.acbmservice.domain.Simulation;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
+import java.util.List;
+
 @Data
 public class SimulationCreateCommand {
 
@@ -26,7 +28,7 @@ public class SimulationCreateCommand {
 
     private Boolean isLocalFeedSimulation;
 
-    private String localFeed;
+    private List<LocalFeed> localFeeds;
 
     public static SimulationCreateCommand convert (Simulation simulation) {
 
@@ -34,12 +36,12 @@ public class SimulationCreateCommand {
 
         BeanUtils.copyProperties(simulation, command);
 
-        if (simulation.getIsLocalFeedSimulation()) {
-            command.setLocalFeed(String.format("%d, %d, %d",
-                    simulation.getLocalFeed().getXFeedField(),
-                    simulation.getLocalFeed().getYFeedField(),
-                    simulation.getLocalFeed().getZFeedField()));
-        }
+//        if (simulation.getIsLocalFeedSimulation()) {
+//            command.setLocalFeed(String.format("%d, %d, %d",
+//                    simulation.getLocalFeed().getXFeedField(),
+//                    simulation.getLocalFeed().getYFeedField(),
+//                    simulation.getLocalFeed().getZFeedField()));
+//        }
 
         return command;
     }
