@@ -11,16 +11,13 @@ import br.fiocruz.procc.acbmservice.repository.SimulationRepository;
 import br.fiocruz.procc.acbmservice.repository.SimulationResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassRelativeResourceLoader;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.FileSystemResourceLoader;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletContext;
 import java.awt.*;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
@@ -129,6 +126,10 @@ public class RunSimulationService {
 
             System.out.println("Rodou a simulação até o final!!!");
 
+            simulationResult.setDataFim(LocalDateTime.now());
+
+            simulationResultRepository.save(simulationResult);
+
         } catch (Exception ex) {
             ex.printStackTrace();
 
@@ -146,6 +147,7 @@ public class RunSimulationService {
         if (!simulation.isPresent())
             new Exception("Simulation definition not exist!");
 
+        simulationResult.setDataInicio(LocalDateTime.now());
         simulationResult.setId(UUID.randomUUID().toString());
         simulationResult.setSimulation(simulation.get());
         simulationResult.setEmailOnwer(simulationRunCommand.getEmailOnwer());
@@ -242,10 +244,10 @@ public class RunSimulationService {
 
                         command.getT_survive().add(item.getCell().getSurviveTime());
 
-                        command.getBacteria_color().add(new Color(
-                                Integer.parseInt(item.getCell().getCellColor().split(",")[0]),//R
-                                Integer.parseInt(item.getCell().getCellColor().split(",")[1]),//G
-                                Integer.parseInt(item.getCell().getCellColor().split(",")[2]) //B
+                        command.getBacteria_color().add(new Color(255,255,255
+//                                Integer.parseInt(item.getCell().getCellColor().split(",")[0]),//R
+//                                Integer.parseInt(item.getCell().getCellColor().split(",")[1]),//G
+//                                Integer.parseInt(item.getCell().getCellColor().split(",")[2]) //B
                         ));
 
                         //Metabolitos
@@ -267,10 +269,10 @@ public class RunSimulationService {
                                 command.getMetabolite_mw().add(met.getMolarMass());
 
                                 command.getMetabolite_color().add(
-                                        new Color(
-                                                Integer.parseInt(item.getCell().getCellColor().split(",")[0]),//R
-                                                Integer.parseInt(item.getCell().getCellColor().split(",")[1]),//G
-                                                Integer.parseInt(item.getCell().getCellColor().split(",")[2]) //B
+                                        new Color(255,255,255
+//                                                Integer.parseInt(item.getCell().getCellColor().split(",")[0]),//R
+//                                                Integer.parseInt(item.getCell().getCellColor().split(",")[1]),//G
+//                                                Integer.parseInt(item.getCell().getCellColor().split(",")[2]) //B
                                         )
                                 );
 

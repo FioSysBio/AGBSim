@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +28,10 @@ public class SimulationResult {
     private String id;
 
     private String emailOnwer;
+
+    private LocalDateTime dataInicio;
+
+    private LocalDateTime dataFim;
 
     @Value("false")
     private Boolean isFinish;
