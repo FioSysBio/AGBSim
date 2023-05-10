@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MetaboliteService {
@@ -56,6 +57,12 @@ public class MetaboliteService {
 
     public Metabolite getById(Long idMetabolite) {
 
-        return metaboliteRepository.findById(idMetabolite).get();
+        Optional<Metabolite> optionalMetabolite = metaboliteRepository.findById(idMetabolite);
+
+        if (optionalMetabolite.isPresent()) {
+            return optionalMetabolite.get();
+        } else {
+            return new Metabolite();
+        }
     }
 }

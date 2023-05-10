@@ -1,6 +1,7 @@
 package br.fiocruz.procc.acbmservice.controller;
 
 import br.fiocruz.procc.acbmservice.commands.MetaboliteCreateCommand;
+import br.fiocruz.procc.acbmservice.commands.MetaboliteGetByIdCommand;
 import br.fiocruz.procc.acbmservice.commands.MetaboliteUpdateCommand;
 import br.fiocruz.procc.acbmservice.domain.Metabolite;
 import br.fiocruz.procc.acbmservice.repository.MetaboliteRepository;
@@ -56,11 +57,11 @@ public class MetaboliteController {
     })
     @Operation(description = "Search by ID Metabolite registered in the database.")
     @GetMapping("/{idMetabolite}")
-    public ResponseEntity<Metabolite> getMetaboliteById(@PathVariable Long idMetabolite) {
+    public ResponseEntity<MetaboliteGetByIdCommand> getMetaboliteById(@PathVariable Long idMetabolite) {
 
         Metabolite metabolite = metaboliteService.getById(idMetabolite);
 
-        return ResponseEntity.ok(metabolite);
+        return ResponseEntity.ok(MetaboliteGetByIdCommand.convert(metabolite));
     }
 
     @ApiResponses(value = {
