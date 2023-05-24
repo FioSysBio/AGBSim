@@ -124,10 +124,6 @@ public class RunSimulationService {
 
             executeEnvironmentsSimulation(pathFileLogFull, simulationRunCommand, simulationResult, realtPathSubstrateFinder, realtPathEat);
 
-            System.out.println("Rodou a simulação até o final!!!");
-
-            simulationResult.setDataFim(LocalDateTime.now());
-
             simulationResultRepository.save(simulationResult);
 
         } catch (Exception ex) {
@@ -396,9 +392,13 @@ public class RunSimulationService {
 
                             simulationResult.setIsFinish(true);
 
+                            simulationResult.setDataFim(LocalDateTime.now());
+
                             simulationResultRepository.save(simulationResult);
 
                             emailService.sendEmailWithAttachment(simulationRunCommand.getEmailOnwer(), "New Simulation", "Simulation finished with Success! - Attachment in Email", pathFileLogFull);
+
+                            System.out.println("Rodou a simulação até o final!!!");
 
                             return;
                         }
@@ -407,7 +407,12 @@ public class RunSimulationService {
                         System.out.println("time: " + environmentSimulation.getTicks() * environmentSimulation.getTickTime() + " min");
 
                         for (int i = 0; i < environmentSimulation.getBacteria_name().size(); i++) {
-                            Color c = new Color(environmentSimulation.getBacteria_color().get(i).getRed(), environmentSimulation.getBacteria_color().get(i).getGreen(), environmentSimulation.getBacteria_color().get(i).getBlue());
+                            Color c = new Color(
+                                    environmentSimulation.getBacteria_color().get(i).getRed(),
+                                    environmentSimulation.getBacteria_color().get(i).getGreen(),
+                                    environmentSimulation.getBacteria_color().get(i).getBlue()
+                            );
+
                             if (environmentSimulation.getL_bac().get(i) == 0) {
 
                                 if(turnOnToPrint) {
