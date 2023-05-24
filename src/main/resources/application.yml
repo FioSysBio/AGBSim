@@ -4,7 +4,7 @@ userMail: acbm.service@gmail.com
 passMail: ypczrmajwtxozsan
 
 server:
-  port: 8187
+  port: 8185
   forward-headers-strategy: framework
 
 spring:
@@ -19,6 +19,7 @@ spring:
     username: acbm
 #    password: procc123
     password: Procc@123
+#    password: local@123
     testWhileIdle: true
     validationQuery: SELECT 1
     hikari:
