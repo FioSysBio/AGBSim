@@ -10,14 +10,15 @@ import java.util.*;
 import java.util.List;
 
 import br.fiocruz.procc.acbmservice.commands.EnvironmentCommand;
+import jep.Interpreter;
 import jep.JepException;
-import lombok.Getter;
-import lombok.Setter;
+import jep.NDArray;
+import jep.SharedInterpreter;
+import lombok.Data;
 import org.springframework.core.io.ClassPathResource;
 
 
-@Getter
-@Setter
+@Data
 public class EnvironmentSimulation {
 
     //Constructor
@@ -30,11 +31,11 @@ public class EnvironmentSimulation {
         this.pathEatScript = pathEatScript;
     }
 
-    private static String pathSubstrateScript;
+    private String pathSubstrateScript;
 
-    private static String pathEatScript;
+    private String pathEatScript;
 
-    static Integer qtdTicks;
+    private Integer qtdTicks;
 
     //environment mesh
     private int[][][] mesh;
@@ -49,170 +50,160 @@ public class EnvironmentSimulation {
     private List<Number> ProdAmount = new ArrayList<Number>();
 
     //bacteria and metabolite properties:    
+    private ArrayList<String> bacteria_name = new ArrayList<String>();
+
     
-    @Getter
-    static ArrayList<String> bacteria_name = new ArrayList<String>();
+    private ArrayList<Integer> bacteria_count = new ArrayList<Integer>();
 
-    @Getter
-    static ArrayList<Integer> bacteria_count = new ArrayList<Integer>();
-
-    @Getter
-    static ArrayList<Integer> bacteria_died = new ArrayList<Integer>();
-
-    @Getter
-    static ArrayList<Double> bacteria_conc = new ArrayList<Double>();
-
-//    static ArrayList<Integer> doubling_time = new ArrayList<Integer>();
-
-    @Getter
-    static ArrayList<Integer> bacteria_scale = new ArrayList<Integer>();
-
-    @Getter
-    static ArrayList<Double> r_bac = new ArrayList<Double>();
-
-    @Getter
-    static ArrayList<Double> l_bac = new ArrayList<Double>();
-
-    @Getter
-    static ArrayList<Double> v_bac = new ArrayList<Double>();
-
-    @Getter
-    static ArrayList<Double> m_bac = new ArrayList<Double>();
-
-    @Getter
-    static ArrayList<String> mFile = new ArrayList<String>();
-
-    @Getter
-    static ArrayList<Integer> bacteria_speed = new ArrayList<Integer>();
-
-    @Getter
-    static ArrayList<Integer> t_survive = new ArrayList<Integer>();
-
-    @Getter
-    static ArrayList<Integer> r_search = new ArrayList<Integer>();
-
-    @Getter
-    static ArrayList<String> metabolite_name = new ArrayList<String>();
-
-    @Getter
-    static ArrayList<Integer> metabolite_count = new ArrayList<Integer>();
     
-    @Getter
-    static ArrayList<Double> metabolite_conc = new ArrayList<Double>();
+    private ArrayList<Integer> bacteria_died = new ArrayList<Integer>();
 
-    @Getter
-    static ArrayList<Integer> metabolite_index = new ArrayList<Integer>();
+    
+    private ArrayList<Double> bacteria_conc = new ArrayList<Double>();
 
-    @Getter
-    static ArrayList<Double> metabolite_mw = new ArrayList<Double>();
+//    private ArrayList<Integer> doubling_time = new ArrayList<Integer>();
 
-    @Getter
-    static ArrayList<Integer> metabolite_speed = new ArrayList<Integer>();
+    
+    private ArrayList<Integer> bacteria_scale = new ArrayList<Integer>();
 
-    @Getter
-    static ArrayList<Double> metabolite_uub = new ArrayList<Double>();
+    
+    private ArrayList<Double> r_bac = new ArrayList<Double>();
 
-    @Getter
-    static ArrayList<ArrayList<String>> ex_rxns_name = new ArrayList<ArrayList<String>>();
+    
+    private ArrayList<Double> l_bac = new ArrayList<Double>();
 
-    @Getter
-    static ArrayList<ArrayList<Integer>> ex_rxns_direction = new ArrayList<ArrayList<Integer>>();
+    
+    private ArrayList<Double> v_bac = new ArrayList<Double>();
 
-    @Getter
-    static ArrayList<ArrayList<Integer>> substrate = new ArrayList<ArrayList<Integer>>();
+    
+    private ArrayList<Double> m_bac = new ArrayList<Double>();
 
-    @Getter
-    static ArrayList<Double> eat_radius = new ArrayList<Double>();
+    
+    private ArrayList<String> mFile = new ArrayList<String>();
 
-    @Getter
-    static ArrayList<Color> bacteria_color = new ArrayList<Color>();
+    
+    private ArrayList<Integer> bacteria_speed = new ArrayList<Integer>();
 
-    @Getter
-    static ArrayList<Color> metabolite_color = new ArrayList<Color>();
+    
+    private ArrayList<Integer> t_survive = new ArrayList<Integer>();
 
-    @Getter
-    static ArrayList<Integer[]> feeding_points = new ArrayList<Integer[]>();
+    
+    private ArrayList<Integer> r_search = new ArrayList<Integer>();
 
-    @Getter
-    static boolean stirredFeed;
+    
+    private ArrayList<String> metabolite_name = new ArrayList<String>();
+
+    
+    private ArrayList<Integer> metabolite_count = new ArrayList<Integer>();
+    
+    
+    private ArrayList<Double> metabolite_conc = new ArrayList<Double>();
+
+    
+    private ArrayList<Integer> metabolite_index = new ArrayList<Integer>();
+
+    
+    private ArrayList<Double> metabolite_mw = new ArrayList<Double>();
+
+    
+    private ArrayList<Integer> metabolite_speed = new ArrayList<Integer>();
+
+    
+    private ArrayList<Double> metabolite_uub = new ArrayList<Double>();
+
+    
+    private ArrayList<ArrayList<String>> ex_rxns_name = new ArrayList<ArrayList<String>>();
+
+    
+    private ArrayList<ArrayList<Integer>> ex_rxns_direction = new ArrayList<ArrayList<Integer>>();
+
+    
+    private ArrayList<ArrayList<Integer>> substrate = new ArrayList<ArrayList<Integer>>();
+
+    
+    private ArrayList<Double> eat_radius = new ArrayList<Double>();
+
+    
+    private ArrayList<Color> bacteria_color = new ArrayList<Color>();
+
+    
+    private ArrayList<Color> metabolite_color = new ArrayList<Color>();
+
+    
+    private ArrayList<Integer[]> feeding_points = new ArrayList<Integer[]>();
+
+    
+    private boolean stirredFeed;
 
 
     //Variable for counting time
-    @Getter
-    static int ticks;
+    private int ticks;
+
     //Variable for stop program at this time
+    private int tickslimit;
 
-    @Getter
-    static int tickslimit;
+    private int death;
 
-    static int death;
-    static int notEat = 0;
-    static ArrayList<Integer> notEat1 = new ArrayList<Integer>();
+    private int notEat = 0;
 
-    
-    
+    private ArrayList<Integer> notEat1 = new ArrayList<Integer>();
+
     //dimension
     //length of the artificial reactor [px]
-    @Setter@Getter
-    private static int dimX = 1000;
+    private int dimX = 1000;
 
     //length of the artificial reactor [mkm]
-    @Setter@Getter
-    private static int L ;
+    private int L ;
 
     //width of the artificial reactor [px]
-    @Setter@Getter
-    private static int dimY = 400;
+    private int dimY = 400;
 
     //width of the artificial reactor [mkm]
-    @Setter@Getter
-    private static int W;
+    private int W;
 
     //depth of artificial reactor [mkm]
-    @Setter@Getter
-    private static int D;
+    private int D;
 
     //volume of the reactor [l]
-    private static double V = L * D * W * Math.pow(10, -15);
+    private double V = L * D * W * Math.pow(10, -15);
 
     //number of mkm in 1 px [mkm/px]
-    @Setter@Getter
-    private static double tickX;
+    private double tickX;
 
-    @Setter@Getter
-    private static double tickY;
+    private double tickY;
 
     //number of minuets in 1 program's tick [min]
-    @Setter@Getter
-    private static int tickTime;
+    private int tickTime;
 
     //number of tick in 1 hour [ticks]
-    @Setter@Getter
-    private static double norm;
+    private double norm;
 
     //Variable for eating
     //period of eating [hours]
-//    static int TickEat = (int) (1*norm);
+    //private int TickEat = (int) (1*norm);
 
     //time of last eating
-    static int ticksEatTime = 1;
+    private int ticksEatTime = 1;
 
     //period of antibiotic getting
-    static int antibioticPeriod;
+    private int antibioticPeriod;
 
-    static int ticksAntTime;
+    private int ticksAntTime;
 
     //amount of days in which get antibiotic
-    static int antibioticsDay;
+    private int antibioticsDay;
 
     //helpful counter: count antibiotics days
-    static int t;
+    private int t;
+
+    private Double bacteria_n_real;
+
+    private Double bacteria_n_a;
 
     //Variable for reading value of variable from external file
-    static Properties props = new Properties() ;
+    private Properties props = new Properties() ;
 
     //Variable for writing output in a file
-    @Setter@Getter
     File logFile;
 
     PrintWriter writeFile = null;
@@ -227,40 +218,42 @@ public class EnvironmentSimulation {
 //        logFile =  new File("/files_simulation/output.txt");
     }
     
-    public static void setParameters (EnvironmentCommand command) {
+    public void setParameters (EnvironmentCommand command) {
 
-    	EnvironmentSimulation.bacteria_name = command.getBacteria_name();
-    	EnvironmentSimulation.bacteria_count = command.getBacteria_count();
-    	EnvironmentSimulation.bacteria_conc = command.getBacteria_conc();
-    	EnvironmentSimulation.bacteria_scale = command.getBacteria_scale();
+    	this.bacteria_name = command.getBacteria_name();
+    	this.bacteria_count = command.getBacteria_count();
+    	this.bacteria_conc = command.getBacteria_conc();
+    	this.bacteria_scale = command.getBacteria_scale();
 //    	Environment.doubling_time = RunWindow.doubling_time;
-    	EnvironmentSimulation.r_bac = command.getR_bac();
-    	EnvironmentSimulation.l_bac = command.getL_bac();
-    	EnvironmentSimulation.v_bac = command.getV_bac();
-    	EnvironmentSimulation.m_bac = command.getM_bac();
-    	EnvironmentSimulation.eat_radius = command.getEat_radius();
-    	EnvironmentSimulation.mFile = command.getMFile();
-    	EnvironmentSimulation.bacteria_speed = command.getBacteria_speed();
-    	EnvironmentSimulation.t_survive = command.getT_survive();
-    	EnvironmentSimulation.r_search = command.getR_search();
-    	EnvironmentSimulation.metabolite_name = command.getMetabolite_name();
-    	EnvironmentSimulation.metabolite_count = command.getMetabolite_count();
-    	EnvironmentSimulation.metabolite_conc = command.getMetabolite_conc();
-    	EnvironmentSimulation.metabolite_mw = command.getMetabolite_mw();
-    	EnvironmentSimulation.metabolite_speed = command.getMetabolite_speed();
-    	EnvironmentSimulation.metabolite_uub = command.getMetabolite_uub();
-    	EnvironmentSimulation.ex_rxns_name = command.getEx_rxns_name();
-    	EnvironmentSimulation.ex_rxns_direction = command.getEx_rxns_direction();
-    	EnvironmentSimulation.tickslimit = command.getTickslimit();
-    	EnvironmentSimulation.tickTime = command.getTickTime();
-    	EnvironmentSimulation.L = command.getL();
-    	EnvironmentSimulation.D = command.getD();
-    	EnvironmentSimulation.W = command.getW();
-    	EnvironmentSimulation.bacteria_color = command.getBacteria_color();
-    	EnvironmentSimulation.metabolite_color = command.getMetabolite_color();
-    	EnvironmentSimulation.feeding_points = command.getFeeding_points();
-    	EnvironmentSimulation.stirredFeed = command.isStirredFeed();
-        Bacteria.n_real = command.getN_real(); //n_real = Double.parseDouble(metScaleField1.getText()) * Math.pow(10, Integer.parseInt(metScaleField2.getText()));
+    	this.r_bac = command.getR_bac();
+    	this.l_bac = command.getL_bac();
+    	this.v_bac = command.getV_bac();
+    	this.m_bac = command.getM_bac();
+    	this.eat_radius = command.getEat_radius();
+    	this.mFile = command.getMFile();
+    	this.bacteria_speed = command.getBacteria_speed();
+    	this.t_survive = command.getT_survive();
+    	this.r_search = command.getR_search();
+    	this.metabolite_name = command.getMetabolite_name();
+    	this.metabolite_count = command.getMetabolite_count();
+    	this.metabolite_conc = command.getMetabolite_conc();
+    	this.metabolite_mw = command.getMetabolite_mw();
+    	this.metabolite_speed = command.getMetabolite_speed();
+    	this.metabolite_uub = command.getMetabolite_uub();
+    	this.ex_rxns_name = command.getEx_rxns_name();
+    	this.ex_rxns_direction = command.getEx_rxns_direction();
+    	this.tickslimit = command.getTickslimit();
+    	this.tickTime = command.getTickTime();
+    	this.L = command.getL();
+    	this.D = command.getD();
+    	this.W = command.getW();
+        this.mesh = new int[L][D][W];
+    	this.bacteria_color = command.getBacteria_color();
+    	this.metabolite_color = command.getMetabolite_color();
+    	this.feeding_points = command.getFeeding_points();
+    	this.stirredFeed = command.isStirredFeed();
+        this.bacteria_n_real = command.getBacteria_n_real();
+        this.bacteria_n_a = command.getBacteria_n_a();
 
     	for (int i = 0; i < bacteria_name.size(); i++) {
 			bacteria_died.add(0);
@@ -276,7 +269,7 @@ public class EnvironmentSimulation {
 
     	for (int i = 0; i < bacteria_name.size(); i++) {
 			try {
-				EnvironmentSimulation.substrate.add(Bacteria.substrateFinder(ex_rxns_name.get(i), ex_rxns_direction.get(i), mFile.get(i), pathSubstrateScript, pathEatScript));
+				this.substrate.add(substrateFinder(ex_rxns_name.get(i), ex_rxns_direction.get(i), mFile.get(i), pathSubstrateScript, pathEatScript));
 			} catch (JepException e) {
 				e.printStackTrace();
 			}
@@ -290,7 +283,7 @@ public class EnvironmentSimulation {
     	//add bacteria
     	for (int i = 0; i < bacteria_count.size(); i++) {
 			for (int j = 0; j < bacteria_count.get(i); j++) {
-				Bacteria b = new Bacteria(new Random().nextInt(L), new Random().nextInt(W), new Random().nextInt(D), i);
+				Bacteria b = new Bacteria(new Random().nextInt(L), new Random().nextInt(W), new Random().nextInt(D), i, this);
 				b.setTimeEat(0);
 				bacterias.add(b);
 			}
@@ -301,7 +294,7 @@ public class EnvironmentSimulation {
     	if (stirredFeed) {
         	for (int i = 0; i < metabolite_count.size(); i++) {
     			for (int j = 0; j < metabolite_count.get(i); j++) {
-    				PolySaccharides p = new PolySaccharides(new Random().nextInt(L), new Random().nextInt(W), new Random().nextInt(D), i);
+    				PolySaccharides p = new PolySaccharides(new Random().nextInt(L), new Random().nextInt(W), new Random().nextInt(D), i, this);
     				p.setSpeed(metabolite_speed.get(i));
     				PS.add(p);
     			}
@@ -310,7 +303,11 @@ public class EnvironmentSimulation {
 	    	for (int k = 0; k < feeding_points.size(); k++) {
 	    		for (int i = 0; i < metabolite_count.size(); i++) {
 	    			for (int j = 0; j < metabolite_count.get(i)/feeding_points.size(); j++) {
-	    				PolySaccharides p = new PolySaccharides((int) (feeding_points.get(k)[0] + new Random().nextGaussian() * 10), (int) (feeding_points.get(k)[1] + new Random().nextGaussian()*10), (int) (feeding_points.get(k)[1] + new Random().nextGaussian() * 10), i);
+	    				PolySaccharides p = new PolySaccharides(
+                                (int) (feeding_points.get(k)[0] + new Random().nextGaussian() * 10),
+                                (int) (feeding_points.get(k)[1] + new Random().nextGaussian()*10),
+                                (int) (feeding_points.get(k)[1] + new Random().nextGaussian() * 10), i,
+                                this);
 	    				p.setSpeed(metabolite_speed.get(i));
 	    				PS.add(p);
 	    				
@@ -343,11 +340,11 @@ public class EnvironmentSimulation {
                     }
                 }
 		    	for (int j = 0; j < count-bacteria_count.get(i); j++) {
-		    		Bacteria b = new Bacteria(new Random().nextInt(L), new Random().nextInt(W), new Random().nextInt(D), i );
+		    		Bacteria b = new Bacteria(new Random().nextInt(L), new Random().nextInt(W), new Random().nextInt(D), i, this);
 		    		b.setMass(m_dummy);
-		    		b.setTimeEat(EnvironmentSimulation.ticks + 1);
+		    		b.setTimeEat(this.ticks + 1);
 		    	    bacterias.add(b);
-		    	    EnvironmentSimulation.bacteria_count.set(i, EnvironmentSimulation.bacteria_count.get(i) +1 );
+		    	    this.bacteria_count.set(i, this.bacteria_count.get(i) +1 );
 		    	}
 			}
 		}
@@ -382,7 +379,7 @@ public class EnvironmentSimulation {
             metabolite_mass.set(p.getType(), metabolite_mass.get(p.getType()) + p.mass);
         }
 		for (int i = 0; i < metabolite_mass.size(); i++) {
-			double c = (metabolite_mass.get(i)/Bacteria.n_a) * metabolite_mw.get(i) / V;
+			double c = (metabolite_mass.get(i)/ this.bacteria_n_real) * metabolite_mw.get(i) / V;
 
             DecimalFormatSymbols symbols = new DecimalFormatSymbols();
             symbols.setDecimalSeparator('.');
@@ -449,7 +446,7 @@ public class EnvironmentSimulation {
             }catch(IOException e){
                 e.printStackTrace();
             }
-            if (! entity.getLive()){
+            if (! entity.isLive()){
                 Ent.remove(i);
             }
         }
@@ -525,5 +522,64 @@ public class EnvironmentSimulation {
 //            System.exit(0);
             writeFile.close();
         }
+    }
+
+    public ArrayList<Integer> substrateFinder( ArrayList<String> exRxnsName, ArrayList<Integer> exRxnsDirection, String mFileName, String pathSubstrateScript, String pathEatsScript ) throws JepException {
+
+        ArrayList<Integer> substrates = new ArrayList<>();
+
+        Interpreter interp = null;
+        try {
+
+            interp = new SharedInterpreter();
+
+            String[] exRxnsArray = new String[exRxnsName.size()];
+            for (int i = 0; i < exRxnsName.size(); i++) {
+                exRxnsArray[i] = exRxnsName.get(i);
+            }
+
+            int[] exDirsArray = new int[exRxnsDirection.size()];
+            for (int i = 0; i < exRxnsDirection.size(); i++) {
+                exDirsArray[i] = exRxnsDirection.get(i);
+            }
+
+            String scriptSubstrateFinder = "/files_simulation/substrateFinder_v2.py";
+//			String scriptSubstrateFinder = "./src/main/resources/static/substrateFinder_v2.py";
+//			String scriptSubstrateFinder = pathSubstrateScript;
+
+            //metabolites, directions, metabolic_model - parametros dentro do script que precisam ser settados
+            interp.set("reactions", exRxnsArray);
+            interp.set("directions", exDirsArray);
+            String ext = ".json";
+            interp.set("metabolic_model", mFileName + ext);
+
+            interp.runScript(scriptSubstrateFinder);
+            double[] result = (double[]) ((NDArray) interp.getValue("result")).getData();
+
+            Arrays.stream(result).forEach(System.out::println);
+
+            double[] fluxArray = result;
+
+            for (int i = 0; i < fluxArray.length; i++) {
+                if (fluxArray[i] > 0) {
+                    int index = 0;
+                    for (int j = 0; j < substrates.size(); j++) {
+                        if ( fluxArray[i] < fluxArray[substrates.get(j)] ) {
+                            index = j+1;
+                        }
+                    }
+                    substrates.add(index, i);
+                }
+            }
+
+        } catch (JepException exc) {
+            exc.printStackTrace();
+        } finally {
+            if(interp != null) {
+                interp.close();
+            }
+        }
+
+        return substrates;
     }
 }

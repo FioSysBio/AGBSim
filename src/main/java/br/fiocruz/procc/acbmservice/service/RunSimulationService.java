@@ -48,9 +48,9 @@ public class RunSimulationService {
     @Autowired
     private ServletContext servletContext;
 
-    private static final String pathFileLog = "/files_simulation/output_simulation_";
+    private String pathFileLog = "/files_simulation/output_simulation_";
 
-    private String pathFileLogFull;
+//    private String pathFileLogFull;
 
     private static int cont = 0;
 
@@ -118,9 +118,9 @@ public class RunSimulationService {
 
             SimulationResult simulationResult = newSimulationResult(simulationRunCommand);
 
-            EnvironmentSimulation.setParameters(transform(simulationRunCommand));
+//            EnvironmentSimulation.setParameters(transform(simulationRunCommand));
 
-            pathFileLogFull = pathFileLog + simulationResult.getEmailOnwer() + "_" + simulationResult.getId() +  ".txt";
+            String pathFileLogFull = pathFileLog + simulationResult.getEmailOnwer() + "_" + simulationResult.getId() +  ".txt";
 
             executeEnvironmentsSimulation(pathFileLogFull, simulationRunCommand, simulationResult, realtPathSubstrateFinder, realtPathEat);
 
@@ -317,11 +317,10 @@ public class RunSimulationService {
 
                         command.setW(simulationRunCommand.getEnvironmentWidth());
 
-                        command.setN_real(simulationRunCommand.getMetaboliteScale() * Math.pow(10, simulationRunCommand.getMetaboliteScaleMult()));
+                        command.setBacteria_n_real(simulationRunCommand.getMetaboliteScale() * Math.pow(10, simulationRunCommand.getMetaboliteScaleMult()));
 
 
-
-                        //nToN
+                        //cToN
                         {
                             double V = command.getL() * command.getW() * command.getD() * Math.pow(10, -18);
                             for (int i = 0; i < command.getBacteria_conc().size(); i++) {
@@ -334,7 +333,9 @@ public class RunSimulationService {
 
                             for (int i = 0; i < command.getMetabolite_conc().size(); i++) {
                                 if (command.getMetabolite_conc().get(i) != -1 ) {
-                                    int n = (int) ( ((command.getMetabolite_conc().get(i)*1000 * V) / (command.getMetabolite_mw().get(i))) * ( Bacteria.n_a / command.getN_real())  );
+                                    int n = (int) ( ((command.getMetabolite_conc().get(i)*1000 * V)
+                                            / (command.getMetabolite_mw().get(i)))
+                                            * ( command.getBacteria_n_a() / command.getBacteria_n_real() )  );
                                     command.getMetabolite_count().set(i, n);
                                 }
                             }
@@ -352,23 +353,198 @@ public class RunSimulationService {
     public void executeEnvironmentsSimulation(String pathLogFile, SimulationRunCommand simulationRunCommand, SimulationResult simulationResult, String pathSubstrateScript, String pathEatScript) {
         // create simple Environment object
         EnvironmentSimulation e1 = new EnvironmentSimulation(pathLogFile, pathSubstrateScript, pathEatScript);
+        e1.setParameters(transform(simulationRunCommand));
         e1.initialize();
+
         try {
             e1.addEntity();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        graphicDataGeneration(e1, simulationRunCommand, simulationResult);
+
+//        graphicDataGeneration(e1, simulationRunCommand, simulationResult);
+
+        //TRAZIDO DO MÉTODO "graphicDataGeneration" para Facilitar o endendimento
+        {
+            t = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    cont++;
+                    int num = cont;
+                    while (true) {
+
+                        try {
+
+                            Color c1 = new Color(235, 245, 255);
+                            Color st = new Color(0, 78, 152);
+
+                            //TAMANHO DO QUADRO: 0, 0, environment.getDimX() , environment.getDimY()
+                            // move and draw object
+//                        environment.draw();
+
+                            //METODO CRIADO PARA PERSISTIR AS ENTIDADES QUE SÃO PARA DESENHAR
+                            if (turnOnToDraw) {
+                                draToPrint(e1, simulationResult);
+                            }
+
+                            e1.actionCore();
+
+                            if (e1.getTicks() == e1.getTickslimit() || e1.getBacterias().isEmpty()) {
+
+                                System.out.println("Simulação " + num + " terminou com sucesso!");
+
+                                simulationResult.setIsFinish(true);
+
+                                simulationResult.setDataFim(LocalDateTime.now());
+
+                                simulationResultRepository.save(simulationResult);
+
+                                emailService.sendEmailWithAttachment(simulationRunCommand.getEmailOnwer(), "New Simulation", "Simulation finished with Success! - Attachment in Email", pathLogFile);
+
+                                System.out.println("Rodou a simulação até o final!!!");
+
+                                return;
+                            }
+
+                            // TEXTO PARA MOSTRAR NO RESULTADO("time:  " + environment.ticks*environment.getTickTime() + " min", environment.getDimX() + 25, 25);
+                            System.out.println("time: " + e1.getTicks() * e1.getTickTime() + " min");
+
+                            for (int i = 0; i < e1.getBacteria_name().size(); i++) {
+                                Color c = new Color(
+                                        e1.getBacteria_color().get(i).getRed(),
+                                        e1.getBacteria_color().get(i).getGreen(),
+                                        e1.getBacteria_color().get(i).getBlue()
+                                );
+
+                                if (e1.getL_bac().get(i) == 0) {
+
+                                    if (turnOnToPrint) {
+                                        System.out.println("Desenho Oval: "
+                                                + "Coord x1: " + e1.getDimX() + 25
+                                                + " / Coord y1" + 25 * (i + 2)
+                                                + " / Largura: " + 10
+                                                + " / Altura: " + 10
+                                                + " / Cor RGB: " + c.getRGB()
+                                                + " / Cor:  R=" + c.getRed() + ", G=" + c.getGreen() + ", B=" + c.getBlue()
+                                        );
+                                    }
+
+                                    if (turnOnToDraw) {
+                                        CellCocciItemToPrintSimulation item = new CellCocciItemToPrintSimulation();
+
+                                        item.setId(UUID.randomUUID().toString());
+                                        item.setSimulationResult(simulationResult);
+                                        item.setTick(e1.getTicks());
+                                        item.setShapeType(ShapeType.COCCI);
+                                        item.setCoordX(e1.getDimX() + 25);
+                                        item.setCoordY(25 * (i + 2));
+                                        item.setWidth(10);
+                                        item.setHeight(10);
+                                        item.setColor(c);//DEFINIR DE ONDE VIRÁ A COR DO PONTO
+
+                                        itemToPrintSimulationRepository.save(item);//SAVE TO VIEW
+                                    }
+
+
+                                } else {
+                                    if (turnOnToPrint) {
+                                        System.out.println("Desenho Retângulo Arredondado: "
+                                                + "Coord x1: " + e1.getDimX() + 25
+                                                + " / Coord y1" + 25 * (i + 2)
+                                                + " / Largura: " + 12
+                                                + " / Altura: " + 6
+                                                + "/ Largura ARC: " + 80
+                                                + " / Altura ARC: " + 100
+                                                + " / Cor RGB: " + c.getRGB()
+                                                + " / Cor:  R=" + c.getRed() + ", G=" + c.getGreen() + ", B=" + c.getBlue()
+                                        );
+                                    }
+                                }
+                                System.out.println(e1.getBacteria_name().get(i));
+                                System.out.println(e1.getBacteria_conc().get(i).toString() + " (g/L)");
+
+                                if (turnOnToDraw) {
+                                    CellBacillusItemToPrintSimulation item = new CellBacillusItemToPrintSimulation();
+                                    item.setId(UUID.randomUUID().toString());
+                                    item.setSimulationResult(simulationResult);
+                                    item.setTick(e1.getTicks());
+                                    item.setShapeType(ShapeType.BACILLI);
+                                    item.setCoordX(e1.getDimX() + 25);
+                                    item.setCoordY(25 * (i + 2));
+                                    item.setWidth(12);
+                                    item.setHeight(6);
+                                    item.setArcWidth(80);
+                                    item.setArcHeight(100);
+                                    item.setColor(c);//DEFINIR DE ONDE VIRÁ A COR DO PONTO
+
+                                    itemToPrintSimulationRepository.save(item);//SAVE TO VIEW
+                                }
+                            }
+
+                            int offset = (e1.getBacteria_name().size() + 2) * 25 + 8;
+
+                            for (int i = 0; i < e1.getMetabolite_name().size(); i++) {
+                                Color c = new Color(e1.getMetabolite_color().get(i).getRed(), e1.getMetabolite_color().get(i).getGreen(), e1.getMetabolite_color().get(i).getBlue());
+
+                                if (turnOnToPrint) {
+                                    System.out.println("Desenho Retângulo: "
+                                            + "Coord x1: " + e1.getDimX() + 29
+                                            + " / Coord y1" + offset + 25 * (i + 1)
+                                            + " / Largura: " + 2
+                                            + " / Altura: " + 2
+                                    );
+                                }
+
+                                System.out.println(e1.getMetabolite_name().get(i));
+                                System.out.println(e1.getMetabolite_conc().get(i).toString() + " (g/L)");
+
+                                if (turnOnToDraw) {
+                                    MetaboliteRectagleItemToPrintSimulation item = new MetaboliteRectagleItemToPrintSimulation();
+                                    item.setId(UUID.randomUUID().toString());
+                                    item.setSimulationResult(simulationResult);
+                                    item.setTick(e1.getTicks());
+                                    item.setShapeType(ShapeType.BACILLI);
+                                    item.setCoordX(e1.getDimX() + 25);
+                                    item.setCoordY(25 * (i + 2));
+                                    item.setWidth(12);
+                                    item.setColor(c);//DEFINIR DE ONDE VIRÁ A COR DO PONTO
+
+                                    itemToPrintSimulationRepository.save(item);//SAVE TO VIEW
+                                }
+                            }
+
+                            Thread.yield();
+
+//                } catch (MessagingException e) {
+//                    throw new RuntimeException(e);
+//                } finally {
+//                    System.out.println("Thread número: " + num + " terminou");
+//                }
+
+                        } catch (MessagingException e) {
+                            throw new RuntimeException(e);
+                        } finally {
+                            System.out.println("Thread número: " + num + " terminou");
+                        }
+                    }
+                }
+
+            });
+//
+            t.start();
+        }
     }
 
-    private void graphicDataGeneration(EnvironmentSimulation environmentSimulation, SimulationRunCommand simulationRunCommand, SimulationResult simulationResult){
+    private void graphicDataGeneration(EnvironmentSimulation environmentSimulation, SimulationRunCommand simulationRunCommand, SimulationResult simulationResult) {
 
         t = new Thread(new Runnable() {
+
             @Override
             public void run() {
                 cont++;
                 int num = cont;
-                while( true ) {
+                while (true) {
 
                     try {
 
@@ -386,7 +562,7 @@ public class RunSimulationService {
 
                         environmentSimulation.actionCore();
 
-                        if (environmentSimulation.getTicks() == environmentSimulation.getTickslimit() || environmentSimulation.getBacterias().isEmpty()){
+                        if (environmentSimulation.getTicks() == environmentSimulation.getTickslimit() || environmentSimulation.getBacterias().isEmpty()) {
 
                             System.out.println("Simulação " + num + " terminou com sucesso!");
 
@@ -396,7 +572,7 @@ public class RunSimulationService {
 
                             simulationResultRepository.save(simulationResult);
 
-                            emailService.sendEmailWithAttachment(simulationRunCommand.getEmailOnwer(), "New Simulation", "Simulation finished with Success! - Attachment in Email", pathFileLogFull);
+                            emailService.sendEmailWithAttachment(simulationRunCommand.getEmailOnwer(), "New Simulation", "Simulation finished with Success! - Attachment in Email", "");
 
                             System.out.println("Rodou a simulação até o final!!!");
 
@@ -415,7 +591,7 @@ public class RunSimulationService {
 
                             if (environmentSimulation.getL_bac().get(i) == 0) {
 
-                                if(turnOnToPrint) {
+                                if (turnOnToPrint) {
                                     System.out.println("Desenho Oval: "
                                             + "Coord x1: " + environmentSimulation.getDimX() + 25
                                             + " / Coord y1" + 25 * (i + 2)
@@ -478,7 +654,7 @@ public class RunSimulationService {
                             }
                         }
 
-                        int offset = (environmentSimulation.getBacteria_name().size()+2)*25+8;
+                        int offset = (environmentSimulation.getBacteria_name().size() + 2) * 25 + 8;
 
                         for (int i = 0; i < environmentSimulation.getMetabolite_name().size(); i++) {
                             Color c = new Color(environmentSimulation.getMetabolite_color().get(i).getRed(), environmentSimulation.getMetabolite_color().get(i).getGreen(), environmentSimulation.getMetabolite_color().get(i).getBlue());
@@ -512,6 +688,12 @@ public class RunSimulationService {
 
                         Thread.yield();
 
+//                } catch (MessagingException e) {
+//                    throw new RuntimeException(e);
+//                } finally {
+//                    System.out.println("Thread número: " + num + " terminou");
+//                }
+
                     } catch (MessagingException e) {
                         throw new RuntimeException(e);
                     } finally {
@@ -519,8 +701,9 @@ public class RunSimulationService {
                     }
                 }
             }
-        });
 
+        });
+//
         t.start();
     }
 

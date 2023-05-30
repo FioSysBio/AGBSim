@@ -116,7 +116,9 @@ public class EnvironmentCommand {
     private double norm;
 
     //one molecule in simulations represent this amount in reality
-    public double n_real = 1.23 * Math.pow(10, 11);
+    private double bacteria_n_real = 1.23 * Math.pow(10, 11);
+
+    private final double bacteria_n_a = 6.022 * Math.pow(10, 23);
 
     public static EnvironmentCommand convert (EnvironmentSimulation env) {
 
@@ -154,6 +156,7 @@ public class EnvironmentCommand {
         command.metabolite_color = env.getMetabolite_color();
         command.feeding_points = env.getFeeding_points();
         command.stirredFeed = env.isStirredFeed();
+        command.setBacteria_n_real(env.getBacteria_n_real());
 
         return command;
     }

@@ -9,24 +9,24 @@ import jep.Interpreter;
 import jep.JepException;
 import jep.NDArray;
 import jep.SharedInterpreter;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 
     //Constructor
-    public Bacteria (int x, int y,int z, int type){
+    public Bacteria (int x, int y,int z, int type, EnvironmentSimulation environmentSimulation){
         super(x, y, z);
         this.type = type;
-        SetProperty();
+		this.environmentSimulation = environmentSimulation;
+        SetProperty(environmentSimulation);
         setMass(m_avg);
-        for (int i = 0; i <= EnvironmentSimulation.metabolite_count.size(); i++) {
+        for (int i = 0; i <= environmentSimulation.getMetabolite_count().size(); i++) {
 			produce_fluxes.add(0.0);
 		}
     }
 
+	private EnvironmentSimulation environmentSimulation;
     //variable
     
     //bacteria name
@@ -80,10 +80,10 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 
 
     //Avogadro number
-    public static final double n_a = 6.022 * Math.pow(10, 23);
+    private final double n_a = 6.022 * Math.pow(10, 23);
 
 	//one molecule in simulations represent this amount in reality
-    public static double n_real = 1.23 * Math.pow(10, 11);
+    private static double n_real = 1.23 * Math.pow(10, 11);
     
     private ArrayList<String> exRxnsName;
 
@@ -96,29 +96,31 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 	public void setEat_radius(double eat_radius) { this.eatRadius = eat_radius * Math.max(r_bac, l_bac); }
 
 	public void setTimeDeath(){
-        this.TimeDeath = EnvironmentSimulation.ticks + 10*t_d;
+        this.TimeDeath = this.environmentSimulation.getTicks() + 10*t_d;
     }
 
     public void setAntibiotic () {this.Antibiotic += 1;}
 
     //set value of bacteria variable
-    public void SetProperty() {
+    public void SetProperty(EnvironmentSimulation environmentSimulation) {
         setSizeX(5);
-        setName(EnvironmentSimulation.bacteria_name.get(type));
+        setName(environmentSimulation.getBacteria_name().get(type));
         setT_d(1);
-        setR_bac(EnvironmentSimulation.r_bac.get(type));
-        setL_bac(EnvironmentSimulation.l_bac.get(type));
-        setV_bac(EnvironmentSimulation.v_bac.get(type));
-        setM_avg(EnvironmentSimulation.m_bac.get(type));
-        setColor(EnvironmentSimulation.bacteria_color.get(type).getRed(), EnvironmentSimulation.bacteria_color.get(type).getGreen(), EnvironmentSimulation.bacteria_color.get(type).getBlue());
-        setSpeed(EnvironmentSimulation.bacteria_speed.get(type));
-        setEat_radius(EnvironmentSimulation.eat_radius.get(type));
-        setMFileName(EnvironmentSimulation.mFile.get(type));
-        setExRxnsName(EnvironmentSimulation.ex_rxns_name.get(type));
-        setExRxnsDirection(EnvironmentSimulation.ex_rxns_direction.get(type));
-        setEat_range(EnvironmentSimulation.t_survive.get(type));
-        setSearchRadius(EnvironmentSimulation.r_search.get(type));
-        setGrowth_substrate(EnvironmentSimulation.substrate.get(type));
+        setR_bac(environmentSimulation.getR_bac().get(type));
+        setL_bac(environmentSimulation.getL_bac().get(type));
+        setV_bac(environmentSimulation.getV_bac().get(type));
+        setM_avg(environmentSimulation.getM_bac().get(type));
+        setColor(environmentSimulation.getBacteria_color().get(type).getRed(),
+				environmentSimulation.getBacteria_color().get(type).getGreen(),
+				environmentSimulation.getBacteria_color().get(type).getBlue());
+        setSpeed(environmentSimulation.getBacteria_speed().get(type));
+        setEat_radius(environmentSimulation.getEat_radius().get(type));
+        setMFileName(environmentSimulation.getMFile().get(type));
+        setExRxnsName(environmentSimulation.getEx_rxns_name().get(type));
+        setExRxnsDirection(environmentSimulation.getEx_rxns_direction().get(type));
+        setEat_range(environmentSimulation.getT_survive().get(type));
+        setSearchRadius(environmentSimulation.getR_search().get(type));
+        setGrowth_substrate(environmentSimulation.getSubstrate().get(type));
         RandomDie();
     }
 
@@ -142,8 +144,8 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 
         if (l_bac == 0) {
 			System.out.println("Desenho Oval: "
-					+ "Coord x1: " + ((int) (getX() / EnvironmentSimulation.getTickX())
-					+ " / Coord y1" + (int) (getY() / EnvironmentSimulation.getTickY())
+					+ "Coord x1: " + ((int) (getX() / environmentSimulation.getTickX())
+					+ " / Coord y1" + (int) (getY() / environmentSimulation.getTickY())
 					+ " / Largura: " + 2 * getSizeX()
 					+ " / Altura: " + 2 * getSizeX())
 					+ " / Cor RGB: " + color.getRGB()
@@ -151,8 +153,8 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 			);
 		} else {
 			System.out.println("Desenho Retângulo Arredondado: "
-					+ "Coord x1: " + ((int) (getX() / EnvironmentSimulation.getTickX())
-					+ " / Coord y1" + (int) (getY() / EnvironmentSimulation.getTickY())
+					+ "Coord x1: " + ((int) (getX() / environmentSimulation.getTickX())
+					+ " / Coord y1" + (int) (getY() / environmentSimulation.getTickY())
 					+ " / Largura: " + 2 * getSizeX() + 2
 					+ " / Altura: " + getSizeX() + 1
 					+ "/ Largura ARC: " + 80
@@ -170,8 +172,8 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 
         if (l_bac == 0) {
 			System.out.println("Desenho Oval: "
-					+ "Coord x1: " + ((int) (getX() / EnvironmentSimulation.getTickX())
-					+ " / Coord y1" + (int) (getY() / EnvironmentSimulation.getTickY())
+					+ "Coord x1: " + ((int) (getX() / environmentSimulation.getTickX())
+					+ " / Coord y1" + (int) (getY() / environmentSimulation.getTickY())
 					+ " / Largura: " + 2 * getSizeX()
 					+ " / Altura: " + 2 * getSizeX())
 					+ " / Cor RGB: " + color.getRGB()
@@ -179,8 +181,8 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 			);
 		} else {
 			System.out.println("Desenho Retângulo Arredondado: "
-					+ "Coord x1: " + ((int) (getX() / EnvironmentSimulation.getTickX())
-					+ " / Coord y1" + (int) (getY() / EnvironmentSimulation.getTickY())
+					+ "Coord x1: " + ((int) (getX() / environmentSimulation.getTickX())
+					+ " / Coord y1" + (int) (getY() / environmentSimulation.getTickY())
 					+ " / Largura: " + 2 * getSizeX() + 2
 					+ " / Altura: " + getSizeX() + 1
 					+ "/ Largura ARC: " + 80
@@ -230,9 +232,9 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
     //bacteria change position
     public void Move(){
 
-        setStepX(getStepX() + getSpeed()/ EnvironmentSimulation.getNorm() * getDx());
-        setStepY(getStepY() + getSpeed()/ EnvironmentSimulation.getNorm() * getDy());
-        setStepZ(getStepZ() + getSpeed()/ EnvironmentSimulation.getNorm() * getDz());
+        setStepX(getStepX() + getSpeed()/ environmentSimulation.getNorm() * getDx());
+        setStepY(getStepY() + getSpeed()/ environmentSimulation.getNorm() * getDy());
+        setStepZ(getStepZ() + getSpeed()/ environmentSimulation.getNorm() * getDz());
         
     }
 
@@ -270,10 +272,10 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 
     //set live false if bacteria didn't eat during set period
     public void CheckTime(){
-		if (EnvironmentSimulation.ticks > (int) (getTimeEat() + getEat_rate())) {
+		if (environmentSimulation.getTicks() > (int) (getTimeEat() + getEat_rate())) {
 			setLive(false);
-			EnvironmentSimulation.bacteria_count.set(this.type, EnvironmentSimulation.bacteria_count.get(this.type) - 1);
-			EnvironmentSimulation.bacteria_died.set(this.type, EnvironmentSimulation.bacteria_died.get(this.type) + 1);
+			environmentSimulation.getBacteria_count().set(this.type, environmentSimulation.getBacteria_count().get(this.type) - 1);
+			environmentSimulation.getBacteria_died().set(this.type, environmentSimulation.getBacteria_died().get(this.type) + 1);
 		}
     }
     
@@ -290,27 +292,27 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 		double v2 = 0.0;
 		int index = -1;
 		PolySaccharides pol = (PolySaccharides) PS.get(l.get(0));
-		while (v2 <= EnvironmentSimulation.metabolite_uub.get(pol.getType()) && index < l.size()) {
+		while (v2 <= environmentSimulation.getMetabolite_uub().get(pol.getType()) && index < l.size()) {
 			index++;
 			v = v2;
 			if (index < l.size()) {
 				m_t += PS.get(l.get(index)).getMass();
 				c = (m_t/n_a) / ( Math.pow(eatRadius, 3)* getV_bac() ); // unit = [mol/m^3]
 				x = 0.33*mass / ( Math.pow(eatRadius, 3)* getV_bac() );
-				v2 = c/(x*(t_d/ EnvironmentSimulation.getNorm())) *Math.pow(10, 3); //unit = [mmol/gr.hr]
+				v2 = c/(x*(t_d/ environmentSimulation.getNorm())) *Math.pow(10, 3); //unit = [mmol/gr.hr]
 			}
 		}
 
 		if (v == 0.0) {
-			v = EnvironmentSimulation.metabolite_uub.get(pol.getType());
+			v = environmentSimulation.getMetabolite_uub().get(pol.getType());
 			x = 0.33*mass/( Math.pow(eatRadius, 3)* getV_bac() );
-			c = v*(x*(t_d/ EnvironmentSimulation.getNorm()))*Math.pow(10, -3);
+			c = v*(x*(t_d/ environmentSimulation.getNorm()))*Math.pow(10, -3);
 			index = 1;
-			PolySaccharides p = new PolySaccharides((int) pol.getX(), (int) pol.getY(), (int) pol.getZ(), pol.getType());
+			PolySaccharides p = new PolySaccharides((int) pol.getX(), (int) pol.getY(), (int) pol.getZ(), pol.getType(), environmentSimulation);
 			p.setMass(pol.getMass() - vToMass(v));
 			PS.add(p);
 			pol.setMass(vToMass(v));
-			EnvironmentSimulation.metabolite_count.set(p.getType(), EnvironmentSimulation.metabolite_count.get(p.getType())+1);
+			environmentSimulation.getMetabolite_count().set(p.getType(), environmentSimulation.getMetabolite_count().get(p.getType())+1);
 		}
 
 
@@ -329,13 +331,13 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
     
     public double vToMass(double v) {
 		double x = 0.33*mass / ( Math.pow(eatRadius, 3) * getV_bac() );
-		double c = v * (x* (t_d/ EnvironmentSimulation.getNorm()) ) * Math.pow(10, -3);
+		double c = v * (x* (t_d/ environmentSimulation.getNorm()) ) * Math.pow(10, -3);
 		double m = c * ( Math.pow(eatRadius, 3) * getV_bac() ) * n_a; //amount of metabolite produced
 		return m;
 	}
 
     public void calculateBiomass(double miu) {
-		double new_mass = mass * Math.pow(Math.E, miu * t_d / EnvironmentSimulation.getNorm());
+		double new_mass = mass * Math.pow(Math.E, miu * t_d / environmentSimulation.getNorm());
 		setMass(new_mass);
 		return;
 	}
@@ -347,18 +349,25 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 		double m_dummy = getMass()/count;
 		this.setMass(m_dummy);
 		for (int i = 0; i < count-1; i++) {
-			Bacteria b = new Bacteria((int) (getX() + getSizeX()/2 * getDx()), (int) (getY() + getSizeX()/2*getDy()), (int) (getZ() + getSizeX()/2*getDz()), this.type);
+			Bacteria b =
+					new Bacteria(
+							(int) (getX() + getSizeX()/2 * getDx()),
+							(int) (getY() + getSizeX()/2*getDy()),
+							(int) (getZ() + getSizeX()/2*getDz()),
+							this.type, environmentSimulation
+					);
 			b.setMass(m_dummy);
-			b.setTimeEat(EnvironmentSimulation.ticks + 1);
+			b.setTimeEat(environmentSimulation.getTicks() + 1);
 			le1.add(b);
-			EnvironmentSimulation.bacteria_count.set(this.type, EnvironmentSimulation.bacteria_count.get(this.type) +1 );
+			environmentSimulation.getBacteria_count().set(this.type, environmentSimulation.getBacteria_count().get(this.type) +1 );
 		}
 	}
 
     public void updateIndexes() {
 
-		for (int i = 1; i < EnvironmentSimulation.metabolite_count.size(); i++) {
-			EnvironmentSimulation.metabolite_index.set(i, EnvironmentSimulation.metabolite_index.get(i-1) + EnvironmentSimulation.metabolite_count.get(i-1));
+		for (int i = 1; i < environmentSimulation.getMetabolite_count().size(); i++) {
+			environmentSimulation.getMetabolite_index()
+					.set(i, environmentSimulation.getMetabolite_index().get(i-1) + environmentSimulation.getMetabolite_count().get(i-1));
 		}
 	}
 
@@ -371,10 +380,10 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 			m = vToMass(f.get(i));
 			n = (int) Math.round(m/n_real);
 			for (int j = 0; j < n; j++) {
-				PolySaccharides p = new PolySaccharides((int) this.getStepX(), (int) this.getStepY(), (int) this.getStepZ(), i);
+				PolySaccharides p = new PolySaccharides((int) this.getStepX(), (int) this.getStepY(), (int) this.getStepZ(), i, environmentSimulation);
 				p.setMass(m/n);
-				PS.add(EnvironmentSimulation.metabolite_index.get(i), p);
-				EnvironmentSimulation.metabolite_count.set(i, EnvironmentSimulation.metabolite_count.get(i)+1);
+				PS.add(environmentSimulation.getMetabolite_index().get(i), p);
+				environmentSimulation.getMetabolite_count().set(i, environmentSimulation.getMetabolite_count().get(i)+1);
 			}
 		}
 		updateIndexes();
@@ -388,7 +397,7 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 		setStepZ(p.getZ());
 
 		//creating an array for metabolites within eat radius
-		ArrayList<Integer> [] nearMetabolites = new ArrayList[EnvironmentSimulation.metabolite_count.size()];
+		ArrayList<Integer> [] nearMetabolites = new ArrayList[environmentSimulation.getMetabolite_count().size()];
 		for (int j = 0; j < nearMetabolites.length; j++) {
 			nearMetabolites[j] = new ArrayList<Integer>();
 		}
@@ -405,7 +414,7 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 		ArrayList<Double> v_in = new ArrayList<Double>();
 		ArrayList<Double> c_in = new ArrayList<Double>();
 
-		for (int j = 0; j < EnvironmentSimulation.metabolite_count.size(); j++) {
+		for (int j = 0; j < environmentSimulation.getMetabolite_count().size(); j++) {
 			v_in.add(0.0);
 			c_in.add(0.0);
 		}
@@ -437,10 +446,10 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 		}
 
 		setDegradableEat(getT_d());
-        setTimeEat(EnvironmentSimulation.ticks + (int)getDegradableEat());
+        setTimeEat(environmentSimulation.getTicks() + (int)getDegradableEat());
 
 		ArrayList<Double> v_out = new ArrayList<>();
-        for (int j = 0; j <= EnvironmentSimulation.metabolite_count.size(); j++) {
+        for (int j = 0; j <= environmentSimulation.getMetabolite_count().size(); j++) {
 			v_out.add(0.0);
 		}
 
@@ -468,7 +477,7 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 					PS.get(index).setLive(false);
 					PS.remove(index);
 				}
-				EnvironmentSimulation.metabolite_count.set(k, EnvironmentSimulation.metabolite_count.get(k) - nearMetabolites[k].size());
+				environmentSimulation.getMetabolite_count().set(k, environmentSimulation.getMetabolite_count().get(k) - nearMetabolites[k].size());
 				v_produce.set(k, 0.0);
 
 			} else if (growth_substrate.contains(k) && Math.abs(v_in.get(k)) < 1 && v_out.get(k) == 0) {
@@ -484,7 +493,7 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 						PS.get(index).setLive(false);
 						PS.remove(index);
 					}
-					EnvironmentSimulation.metabolite_count.set(k, EnvironmentSimulation.metabolite_count.get(k) - nearMetabolites[k].size());
+					environmentSimulation.getMetabolite_count().set(k, environmentSimulation.getMetabolite_count().get(k) - nearMetabolites[k].size());
 					v_produce.set(k, 0.0);
 				}
 			} else if (v_out.get(k) == 0) {
@@ -506,7 +515,7 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 					m_t += PS.get(nearMetabolites[k].get(index)).getMass();
 					c = (m_t/n_a) / (getV_bac()); // unit = [mol/m^3]
 					x = 0.33*mass/(getV_bac());
-					v2 = c/(x*(t_d/ EnvironmentSimulation.getNorm()))*Math.pow(10, 3); //unit = [mmol/gr.hr]
+					v2 = c/(x*(t_d/ environmentSimulation.getNorm()))*Math.pow(10, 3); //unit = [mmol/gr.hr]
 				}
 				double m2 = vToMass( v2 - Math.abs(v_out.get(k)) );
 				PS.get(nearMetabolites[k].get(index)).setMass(m2);
@@ -518,7 +527,7 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 					PS.remove(ii);
 				}
 //    			System.out.println(PS.size());
-				EnvironmentSimulation.metabolite_count.set(k, EnvironmentSimulation.metabolite_count.get(k) - index);
+				environmentSimulation.getMetabolite_count().set(k, environmentSimulation.getMetabolite_count().get(k) - index);
 
 			}
 
@@ -529,7 +538,7 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 		for (int j = 0; j < ps_size_2 - ps_size_1; j++) {
 			PolySaccharides pp = (PolySaccharides) PS.get(PS.size()-1);
 			PS.remove(PS.size()-1);
-			PS.add(EnvironmentSimulation.metabolite_index.get(pp.getType()), pp);
+			PS.add(environmentSimulation.getMetabolite_index().get(pp.getType()), pp);
 //			System.out.println("rearrange");
 		}
 		updateIndexes();
@@ -561,7 +570,7 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 				fluxArray[i] = f.get(i);
 			}
 
-			int time = EnvironmentSimulation.ticks * EnvironmentSimulation.getTickTime();
+			int time = environmentSimulation.getTicks() * environmentSimulation.getTickTime();
 
 			double[] cArray = new double[c.size()];
 			for (int i = 0; i < c.size(); i++) {
@@ -601,65 +610,6 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 		}
 
 		return outputs;
-	}
-
-	public static ArrayList<Integer> substrateFinder( ArrayList<String> exRxnsName, ArrayList<Integer> exRxnsDirection, String mFileName, String pathSubstrateScript, String pathEatsScript ) throws JepException {
-
-		ArrayList<Integer> substrates = new ArrayList<>();
-
-		Interpreter interp = null;
-		try {
-
-			interp = new SharedInterpreter();
-
-			String[] exRxnsArray = new String[exRxnsName.size()];
-			for (int i = 0; i < exRxnsName.size(); i++) {
-				exRxnsArray[i] = exRxnsName.get(i);
-			}
-
-			int[] exDirsArray = new int[exRxnsDirection.size()];
-			for (int i = 0; i < exRxnsDirection.size(); i++) {
-				exDirsArray[i] = exRxnsDirection.get(i);
-			}
-
-			String scriptSubstrateFinder = "/files_simulation/substrateFinder_v2.py";
-//			String scriptSubstrateFinder = "./src/main/resources/static/substrateFinder_v2.py";
-//			String scriptSubstrateFinder = pathSubstrateScript;
-
-			//metabolites, directions, metabolic_model - parametros dentro do script que precisam ser settados
-			interp.set("reactions", exRxnsArray);
-			interp.set("directions", exDirsArray);
-			String ext = ".json";
-			interp.set("metabolic_model", mFileName + ext);
-
-			interp.runScript(scriptSubstrateFinder);
-			double[] result = (double[]) ((NDArray) interp.getValue("result")).getData();
-
-			Arrays.stream(result).forEach(System.out::println);
-
-			double[] fluxArray = result;
-
-			for (int i = 0; i < fluxArray.length; i++) {
-				if (fluxArray[i] > 0) {
-					int index = 0;
-					for (int j = 0; j < substrates.size(); j++) {
-						if ( fluxArray[i] < fluxArray[substrates.get(j)] ) {
-							index = j+1;
-						}
-					}
-					substrates.add(index, i);
-				}
-			}
-
-		} catch (JepException exc) {
-			exc.printStackTrace();
-		} finally {
-			if(interp != null) {
-				interp.close();
-			}
-		}
-
-       return substrates;
 	}
 
     public boolean checkCollision(EnvironmentSimulation env) {
@@ -805,24 +755,24 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 //    	System.out.println("l " + l + " r " + 2*r_bac + " L " + Environment.getL());
 //    	System.out.println("step "+ getStepX() + " " + getStepY() + " " + getStepZ() + " ");
 
-			while ( (this.getStepX() < 0) || (this.getStepX() + l > EnvironmentSimulation.getL()) || (this.getStepY() < 0) || (this.getStepY() + 2 * r_bac > EnvironmentSimulation.getW()) || (this.getStepZ() < 0) || (this.getStepZ() + 2 * r_bac > EnvironmentSimulation.getD())) {
+			while ( (this.getStepX() < 0) || (this.getStepX() + l > environmentSimulation.getL()) || (this.getStepY() < 0) || (this.getStepY() + 2 * r_bac > environmentSimulation.getW()) || (this.getStepZ() < 0) || (this.getStepZ() + 2 * r_bac > environmentSimulation.getD())) {
 				if (this.getStepX() < 0) {
 					setStepX(-this.getStepX());
 				}
-				if ( (this.getStepX() + l) > EnvironmentSimulation.getL()) {
-					setStepX(EnvironmentSimulation.getL() - (this.getStepX() + l - EnvironmentSimulation.getL()) - l);
+				if ( (this.getStepX() + l) > environmentSimulation.getL()) {
+					setStepX(environmentSimulation.getL() - (this.getStepX() + l - environmentSimulation.getL()) - l);
 				}
 				if (this.getStepY() < 0) {
 					setStepY(-this.getStepY());
 				}
-				if ( (this.getStepY() + 2*r_bac) > EnvironmentSimulation.getW() ) {
-					setStepY(EnvironmentSimulation.getW() - (this.getStepY() + 2*r_bac - EnvironmentSimulation.getW()) - 2*r_bac);
+				if ( (this.getStepY() + 2*r_bac) > environmentSimulation.getW() ) {
+					setStepY(environmentSimulation.getW() - (this.getStepY() + 2*r_bac - environmentSimulation.getW()) - 2*r_bac);
 				}
 				if (this.getStepZ() < 0) {
 					setStepZ(-this.getStepZ());
 				}
-				if ( (this.getStepZ() + 2*r_bac) > EnvironmentSimulation.getD()) {
-					setStepZ(EnvironmentSimulation.getD() - (this.getStepZ() + 2*r_bac - EnvironmentSimulation.getD()) - 2*r_bac);
+				if ( (this.getStepZ() + 2*r_bac) > environmentSimulation.getD()) {
+					setStepZ(environmentSimulation.getD() - (this.getStepZ() + 2*r_bac - environmentSimulation.getD()) - 2*r_bac);
 				}
 			}
 //    	System.out.println((this.getStepZ() + 2*r_bac));
@@ -834,7 +784,7 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
     public void tick(List<Entity> PS, List<Entity> A, List<Entity> B, EnvironmentSimulation env)
             throws IOException{
 
-			if (EnvironmentSimulation.ticks == 0) {
+			if (environmentSimulation.getTicks() == 0) {
 				return;
 			}
 
@@ -853,7 +803,8 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 			direct(PS,index);
 			PolySaccharides ps = (PolySaccharides) PS.get(index);
 			//and moves to it
-			if (CheckDistance(ps.getX(), getX(), ps.getY(), getY(), ps.getZ(), getZ(), (getSpeed()/ EnvironmentSimulation.getNorm())* EnvironmentSimulation.getTickTime())) {
+			if (CheckDistance(ps.getX(), getX(), ps.getY(), getY(), ps.getZ(), getZ(),
+					(getSpeed()/ environmentSimulation.getNorm())* environmentSimulation.getTickTime())) {
 				setStepX(ps.getX());
 				setStepY(ps.getY());
 				setStepZ(ps.getZ());
@@ -863,7 +814,7 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
 			wall();
 
             while (checkCollision(env)) {
-				RandomMove();
+				RandomMove(env);
 				wall();
 				System.out.println("collision");
 			}
@@ -889,21 +840,25 @@ public class Bacteria extends Entity {//VAI SER TRANSFORMADO EM SERVICE
                 divide(B);
                 } else {
 				//if bacteria couldn't eat metabolite
-                EnvironmentSimulation.notEat++;
+//                environmentSimulation.notEat++;
+                environmentSimulation.setNotEat(environmentSimulation.getNotEat() + 1);
                 }
-            } else {
+		}
+		else {
 			//if bacteria couldn't find metabolite
-			RandomMove();
+			RandomMove(env);
                 //check intersect with boundary
                 wall();
                 //check if new coordinate is empty and if not again does random moving
                 while (checkCollision(env)) {
-					RandomMove();
+					RandomMove(env);
 					wall();
 					System.out.println("collision");
 				}
-			EnvironmentSimulation.notEat++;
-            }
+//			environmentSimulation.notEat++;
+			environmentSimulation.setNotEat(environmentSimulation.getNotEat() + 1);
+
+		}
 
         //free up current space elements of environment
         env.freeUpMesh(occupiedMesh());
