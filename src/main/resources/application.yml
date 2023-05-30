@@ -4,7 +4,7 @@ userMail: acbm.service@gmail.com
 passMail: ypczrmajwtxozsan
 
 server:
-  port: 8185
+  port: 8186
   forward-headers-strategy: framework
 
 spring:
