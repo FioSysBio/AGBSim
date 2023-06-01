@@ -16,10 +16,10 @@ public class AcbmServiceApplication {
 	public static void main(String[] args) {
 
 		//SETUP DO PATH DAS VARIÁVEIS REFERENTES AO AMBIENTE PYTHON (NO CASO AQUI USANDO ANACONDA)
-		File pythonHome = new File("/softwares/anaconda3");
-		PyConfig conf = new PyConfig();
-		conf.setPythonHome(pythonHome.getAbsolutePath());
-		MainInterpreter.setInitParams(conf);
+//		File pythonHome = new File("/softwares/anaconda3");
+//		PyConfig conf = new PyConfig();
+//		conf.setPythonHome(pythonHome.getAbsolutePath());
+//		MainInterpreter.setInitParams(conf);
 
 		SpringApplication.run(AcbmServiceApplication.class, args);
 	}
