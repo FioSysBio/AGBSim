@@ -10,5 +10,5 @@ import java.util.UUID;
 @Repository
 public interface SimulationResultRepository extends CrudRepository<SimulationResult, UUID> {
 
-    List<SimulationResult> findAllByEmailOnwer(String emailOnwer);
+    List<SimulationResult> findTop15AllByEmailOnwerOrderByDataFimDesc(String emailOnwer);
 }

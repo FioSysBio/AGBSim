@@ -15,6 +15,6 @@ public class SimulationResultService {
 
     public List<SimulationResult> getResultsByEmail(String emailOnwer) {
 
-        return (List<SimulationResult>) simulationResultRepository.findAllByEmailOnwer(emailOnwer);
+        return (List<SimulationResult>) simulationResultRepository.findTop15AllByEmailOnwerOrderByDataFimDesc(emailOnwer);
     }
 }
