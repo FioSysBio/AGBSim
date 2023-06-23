@@ -6,7 +6,7 @@ passMail: ypczrmajwtxozsan
 
 server:
   port: 8185
-  forward-headers-strategy: framework
+#  forward-headers-strategy: framework
   ssl:
     enabled: true
     key-store: classpath:keystore.p12
