@@ -6,13 +6,13 @@ passMail: ypczrmajwtxozsan
 
 server:
   port: 8185
-  forward-headers-strategy: framework
-  ssl:
-    enabled: true
-    key-store: classpath:keystore.p12
-    key-store-password: agbsim_api
-    key-store-type: PKCS12
-    key-alias: agbsim_api
+#  forward-headers-strategy: framework
+#  ssl:
+#    enabled: true
+#    key-store: classpath:keystore.p12
+#    key-store-password: agbsim_api
+#    key-store-type: PKCS12
+#    key-alias: agbsim_api
 
 spring:
   application:
