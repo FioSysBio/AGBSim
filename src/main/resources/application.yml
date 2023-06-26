@@ -5,7 +5,7 @@ userMail: acbm.service@gmail.com
 passMail: ypczrmajwtxozsan
 
 server:
-  port: 8185
+  port: 8443
 #  forward-headers-strategy: framework
   ssl:
     enabled: true
