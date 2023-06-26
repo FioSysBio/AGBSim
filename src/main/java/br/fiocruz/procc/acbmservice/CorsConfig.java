@@ -10,7 +10,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
 
-        registry.addMapping("/subpasta/**") // Substitua "/subpasta/**" pelo caminho da sua subpasta
+        registry.addMapping("/agbsim/**") // Substitua "/subpasta/**" pelo caminho da sua subpasta
                 .allowedOrigins("*") // Defina os domínios permitidos ou use "*" para permitir todos
                 .allowedMethods("*") // Defina os métodos HTTP permitidos
                 .allowedHeaders("*") // Defina os cabeçalhos permitidos ou use "*" para permitir todos
