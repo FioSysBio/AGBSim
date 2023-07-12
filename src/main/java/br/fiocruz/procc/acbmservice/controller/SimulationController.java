@@ -52,14 +52,22 @@ public class SimulationController {
     @PostMapping("/run")
     public ResponseEntity<String> run(@RequestBody SimulationRunCommand simulationRunCommand) {
 
-        EnvironmentCommand env = new EnvironmentCommand();
+        try {
+            EnvironmentCommand env = new EnvironmentCommand();
 
-        String result = runSimulationService.runSimulation(simulationRunCommand);
+            String result = runSimulationService.runSimulation(simulationRunCommand);
 
-        String textEmail = "New Simulation started from User: " + simulationRunCommand.getEmailOnwer() + "\n\n";
-        emailService.sendEmail("acbm.service@gmail.com", "New Simulation started!", textEmail);
+            String textEmail = "New Simulation started from User: " + simulationRunCommand.getEmailOnwer() + "\n\n";
+            emailService.sendEmail("acbm.service@gmail.com", "New Simulation started!", textEmail);
 
-        return ResponseEntity.ok(result);
+            return ResponseEntity.ok(result);
+
+        } catch (Exception ex) {
+            String textEmail = "Something unexpected happened!: " + ex.getMessage() + "\n\n" + simulationRunCommand.getEmailOnwer() + "\n\n";
+            emailService.sendEmail("acbm.service@gmail.com", "New Simulation started!", textEmail);
+
+            return ResponseEntity.ok("Something unexpected happened!");
+        }
     }
 
     @ApiResponses(value = {
