@@ -13,14 +13,12 @@ def substrateFinder(reactions, file_metabolic_model):
 
     model = load_json_model(json_path)
 
-    v_out = true
+    v_out = True
     for i in range(len(reactions)):
-         try:
-            reac = model.reactions.get_by_id(reactions[j])
-            if reac == null
-            return false
-         except:
-            retun false
+        reac = model.reactions.get_by_id(reactions[i])
+        if reac is None:
+            v_out = False
+
     return v_out
 
 result = substrateFinder(reactions, metabolic_model)
