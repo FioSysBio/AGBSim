@@ -9,6 +9,7 @@ import br.fiocruz.procc.acbmservice.service.EmailService;
 import br.fiocruz.procc.acbmservice.service.RunSimulationService;
 import br.fiocruz.procc.acbmservice.service.SimulationResultService;
 import br.fiocruz.procc.acbmservice.service.SimulationService;
+import br.fiocruz.procc.acbmservice.service.ValidateParametersService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -40,6 +41,9 @@ public class SimulationController {
     private SimulationResultService simulationResultService;
 
     @Autowired
+    private ValidateParametersService validateService;
+
+    @Autowired
     private EmailService emailService;
 
     @ApiResponses(value = {
@@ -54,6 +58,9 @@ public class SimulationController {
 
         try {
             EnvironmentCommand env = new EnvironmentCommand();
+
+            if(!validateService.validateSubstrate())
+                return ResponseEntity.ok("Invalid parameters!");
 
             String result = runSimulationService.runSimulation(simulationRunCommand);
 
