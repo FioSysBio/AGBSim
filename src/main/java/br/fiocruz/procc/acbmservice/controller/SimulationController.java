@@ -59,7 +59,7 @@ public class SimulationController {
         try {
             EnvironmentCommand env = new EnvironmentCommand();
 
-            if(!validateService.validateSubstrate())
+            if(!validateService.validateSubstrate(simulationRunCommand))
                 return ResponseEntity.ok("Invalid parameters!");
 
             String result = runSimulationService.runSimulation(simulationRunCommand);

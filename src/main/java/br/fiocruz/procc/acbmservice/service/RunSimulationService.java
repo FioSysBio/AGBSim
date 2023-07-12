@@ -59,25 +59,10 @@ public class RunSimulationService {
     public String runSimulation(SimulationRunCommand simulationRunCommand) {
 
         String realtPathSubstrateFinder = servletContext.getRealPath("/WEB-INF/classes/static/");
-//        System.out.println("Real Path: " + realtPathSubstrateFinder);
 //
         String contexttPathSubstrateFinder = servletContext.getContextPath();
-//        System.out.println("Context Path: " + contexttPathSubstrateFinder);
 //
         String realtPathEat = servletContext.getRealPath("/WEB-INF/classes/static/eat_v2.py");
-//        System.out.println("Real Path: " + realtPathEat);
-//
-//        ResourceLoader resourceLoader = new DefaultResourceLoader();
-//        ResourceLoader classRelativeResourceLoader = new ClassRelativeResourceLoader(RunSimulationService.class);
-//        ResourceLoader fileSystemResourceLoader = new FileSystemResourceLoader();
-//
-//        System.out.println("R: " + resourceLoader.getResource().);
-//        System.out.println("C: " + classRelativeResourceLoader.toString());
-//        try {
-//            System.out.println("F: " + fileSystemResourceLoader.getResource("substrateFinder_v2.py").getURL().toString());
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
 
         turnOnToPrint = Boolean.valueOf(env.getProperty("turnOnPrint"));
 
@@ -117,8 +102,6 @@ public class RunSimulationService {
 
 
             SimulationResult simulationResult = newSimulationResult(simulationRunCommand);
-
-//            EnvironmentSimulation.setParameters(transform(simulationRunCommand));
 
             String pathFileLogFull = pathFileLog + simulationResult.getEmailOnwer() + "_" + simulationResult.getId() +  ".txt";
 
@@ -362,8 +345,6 @@ public class RunSimulationService {
             e.printStackTrace();
         }
 
-//        graphicDataGeneration(e1, simulationRunCommand, simulationResult);
-
         //TRAZIDO DO MÉTODO "graphicDataGeneration" para Facilitar o endendimento
         {
             t = new Thread(new Runnable() {
@@ -378,10 +359,6 @@ public class RunSimulationService {
 
                             Color c1 = new Color(235, 245, 255);
                             Color st = new Color(0, 78, 152);
-
-                            //TAMANHO DO QUADRO: 0, 0, environment.getDimX() , environment.getDimY()
-                            // move and draw object
-//                        environment.draw();
 
                             //METODO CRIADO PARA PERSISTIR AS ENTIDADES QUE SÃO PARA DESENHAR
                             if (turnOnToDraw) {
@@ -516,12 +493,6 @@ public class RunSimulationService {
 
                             Thread.yield();
 
-//                } catch (MessagingException e) {
-//                    throw new RuntimeException(e);
-//                } finally {
-//                    System.out.println("Thread número: " + num + " terminou");
-//                }
-
                         } catch (MessagingException e) {
                             throw new RuntimeException(e);
                         } finally {
@@ -550,10 +521,6 @@ public class RunSimulationService {
 
                         Color c1 = new Color(235, 245, 255);
                         Color st = new Color(0, 78, 152);
-
-                        //TAMANHO DO QUADRO: 0, 0, environment.getDimX() , environment.getDimY()
-                        // move and draw object
-//                        environment.draw();
 
                         //METODO CRIADO PARA PERSISTIR AS ENTIDADES QUE SÃO PARA DESENHAR
                         if (turnOnToDraw) {
@@ -688,12 +655,6 @@ public class RunSimulationService {
 
                         Thread.yield();
 
-//                } catch (MessagingException e) {
-//                    throw new RuntimeException(e);
-//                } finally {
-//                    System.out.println("Thread número: " + num + " terminou");
-//                }
-
                     } catch (MessagingException e) {
                         throw new RuntimeException(e);
                     } finally {
@@ -772,9 +733,5 @@ public class RunSimulationService {
 
             itemToPrintSimulationRepository.save(item);//SAVE TO VIEW
         }
-
-//        for (Entity bac : environment.getANT()) {
-//
-//        }
     }
 }
