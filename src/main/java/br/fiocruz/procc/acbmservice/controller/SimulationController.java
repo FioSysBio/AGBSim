@@ -59,8 +59,12 @@ public class SimulationController {
         try {
             EnvironmentCommand env = new EnvironmentCommand();
 
-            if(!validateService.validateSubstrate(simulationRunCommand))
+            if(!validateService.validateSubstrate(simulationRunCommand)) {
+                String textEmail = "Invalid parameters, reaction name not found in SBML!\n" +
+                        "In New Simulation started from User: " + simulationRunCommand.getEmailOnwer() + "\n\n";
+                emailService.sendEmail("acbm.service@gmail.com", "Invalid parameters for Simulation!", textEmail);
                 return ResponseEntity.ok("Invalid parameters, reaction name not found in SBML!");
+            }
 
             String result = runSimulationService.runSimulation(simulationRunCommand);
 
