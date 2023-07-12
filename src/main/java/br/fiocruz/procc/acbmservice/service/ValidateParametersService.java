@@ -47,7 +47,10 @@ public class ValidateParametersService {
                 interp.set("metabolic_model", mFileName + ext);
 
                 interp.runScript(substrateValidate);
-                Boolean result = (Boolean) ((NDArray) interp.getValue("result")).getData();
+                interp.eval("result = substrateFinder(reactions, metabolic_model)");
+                Object resultScript = interp.getValue("result");
+
+                Boolean result = (Boolean) resultScript;
 
                 System.out.println(result);
 //                Arrays.stream(result).forEach(System.out::println);

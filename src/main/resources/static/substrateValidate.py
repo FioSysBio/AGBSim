@@ -15,10 +15,12 @@ def substrateFinder(reactions, file_metabolic_model):
 
     v_out = True
     for i in range(len(reactions)):
-        reac = model.reactions.get_by_id(reactions[i])
-        if reac is None:
+        try:
+            reac = model.reactions.get_by_id(reactions[i])
+            if reac is None:
+                v_out = False
+        except:
             v_out = False
-
     return v_out
 
 result = substrateFinder(reactions, metabolic_model)

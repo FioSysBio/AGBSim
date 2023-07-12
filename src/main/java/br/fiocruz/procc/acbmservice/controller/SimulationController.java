@@ -60,7 +60,7 @@ public class SimulationController {
             EnvironmentCommand env = new EnvironmentCommand();
 
             if(!validateService.validateSubstrate(simulationRunCommand))
-                return ResponseEntity.ok("Invalid parameters!");
+                return ResponseEntity.ok("Invalid parameters, reaction name not found in SBML!");
 
             String result = runSimulationService.runSimulation(simulationRunCommand);
 
