@@ -16,3 +16,10 @@ tutorial de referência no no link: https://www.alura.com.br/artigos/publicando-
 * fazer a execução do comando git pull
 * executar o build do projeto com o comando mvn clean package
 * fazer a inicialização do serviço com o comando sudo systemctl start nome_do_serviço criado no passo inicial
+
+  ## Passos para atualização de certificado (cada três meses):
+
+* Executar: openssl pkcs12 -export -in /etc/letsencrypt/live/pixel.procc.fiocruz.br/fullchain.pem -inkey /etc/letsencrypt/live/pixel.procc.fiocruz.br/privkey.pem -out keystore.p12 -name "agbsim_api"
+* password "agbsim_api"
+* copiar keystore.p12 para o diretório /sistemas/AGBSim/src/main/resources
+* fazer a inicialização do serviço com o comando sudo systemctl restart nome_do_serviço (agbsim.service no caso do pixel) criado no passo inicial
